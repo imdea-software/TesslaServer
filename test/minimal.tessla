@@ -1,0 +1,66 @@
+define test_calls: Events<Int> := function_calls("minimal.c:test")
+
+define error: Events<Unit> := onFalse(geq(5,test_calls))
+
+-- out error
+======
+Definitions(
+  Map(
+    "test_calls" -> StreamDef(
+      "test_calls",
+      ExprTree(
+        TypeAscrFn(
+          GenericType(
+            "Events",
+            List(
+              SimpleType("Int")
+            )
+          )
+        ),
+        Map(
+          Pos(0) -> ExprTree(
+            NamedFn(
+              "function_calls",
+            ),
+            Map(
+              Pos(0) -> ExprTree(
+                LiteralFn(
+                  StringLiteral("minimal.c:test"),
+                ),
+              )
+            )
+          )
+        )
+      )
+    ),
+    "error" -> StreamDef(
+      "error",
+      ExprTree(
+        TypeAscrFn(
+          GenericType(
+            "Events",
+            List(SimpleType("Unit"))
+          ),
+          Map(
+            Pos(0) -> ExprTree(
+              NamedFn("onFalse"),
+              Map(
+                Pos(0) -> ExprTree(
+                  NamedFn("leq"),
+                  Map(
+                    Pos(0) -> ExprTree(
+                      LiteralFn(IntLiteral(0)),
+                    ),
+                    Pos(1) -> ExprTree(
+                      NamedFn("test_calls")
+                    )
+                  ),
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)

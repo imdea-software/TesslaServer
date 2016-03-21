@@ -5,6 +5,7 @@ defmodule TesslaServer.Mixfile do
     [app: :tessla_server,
      version: "0.0.1",
      elixir: "~> 1.2",
+     escript: escript_config,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps]
@@ -14,7 +15,12 @@ defmodule TesslaServer.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [
+      applications: [
+        :logger,
+        :timex
+      ]
+  ]
   end
 
   # Dependencies can be Hex packages:
@@ -27,6 +33,13 @@ defmodule TesslaServer.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [
+      {:timex, "~> 2.0"},
+      {:tzdata, "~> 0.1.8", override: true}
+    ]
+  end
+
+  defp escript_config do
+    [main_module: TesslaServer]
   end
 end
