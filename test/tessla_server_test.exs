@@ -3,10 +3,7 @@ defmodule TesslaServerTest do
   doctest TesslaServer
 
   test "the truth" do
-    assert 1 + 1 == 3
+    assert 1 + 1 == 2
   end
 
-  test "also not" do
-    assert 1*2 == 1
-  end
 end
