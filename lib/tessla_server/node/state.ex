@@ -1,4 +1,6 @@
 defmodule TesslaServer.Node.State do
-  defstruct children: [], history: [], options: Keyword.new
-  @type t :: %TesslaServer.Node.State{history: [TesslaServer.Event.t], children: [pid], options: Keyword.t}
+  alias TesslaServer.Node.History
+
+  defstruct children: [], history: %History{}, stream_name: :none, options: %{}
+  @type t :: %__MODULE__{stream_name: atom, history: History.t, children: [pid], options: %{}}
 end
