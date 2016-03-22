@@ -1,7 +1,14 @@
 defmodule TesslaServer.Node do
-  alias TesslaServer.Event
-  alias TesslaServer.Node.History
+  @moduledoc """
+  Base Module to build new Nodes
   
+  When you want to implement a new Node you should call `use TesslaServer.Node`
+  Furthermore you'd have to implement the `process` function.
+  """
+
+  alias TesslaServer.Event
+  alias TesslaServer.Node.{History,State}
+
   @type on_process :: :wait | {:ok, Event.t}
 
   @callback process(Event.t, State.t) :: on_process
@@ -32,7 +39,7 @@ defmodule TesslaServer.Node do
         end
       end
 
-      @spec handle_processed(TesslaServer.Node.History.t, TesslaServer.Node.State.t, TesslaServer.Event.t) :: TesslaServer.Node.State.t
+      @spec handle_processed(TesslaServer.Node.History.t, TesslaServer.Node.State.t, TesslaServer.Event.t) :: {:noreply, TesslaServer.Node.State.t}
       defp handle_processed(history, state, processed) do
         IO.puts("output of #{state.stream_name}: #{inspect(processed.value)}")
         new_history = History.update_output(history, processed)
