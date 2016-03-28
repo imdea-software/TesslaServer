@@ -2,12 +2,29 @@ defmodule TesslaServer do
   use Timex
 
   def main(_args) do
-    {:ok, pid_child} = GenServer.start_link(TesslaServer.Node.Increment, %{children: [], stream_name: :error, options: %{increment: 2}})
-    {:ok, pid_father} = GenServer.start_link(TesslaServer.Node.Add,  %{children: [pid_child], stream_name: :adder,  options: %{summand1: :input1, summand2: :input2}})
-    read(pid_father, pid_child)
+
+    {:ok, pid_multiplier} = GenServer.start_link(TesslaServer.Node.Multiply, %{children: [], stream_name: :multiplier, options: %{factor1: :adder1, factor2: :adder2}})
+    {:ok, pid_adder2} = GenServer.start_link(TesslaServer.Node.Add, %{children: [pid_multiplier], stream_name: :adder2, options: %{summand1: :input3, summand2: :input4}})
+    {:ok, pid_adder1} = GenServer.start_link(TesslaServer.Node.Add,  %{children: [pid_multiplier], stream_name: :adder1,  options: %{summand1: :input1, summand2: :input2}})
+
+
+    
+    {:ok, input1} = GenServer.start_link(TesslaServer.Source, %{name: :input1, subscribers: [pid_adder1]}) 
+    {:ok, input2} = GenServer.start_link(TesslaServer.Source, %{name: :input2, subscribers: [pid_adder1]}) 
+    {:ok, input3} = GenServer.start_link(TesslaServer.Source, %{name: :input3, subscribers: [pid_adder2]}) 
+    {:ok, input4} = GenServer.start_link(TesslaServer.Source, %{name: :input4, subscribers: [pid_adder2]}) 
+
+    inputs = %{
+      input1: input1,
+      input2: input2,
+      input3: input3,
+      input4: input4
+    }
+
+    read(inputs)
   end
 
-  defp read(pid_father, pid_child) do
+  defp read(inputs) do
     case IO.read(:stdio, :line) do
       :eof -> :ok
       {:error, reason} -> IO.puts "Error: #{reason}"
@@ -17,12 +34,9 @@ defmodule TesslaServer do
         event = %TesslaServer.Event{
           timestamp: Time.now, 
           value: value, 
-          stream_name: String.to_atom(stream_name)
         }
-        GenServer.cast(pid_father, {:process, event})
-        #IO.puts(inspect(:sys.get_status(pid_father)))
-        #IO.puts(inspect(:sys.get_status(pid_child)))
-        read(pid_father, pid_child)
+        Map.get(inputs, String.to_atom(stream_name)) |> GenServer.cast({:new_event, event})
+        read(inputs)
     end
   end
 end

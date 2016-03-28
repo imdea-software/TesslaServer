@@ -12,9 +12,8 @@ defmodule TesslaServer.Node.HistoryTest do
     stream_name = :counter
     event = %Event{timestamp: timestamp, value: 1, stream_name: stream_name}
     history = %History{}
-    
-    updated_history = History.update_input(history, event)
 
+    updated_history = History.update_input(history, event)
     assert(hd(updated_history.inputs[stream_name]) == event)
   end
 

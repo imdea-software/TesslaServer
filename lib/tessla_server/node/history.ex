@@ -43,6 +43,14 @@ defmodule TesslaServer.Node.History do
       [] -> nil
       [hd | _] -> hd
     end
-    
+  end
+
+  @doc """
+  Returns the latest `Event.t` that is saved on any input stream
+  It assumes that every Stream is ordered by time, meaning it only looks at the head of every Stream
+  """
+  @spec get_latest_input(History.t) :: Event.t
+  def get_latest_input(history) do
+    Map.values(history.inputs) |> Enum.map(&(hd &1)) |> Enum.max_by(&(&1.timestamp))
   end
 end
