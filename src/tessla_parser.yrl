@@ -6,7 +6,7 @@ Nonterminals
   typelist types generictype_tag streamdef_tag def_map_tag.
 Terminals '(' ')' int string ',' '->' pos 
   intliteral stringliteral simpletype list typeascrfn defs 
-  map generictype literalfn namedfn streamdef exprtree.
+  map generictype literalfn namedfn streamdef exprtree atom.
 
 defs_tag ->
   defs '(' map_tag ')' : '$3' .
@@ -19,7 +19,7 @@ mapentries  -> mapentry ',' mapentries : maps:merge('$1', '$3').
 
 mapentry    -> mapkey '->' mapvalue : #{'$1'=> '$3'}.
 
-mapkey      -> pos '(' int ')' : extract_tag('$3').
+mapkey      -> pos '(' int ')' : extract_value('$3').
 mapkey      -> string : extract_atom('$1').
 
 mapvalue    -> streamdef_tag : '$1'.
@@ -50,10 +50,13 @@ types     -> type ',' types.
 
 literalfn_tag     -> literalfn '(' literal ')' : '$3'.
 
-literal       -> intliteral '(' int ')' : extract_tag('$3').
-literal       -> stringliteral '(' string ')' : extract_tag('$3').
+literal       -> intliteral '(' int ')' : extract_value('$3').
+literal       -> stringliteral '(' string ')' : extract_value('$3').
 
-namedfn_tag       -> namedfn '(' string  ')' : extract_atom('$3').
+
+namedfn_tag       -> namedfn '(' string  ')' : extract_value('$3').
+namedfn_tag       -> namedfn '(' atom  ')' : extract_value('$3').
+
 
 streamdef_tag     -> streamdef '(' streamname ',' exprtree_tag ')' : maps:merge(#{name => '$3'}, '$5').
 
@@ -61,5 +64,5 @@ streamname    -> string : extract_atom('$1') .
 
 Erlang code.
 
-extract_tag({_tag, _Line, Value}) -> Value.
+extract_value({_tag, _Line, Value}) -> Value.
 extract_atom({_tag, _Line, Value}) -> list_to_atom(Value).

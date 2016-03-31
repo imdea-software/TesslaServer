@@ -3,6 +3,14 @@ Definitions(
     "writes" -> StreamDef(
       "writes",
       ExprTree(
+        TypeAscrFn(
+          GenericType(
+            "Events",
+            List(
+              SimpleType("Int")
+            )
+          )
+        ),
         Map(
           Pos(0) -> ExprTree(
             NamedFn("variable_updates"),
@@ -10,7 +18,7 @@ Definitions(
               Pos(0) -> ExprTree(
                 LiteralFn(
                   StringLiteral("main.c:write_ptr")
-                ),
+                )
               )
             )
           )
