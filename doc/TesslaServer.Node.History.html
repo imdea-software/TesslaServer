@@ -102,6 +102,16 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#get_latest_input/1">get_latest_input(history)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream
+It assumes that every Stream is ordered by time, meaning it only looks at the head of every Stream</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#get_latest_input_of_stream/2">get_latest_input_of_stream(history, name)</a>
   </div>
   
@@ -164,7 +174,31 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_latest_input_of_stream/2">
+          <div class="detail" id="get_latest_input/1">
+  <div class="detail-header">
+    <a href="#get_latest_input/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_latest_input(history)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_latest_input(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream
+It assumes that every Stream is ordered by time, meaning it only looks at the head of every Stream</p>
+
+  </section>
+</div>
+<div class="detail" id="get_latest_input_of_stream/2">
   <div class="detail-header">
     <a href="#get_latest_input_of_stream/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>

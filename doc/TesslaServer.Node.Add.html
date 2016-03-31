@@ -91,14 +91,19 @@ which must be atoms representing the names of the event streams that should be s
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#process/2">process(event, state)</a>
+    <a href="#prepare_values/1">prepare_values(state)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Processes a given <code class="inline">event</code> by adding it’s value to the last value of the other event stream saved in
-<code class="inline">state.history</code>.
-To do so the keys <code class="inline">:summand1</code> and <code class="inline">:summand2</code> have to be present in <code class="inline">state.options</code>, 
-and the value of one of them has to be the same as <code class="inline">event.stream_name</code> and the value 
-of the other one has to match a key in <code class="inline">state.history.inputs</code></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_values/1"><code class="inline">TesslaServer.Node.prepare_values/1</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#process_values/1">process_values(map)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:process_values/1"><code class="inline">TesslaServer.Node.process_values/1</code></a></p>
 </div>
   
 </div>
@@ -123,12 +128,12 @@ of the other one has to match a key in <code class="inline">state.history.inputs
             </a>
             Functions
           </h1>
-          <div class="detail" id="process/2">
+          <div class="detail" id="prepare_values/1">
   <div class="detail-header">
-    <a href="#process/2" class="detail-link" title="Link to this function">
+    <a href="#prepare_values/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">process(event, state)</span>
+    <span class="signature">prepare_values(state)</span>
       
   </div>
   
@@ -136,20 +141,36 @@ of the other one has to match a key in <code class="inline">state.history.inputs
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">process(<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
+          <pre><code class="elixir">prepare_values(<a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: %{values: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>], state: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Processes a given <code class="inline">event</code> by adding it’s value to the last value of the other event stream saved in
-<code class="inline">state.history</code>.
-To do so the keys <code class="inline">:summand1</code> and <code class="inline">:summand2</code> have to be present in <code class="inline">state.options</code>, 
-and the value of one of them has to be the same as <code class="inline">event.stream_name</code> and the value 
-of the other one has to match a key in <code class="inline">state.history.inputs</code></p>
-<p>Returns <code class="inline">:wait</code> if at least one event stream doesn’t have a value until now
-or <code class="inline">{:ok, new_event}</code> where the new event is computed by adding the two last events of
-the specified event stream.</p>
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_values/1"><code class="inline">TesslaServer.Node.prepare_values/1</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="process_values/1">
+  <div class="detail-header">
+    <a href="#process_values/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">process_values(map)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">process_values(%{values: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>], state: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:process_values/1"><code class="inline">TesslaServer.Node.process_values/1</code></a>.</p>
 
   </section>
 </div>

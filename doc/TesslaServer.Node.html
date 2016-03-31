@@ -110,7 +110,13 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:process/2">process(arg0, arg1)</a>
+    <a href="#c:prepare_values/1">prepare_values(list)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:process_values/1">process_values(prepared_values)</a>
   </div>
   
 </div>
@@ -131,7 +137,9 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
           </h1>
           <div class="types-list">
             <div id="t:on_process/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:on_process/0">on_process</a> :: :wait | {:ok, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>}</code></pre>
+  <pre><code class="elixir"><a href="#t:on_process/0">on_process</a> ::
+  {:wait, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>} |
+  {:ok, %{event: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, state: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}}</code></pre>
   
 </div>
 
@@ -151,12 +159,12 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
             </a>
             Callbacks
           </h1>
-          <div class="detail" id="c:process/2">
+          <div class="detail" id="c:prepare_values/1">
   <div class="detail-header">
-    <a href="#c:process/2" class="detail-link" title="Link to this callback">
+    <a href="#c:prepare_values/1" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">process(arg0, arg1)</span>
+    <span class="signature">prepare_values(list)</span>
       
   </div>
   
@@ -164,7 +172,29 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">process(<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: <a href="#t:on_process/0">on_process</a></code></pre>
+          <pre><code class="elixir">prepare_values([{:state, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}]) :: prepared_values</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:process_values/1">
+  <div class="detail-header">
+    <a href="#c:process_values/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">process_values(prepared_values)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">process_values(prepared_values) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
         
       </div>
     </div>

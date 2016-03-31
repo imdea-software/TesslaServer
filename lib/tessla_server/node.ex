@@ -3,7 +3,7 @@ defmodule TesslaServer.Node do
   Base Module to build new Nodes
 
   When you want to implement a new Node you should call `use TesslaServer.Node`
-  Furthermore you'd have to implement the `process` function.
+  Furthermore you'd have to implement the `prepare_values` and `process_values` functions.
   """
 
   alias TesslaServer.{Node, Event}
@@ -16,7 +16,7 @@ defmodule TesslaServer.Node do
   @callback process_values(prepared_values) :: Node.on_process
 
   defmacro __using__(_) do
-    quote do
+    quote location: :keep do
       alias TesslaServer.{Node, Event}
       alias TesslaServer.Node.{State, History}
       alias TesslaServer.Event
@@ -40,6 +40,11 @@ defmodule TesslaServer.Node do
         end
       end
 
+      @spec handle_cast({:add_child, pid}, State.t) :: { :noreply, State.t }
+      def handle_cast({:noreply, new_child}, state) do
+        %{ state | children: [new_child | state.children]}
+      end
+
       @spec process(Event.t, State.t) :: Node.on_process
       defp process(event, state) do
         processed = %{event: event, state: state}
@@ -48,10 +53,10 @@ defmodule TesslaServer.Node do
                     |> process_values
 
         case processed do
-          {:wait, new_state} -> 
+          {:wait, new_state} ->
             IO.puts("wait")
             {:wait, new_state}
-          {:ok, map} -> 
+          {:ok, map} ->
             {:ok, update_output(map)}
         end
       end
