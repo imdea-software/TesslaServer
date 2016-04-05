@@ -71,7 +71,7 @@
         <section id="moduledoc" class="docstring">
           <p>Base Module to build new Nodes</p>
 <p>When you want to implement a new Node you should call <code class="inline">use TesslaServer.Node</code>
-Furthermore you’d have to implement the <code class="inline">process</code> function.</p>
+Furthermore you’d have to implement the <code class="inline">prepare_values</code> and <code class="inline">process_values</code> functions.</p>
 
         </section>
       
@@ -117,6 +117,12 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:process_values/1">process_values(prepared_values)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:start/1">start(%{})</a>
   </div>
   
 </div>
@@ -195,6 +201,28 @@ Furthermore you’d have to implement the <code class="inline">process</code> fu
       <div class="specs-list">
         
           <pre><code class="elixir">process_values(prepared_values) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:start/1">
+  <div class="detail-header">
+    <a href="#c:start/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">start(%{})</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">start(%{}) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
         
       </div>
     </div>

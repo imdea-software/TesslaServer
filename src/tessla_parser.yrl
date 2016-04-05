@@ -3,7 +3,8 @@ Nonterminals
   defs_tag map_tag mapentries mapentry mapkey mapvalue 
   exprtree_tag expression literalfn_tag
   namedfn_tag literal functioncall streamname typedescr type
-  typelist types generictype_tag streamdef_tag def_map_tag.
+  typelist types generictype_tag streamdef_tag def_map_tag
+  arg_mapentry arg_mapentries arg_map_tag.
 Terminals '(' ')' int string ',' '->' pos 
   intliteral stringliteral simpletype list typeascrfn defs 
   map generictype literalfn namedfn streamdef exprtree atom.
@@ -32,9 +33,16 @@ exprtree_tag    -> exprtree '(' expression ')' : '$3'.
 expression  -> functioncall : #{def => '$1'}.
 expression  -> typedescr ',' def_map_tag : '$3'.
 
-functioncall  -> namedfn_tag ',' map_tag : #{function => '$1', args => '$3'}.
-functioncall  -> namedfn_tag : #{stream => '$1'}.
+functioncall  -> namedfn_tag ',' arg_map_tag : #{function => '$1', args => '$3'}.
+functioncall  -> namedfn_tag : #{stream => list_to_atom('$1')}.
 functioncall  -> literalfn_tag : #{literal => '$1'}.
+
+arg_map_tag -> map '(' arg_mapentries ')' : '$3'.
+
+arg_mapentries -> arg_mapentry : ['$1'].
+arg_mapentries -> arg_mapentry ',' arg_mapentries : ['$1' | '$3'].
+
+arg_mapentry -> pos '(' int ')' '->' exprtree_tag : '$6'.
 
 typedescr     -> typeascrfn '(' type ')'.
 
@@ -55,7 +63,7 @@ literal       -> stringliteral '(' string ')' : extract_value('$3').
 
 
 namedfn_tag       -> namedfn '(' string  ')' : extract_value('$3').
-namedfn_tag       -> namedfn '(' atom  ')' : extract_value('$3').
+namedfn_tag       -> namedfn '(' atom  ')' : extract_atom('$3').
 
 
 streamdef_tag     -> streamdef '(' streamname ',' exprtree_tag ')' : maps:merge(#{name => '$3'}, '$5').

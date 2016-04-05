@@ -14,13 +14,16 @@ Definitions(
         Map(
           Pos(0) -> ExprTree(
             NamedFn(
-              "function_calls"
+              function_call_parameter
             ),
             Map(
               Pos(0) -> ExprTree(
                 LiteralFn(
                   StringLiteral("minimal.c:test")
                 )
+              ),
+              Pos(1) -> ExprTree(
+                LiteralFn(IntLiteral(2))
               )
             )
           )
@@ -33,15 +36,12 @@ Definitions(
         TypeAscrFn(
           GenericType(
             "Events",
-            List(SimpleType("Unit"))
+            List(SimpleType("Boolean"))
           )
         ),
         Map(
           Pos(0) -> ExprTree(
-            NamedFn("onFalse"),
-            Map(
-              Pos(0) -> ExprTree(
-                NamedFn("leq"),
+                NamedFn(leq),
                 Map(
                   Pos(0) -> ExprTree(
                     LiteralFn(IntLiteral(0))
@@ -50,8 +50,6 @@ Definitions(
                     NamedFn("test_calls")
                   )
                 )
-              )
-            )
           )
         )
       )

@@ -14,6 +14,7 @@ defmodule TesslaServer.Node do
 
   @callback prepare_values(state: State.t) :: prepared_values
   @callback process_values(prepared_values) :: Node.on_process
+  @callback start(%{}) :: String.t
 
   defmacro __using__(_) do
     quote location: :keep do
@@ -21,14 +22,20 @@ defmodule TesslaServer.Node do
       alias TesslaServer.Node.{State, History}
       alias TesslaServer.Event
 
+      import TesslaServer.Registry
+
 
       use GenServer
       @behaviour Node
 
-      @spec init(%{children: [pid], stream_name: atom, options: %{}}) :: { :ok, State.t }
+      def start(args) do
+        GenServer.start(__MODULE__, args, name: via_tuple(args[:stream_name]))
+      end
+
+      @spec init(%{stream_name: atom | String.t, options: %{}}) :: { :ok, State.t }
       def init(args) do
         { :ok,
-          %State{children: args[:children], stream_name: args[:stream_name], options: args[:options]}
+          %State{stream_name: args[:stream_name], options: args[:options]}
         }
       end
 
@@ -40,9 +47,10 @@ defmodule TesslaServer.Node do
         end
       end
 
-      @spec handle_cast({:add_child, pid}, State.t) :: { :noreply, State.t }
-      def handle_cast({:noreply, new_child}, state) do
-        %{ state | children: [new_child | state.children]}
+      @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
+      def handle_cast({:add_child, new_child}, state) do
+        # TODO: probably send latest event?
+         {:noreply, %{ state | children: [new_child | state.children]}}
       end
 
       @spec process(Event.t, State.t) :: Node.on_process
@@ -54,7 +62,6 @@ defmodule TesslaServer.Node do
 
         case processed do
           {:wait, new_state} ->
-            IO.puts("wait")
             {:wait, new_state}
           {:ok, map} ->
             {:ok, update_output(map)}
@@ -76,9 +83,14 @@ defmodule TesslaServer.Node do
       @spec handle_processed(State.t) :: {:noreply, State.t}
       defp handle_processed(state) do
         IO.puts("output of #{state.stream_name}: #{state.history.output |> hd |> inspect}")
-        Enum.each(state.children, &GenServer.cast(&1, {:process, state.history.output |> hd} ))
+        Enum.each(state.children, &GenServer.cast(via_tuple(&1), {:process, state.history.output |> hd} ))
+
         { :noreply, state }
       end
+
+      defoverridable [start: 1, update_inputs: 1, update_output: 1, handle_processed: 1,
+      handle_cast: 2, init: 1]
+
     end
   end
 end

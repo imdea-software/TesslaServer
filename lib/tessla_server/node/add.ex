@@ -14,7 +14,6 @@ defmodule TesslaServer.Node.Add do
   @spec prepare_values(State.t) :: %{values: [Event.t], state: State.t}
   def prepare_values(state) do
     summands = get_summands(state)
-    IO.puts("Summands: #{inspect(summands)}")
     %{values: summands, state: state}
   end
 
