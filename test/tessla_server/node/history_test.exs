@@ -16,5 +16,4 @@ defmodule TesslaServer.Node.HistoryTest do
     updated_history = History.update_input(history, event)
     assert(hd(updated_history.inputs[stream_name]) == event)
   end
-
 end

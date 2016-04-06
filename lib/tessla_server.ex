@@ -2,9 +2,7 @@ defmodule TesslaServer do
   use Timex
 
   alias TesslaServer.SpecProcessor
-  alias TesslaServer.Event
-  
-  import TesslaServer.Registry
+  alias TesslaServer.Source
 
   def main(_args) do
 
@@ -12,14 +10,21 @@ defmodule TesslaServer do
 
     SpecProcessor.process(spec)
 
-    event = %Event{value: "minimal.c:test(0,1,2)", stream_name: :'function_call:minimal.c:test'}
-    
-    IO.puts "sending event"
+    read
+  end
 
-    GenServer.cast(via_tuple(:test_calls), {:process, event}) 
-
-    :timer.sleep(100000) # Needed for script testing, else it will temrinate
-    # will be replaced by event loop of course
+  defp read() do
+    case IO.read(:stdio, :line) do
+      :eof -> :ok
+      {:error, reason} -> IO.puts "Error: {reason}"
+      data ->
+        data = String.rstrip data, ?\n
+        [stream_name | values] = String.split(data, " ")
+        IO.puts "values: #{inspect values}"
+        timestamp = Time.now
+        Source.distribute(stream_name, values, timestamp)
+        read()
+    end
 
   end
 end

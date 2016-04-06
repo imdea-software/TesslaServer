@@ -50,7 +50,7 @@ defmodule TesslaServer.Node do
       @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
       def handle_cast({:add_child, new_child}, state) do
         # TODO: probably send latest event?
-         {:noreply, %{ state | children: [new_child | state.children]}}
+        {:noreply, %{ state | children: [new_child | state.children]}}
       end
 
       @spec process(Event.t, State.t) :: Node.on_process
@@ -89,7 +89,7 @@ defmodule TesslaServer.Node do
       end
 
       defoverridable [start: 1, update_inputs: 1, update_output: 1, handle_processed: 1,
-      handle_cast: 2, init: 1]
+       handle_cast: 2, init: 1]
 
     end
   end

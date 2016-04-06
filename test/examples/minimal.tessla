@@ -23,7 +23,7 @@ Definitions(
                 )
               ),
               Pos(1) -> ExprTree(
-                LiteralFn(IntLiteral(2))
+                LiteralFn(IntLiteral(0))
               )
             )
           )
@@ -44,7 +44,7 @@ Definitions(
                 NamedFn(leq),
                 Map(
                   Pos(0) -> ExprTree(
-                    LiteralFn(IntLiteral(0))
+                    LiteralFn(IntLiteral(5))
                   ),
                   Pos(1) -> ExprTree(
                     NamedFn("test_calls")

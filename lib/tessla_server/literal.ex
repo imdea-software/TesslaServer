@@ -4,6 +4,8 @@ defmodule TesslaServer.Literal do
   """
 
   alias TesslaServer.Event
+  import TesslaServer.Registry, only: [via_tuple: 1]
+
   defstruct children: [], value: nil, name: nil
   @type t :: %__MODULE__{name: String.t, value: any, children: [String.t]}
 
@@ -20,7 +22,7 @@ defmodule TesslaServer.Literal do
   end
 
   @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
-  def handle_cast(l = {:add_child, new_child}, state) do
+  def handle_cast({:add_child, new_child}, state) do
     new_state = %{ state | children: [new_child | state.children]}
     event = %Event{value: state.value, stream_name: state.name}
     GenServer.cast(via_tuple(new_child), {:process, event})
@@ -30,9 +32,5 @@ defmodule TesslaServer.Literal do
 
   def start(defaults) do
     GenServer.start(__MODULE__, defaults, name: via_tuple(defaults[:name]))
-  end
-
-  defp via_tuple(stream_name) do
-    {:via, :gproc, {:n, :l, stream_name}}
   end
 end

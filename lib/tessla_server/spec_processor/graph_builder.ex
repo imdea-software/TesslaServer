@@ -33,13 +33,12 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     [stream1 | [stream2 | _]] = ancestors
 
-    args = %{stream_name: name, options: %{stream1: stream1, stream2: stream2}}
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Leq.start args
+    Leq.start options
 
-    Enum.map(ancestors, &(GenServer.cast(via_tuple(&1), {:add_child, name})))
 
-    name
+    add_to_ancestors(name, ancestors)
   end
 
   defp build_node(%{def: %{function: :function_call_parameter, args: args}}, name) do
@@ -58,6 +57,11 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   defp build_node(%{def: %{stream: stream_name}}, name), do: stream_name
 
+  defp add_to_ancestors(child, ancestors) do
+    Enum.map(ancestors, &(GenServer.cast(via_tuple(&1), {:add_child, child})))
+    child
+  end
+
   defp unique_name do
     System.unique_integer |> Integer.to_string
   end
@@ -72,7 +76,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     Enum.each(spec, fn {key, value} ->
       references = get_references(value)
-      IO.puts("refs for #{inspect key}:  #{inspect references}")
+      #IO.puts("refs for #{inspect key}:  #{inspect references}")
       Enum.each(references, fn ref ->
         :digraph.add_edge(g, key, ref)
       end)
