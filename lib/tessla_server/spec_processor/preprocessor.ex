@@ -7,7 +7,7 @@ defmodule TesslaServer.SpecProcessor.Preprocessor do
 
   @spec process(String.t) :: String.t
   def process(spec) do
-    spec 
+    spec
       |> String.downcase
 
   end

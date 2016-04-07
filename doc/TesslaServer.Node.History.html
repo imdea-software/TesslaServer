@@ -121,6 +121,15 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#get_latest_output/1">get_latest_output(history)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event</code> in the output of a History</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#update_input/2">update_input(history, new_event)</a>
   </div>
   
@@ -220,6 +229,29 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
   
   <section class="docstring">
     <p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code></p>
+
+  </section>
+</div>
+<div class="detail" id="get_latest_output/1">
+  <div class="detail-header">
+    <a href="#get_latest_output/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_latest_output(history)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_latest_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns the latest <code class="inline">Event</code> in the output of a History</p>
 
   </section>
 </div>

@@ -7,7 +7,8 @@ defmodule TesslaServer.SpecProcessor.Parser do
     # Enum.each(tokens, &(IO.puts(inspect(&1))))
     case :tessla_parser.parse tokens do
       {:ok, parsed } -> parsed
-      {:error, {line, _, reason}} -> raise("Invalid spec at line #{inspect line}, reason: #{inspect reason}" )
+      {:error, {line, _, reason}} ->
+        raise("Invalid spec at line #{inspect line}, reason: #{inspect reason}" )
     end
   end
 end

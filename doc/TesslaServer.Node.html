@@ -91,6 +91,12 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#t:name/0">name()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#t:on_process/0">on_process()</a>
   </div>
   
@@ -100,6 +106,37 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 
 
           
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_history/1">get_history(name)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Gets the <code class="inline">State</code> of the <code class="inline">Node</code> that is registered under <code class="inline">name</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_latest_output/1">get_latest_output(name)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_event/2">send_event(name, event)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">name</code> to process it</p>
+</div>
+  
+</div>
+
+  </div>
+
 
           
 
@@ -142,7 +179,11 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
             Types
           </h1>
           <div class="types-list">
-            <div id="t:on_process/0" class="type-detail">
+            <div id="t:name/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:name/0">name</a> :: atom | <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+  
+</div>
+<div id="t:on_process/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:on_process/0">on_process</a> ::
   {:wait, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>} |
   {:ok, %{event: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, state: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}}</code></pre>
@@ -153,6 +194,84 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
         </section>
       
 
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="get_history/1">
+  <div class="detail-header">
+    <a href="#get_history/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_history(name)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_history(<a href="#t:name/0">name</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Gets the <code class="inline">State</code> of the <code class="inline">Node</code> that is registered under <code class="inline">name</code></p>
+
+  </section>
+</div>
+<div class="detail" id="get_latest_output/1">
+  <div class="detail-header">
+    <a href="#get_latest_output/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_latest_output(name)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_latest_output(<a href="#t:name/0">name</a>) :: any</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="send_event/2">
+  <div class="detail-header">
+    <a href="#send_event/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_event(name, event)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">send_event(<a href="#t:name/0">name</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">name</code> to process it</p>
+
+  </section>
+</div>
+
+        </section>
       
 
       
@@ -222,7 +341,9 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">start(%{}) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+          <pre><code class="elixir">start(%{stream_name: atom | <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}) ::
+  atom |
+  <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
         
       </div>
     </div>

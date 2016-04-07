@@ -1,12 +1,12 @@
 defmodule TesslaServer.Node.Not do
   @moduledoc """
-  Implements a `Node` that inverts the value of a boolean stream.
+  Implements a `Node` that computes the absolute value of a stream
 
   To do so the `state.options` object has to be initialized with the key `:operand1`
   which must be an atom representing the name of the event stream that should be the base for the computation.
   """
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node
@@ -21,7 +21,7 @@ defmodule TesslaServer.Node.Not do
   def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
   def process_values(%{values: values, state: state}) do
     [op1] = values
-    value = not(op1.value)
+    value = abs op1.value
     event = History.get_latest_input state.history
     processed_event = %{event | value: value, stream_name: state.stream_name}
     {:ok, %{event: processed_event, state: state}}

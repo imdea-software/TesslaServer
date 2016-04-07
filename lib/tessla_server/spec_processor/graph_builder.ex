@@ -5,41 +5,210 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   alias TesslaServer.Literal
   alias TesslaServer.Node
-  alias TesslaServer.Node.{Leq,Add,Multiply}
   alias TesslaServer.Source.{FunctionCallParameter}
 
   import TesslaServer.Registry
 
-  @spec build(%{}) :: %{atom: pid}
+  @spec build(%{}) :: :ok
   def build(spec = %{}) do
     list = get_ordered_list spec
 
     Enum.map(list, fn key -> build_stream {key, spec[key]} end)
-    #GenServer.cast(via_tuple(name), {:add_child, :a})
+    # GenServer.cast(via_tuple(name), {:add_child, :a})
+    :ok
   end
 
   defp build_stream(all = {name, definition}) do
 
     build_node(definition, name)
 
-    #GenServer.start(name: via_tuple(name))
+    # GenServer.start(name: via_tuple(name))
   end
 
   defp build_node(definition), do: build_node(definition, unique_name)
 
   defp build_node(%{def: %{function: :leq, args: args}}, name) do
-    IO.puts("leq: #{name}, args: #{inspect args}")
     ancestors = Enum.map(args, &build_node/1)
+    IO.puts("leq: #{name}, args: #{inspect ancestors}")
 
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Leq.start options
-
+    Node.Leq.start options
 
     add_to_ancestors(name, ancestors)
   end
+
+  defp build_node(%{def: %{function: :add, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("add: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Add.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :sub, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("sub: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Sub.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :mul, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("mul: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Mul.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :div, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("div: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Div.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :geq, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("geq: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Geq.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :eq, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("eq: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Eq.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :max, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("max: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Max.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :min, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("min: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Min.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :abs, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("abs: #{name}, args: #{inspect ancestors}")
+    [stream1 | _] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1}}
+
+    Node.Abs.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :and, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("and: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.And.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :or, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("or: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Or.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :implies, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("implies: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Implies.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
+  defp build_node(%{def: %{function: :not, args: args}}, name) do
+    ancestors = Enum.map(args, &build_node/1)
+
+    IO.puts("not: #{name}, args: #{inspect ancestors}")
+    [stream1 | [stream2 | _]] = ancestors
+
+    options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
+
+    Node.Not.start options
+
+    add_to_ancestors(name, ancestors)
+  end
+
 
   defp build_node(%{def: %{function: :function_call_parameter, args: args}}, name) do
     [%{def: %{literal: function_name}}| [%{def: %{literal: param_pos}} | []]] = args
@@ -58,7 +227,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{stream: stream_name}}, name), do: stream_name
 
   defp add_to_ancestors(child, ancestors) do
-    Enum.map(ancestors, &(GenServer.cast(via_tuple(&1), {:add_child, child})))
+    Enum.each(ancestors, &(GenServer.cast(via_tuple(&1), {:add_child, child})))
     child
   end
 
@@ -76,7 +245,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     Enum.each(spec, fn {key, value} ->
       references = get_references(value)
-      #IO.puts("refs for #{inspect key}:  #{inspect references}")
+      # IO.puts("refs for #{inspect key}:  #{inspect references}")
       Enum.each(references, fn ref ->
         :digraph.add_edge(g, key, ref)
       end)
@@ -89,9 +258,13 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
     name
   end
   defp get_references(%{def: %{args: definitions}}) do
-    Enum.map(definitions, fn definition ->
+    definitions
+    |> Enum.map(fn definition ->
       get_references definition
-    end) |> Enum.reject(&is_nil/1) |> Enum.uniq |> List.flatten
+    end)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.uniq
+    |> List.flatten
   end
   defp get_references(%{def: %{}}), do: nil
 

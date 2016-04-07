@@ -6,7 +6,7 @@ defmodule TesslaServer.Node.Implies do
   which must be atoms representing the names of the event streams that should be used.
   """
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

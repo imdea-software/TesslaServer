@@ -4,8 +4,7 @@ defmodule TesslaServer.Node.Mul do
   To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
   which must be atoms representing the names of the event streams that should be multiplied.
   """
-  
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

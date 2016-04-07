@@ -67,7 +67,7 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Implements a <code class="inline">Node</code> that inverts the value of a boolean stream.</p>
+          <p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
 <p>To do so the <code class="inline">state.options</code> object has to be initialized with the key <code class="inline">:operand1</code>
 which must be an atom representing the name of the event stream that should be the base for the computation.</p>
 
@@ -191,6 +191,15 @@ which must be an atom representing the name of the event stream that should be t
     <span class="signature">start(args)</span>
       
   </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">start(%{}) :: <a href="TesslaServer.Node.html#t:name/0">TesslaServer.Node.name</a></code></pre>
+        
+      </div>
+    </div>
   
   <section class="docstring">
     <p>Callback implementation for <a href="TesslaServer.Node.html#c:start/1"><code class="inline">TesslaServer.Node.start/1</code></a>.</p>

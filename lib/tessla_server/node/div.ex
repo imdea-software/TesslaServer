@@ -6,7 +6,7 @@ defmodule TesslaServer.Node.Div do
   which must be atoms representing the names of the event streams that should be divided.
   """
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

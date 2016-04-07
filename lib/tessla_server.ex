@@ -1,4 +1,7 @@
 defmodule TesslaServer do
+  @moduledoc """
+  Entry Point for `TesslaServer`
+  """
   use Timex
 
   alias TesslaServer.SpecProcessor
@@ -13,7 +16,7 @@ defmodule TesslaServer do
     read
   end
 
-  defp read() do
+  defp read do
     case IO.read(:stdio, :line) do
       :eof -> :ok
       {:error, reason} -> IO.puts "Error: {reason}"

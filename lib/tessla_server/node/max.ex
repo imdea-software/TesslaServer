@@ -6,7 +6,7 @@ defmodule TesslaServer.Node.Max do
   which must be atoms representing the names of the event streams that should be compared.
   """
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

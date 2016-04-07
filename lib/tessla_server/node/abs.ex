@@ -6,7 +6,7 @@ defmodule TesslaServer.Node.Abs do
   which must be an atom representing the name of the event stream that should be the base for the computation.
   """
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

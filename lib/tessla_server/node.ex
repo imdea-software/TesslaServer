@@ -7,14 +7,38 @@ defmodule TesslaServer.Node do
   """
 
   alias TesslaServer.{Node, Event}
-  alias TesslaServer.Node.{History,State}
+  alias TesslaServer.Node.{History, State}
+
+  import TesslaServer.Registry
 
   @type on_process :: {:wait, State.t} | {:ok, %{ event: Event.t, state: State.t }}
   @typep prepared_values :: %{ values: [Event.t], state: State.t }
+  @type name :: atom | String.t
 
   @callback prepare_values(state: State.t) :: prepared_values
   @callback process_values(prepared_values) :: Node.on_process
-  @callback start(%{}) :: String.t
+  @callback start(%{stream_name: atom | String.t}) :: atom | String.t
+
+  @doc """
+  Sends a new `Event` to the `Node` that is registered with `name` to process it
+  """
+  @spec send_event(name, Event.t) :: :ok
+  def send_event(name, event) do
+    GenServer.cast(via_tuple(name), {:process, event})
+  end
+
+  @doc """
+  Gets the `State` of the `Node` that is registered under `name`
+  """
+  @spec get_history(name) :: State.t
+  def get_history(name) do
+    GenServer.call(via_tuple(name), :get_history)
+  end
+
+  @spec get_latest_output(name) :: any
+  def get_latest_output(name) do
+    GenServer.call(via_tuple(name), :get_latest_output)
+  end
 
   defmacro __using__(_) do
     quote location: :keep do
@@ -28,8 +52,11 @@ defmodule TesslaServer.Node do
       use GenServer
       @behaviour Node
 
+      @spec start(%{}) :: Node.name
       def start(args) do
-        GenServer.start(__MODULE__, args, name: via_tuple(args[:stream_name]))
+        name = args[:stream_name]
+        GenServer.start(__MODULE__, args, name: via_tuple(name))
+        name
       end
 
       @spec init(%{stream_name: atom | String.t, options: %{}}) :: { :ok, State.t }
@@ -37,6 +64,17 @@ defmodule TesslaServer.Node do
         { :ok,
           %State{stream_name: args[:stream_name], options: args[:options]}
         }
+      end
+
+      @spec handle_call(:get_history, pid, State.t) :: {:reply}
+      def handle_call(:get_history, _,state) do
+        {:reply, state.history, state}
+      end
+
+
+      @spec handle_call(:get_latest_output, pid,State.t) :: {:reply, any, State.t}
+      def handle_call(:get_latest_output, _,state) do
+        {:reply, History.get_latest_output(state.history), state}
       end
 
       @spec handle_cast({:process, Event.t}, State.t) :: { :noreply, State.t }
@@ -89,7 +127,7 @@ defmodule TesslaServer.Node do
       end
 
       defoverridable [start: 1, update_inputs: 1, update_output: 1, handle_processed: 1,
-       handle_cast: 2, init: 1]
+       handle_cast: 2, handle_call: 3, init: 1]
 
     end
   end

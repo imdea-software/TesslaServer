@@ -8,7 +8,6 @@ defmodule TesslaServer.Node.History do
 
   defstruct inputs: %{}, output: []
   @type t :: %__MODULE__{inputs: input_streams, output: event_stream}
-  
   @typep input_streams :: %{atom => event_stream}
   @typep event_stream :: [Event.t]
 
@@ -51,6 +50,17 @@ defmodule TesslaServer.Node.History do
   """
   @spec get_latest_input(History.t) :: Event.t
   def get_latest_input(history) do
-    Map.values(history.inputs) |> Enum.map(&(hd &1)) |> Enum.max_by(&(&1.timestamp))
+    history.inputs
+    |> Map.values
+    |> Enum.map(&(hd &1))
+    |> Enum.max_by(&(&1.timestamp))
+  end
+
+  @doc """
+  Returns the latest `Event` in the output of a History
+  """
+  @spec get_latest_output(History.t) :: Event.t
+  def get_latest_output(history) do
+    hd history.output
   end
 end

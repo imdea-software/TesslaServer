@@ -8,7 +8,7 @@ defmodule TesslaServer.Source.FunctionCallParameter do
 
   use Node
 
-  alias TesslaServer.{Node,Event}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   def start(args) do
@@ -35,7 +35,8 @@ defmodule TesslaServer.Source.FunctionCallParameter do
   def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
   def process_values(%{values: values, state: state}) do
     event = hd values
-    {value, _} =  Enum.at(event.value, state.options[:param_pos])
+    {value, _} =  event.value
+                  |> Enum.at(state.options[:param_pos])
                   |> Integer.parse # TODO somehow process based on needed type
 
     event = History.get_latest_input(state.history)
