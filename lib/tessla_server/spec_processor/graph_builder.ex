@@ -14,15 +14,11 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
     list = get_ordered_list spec
 
     Enum.map(list, fn key -> build_stream {key, spec[key]} end)
-    # GenServer.cast(via_tuple(name), {:add_child, :a})
     :ok
   end
 
   defp build_stream(all = {name, definition}) do
-
     build_node(definition, name)
-
-    # GenServer.start(name: via_tuple(name))
   end
 
   defp build_node(definition), do: build_node(definition, unique_name)
@@ -227,7 +223,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{stream: stream_name}}, name), do: stream_name
 
   defp add_to_ancestors(child, ancestors) do
-    Enum.each(ancestors, &(GenServer.cast(via_tuple(&1), {:add_child, child})))
+    Enum.each(ancestors, &(Node.add_child(&1, child)))
     child
   end
 

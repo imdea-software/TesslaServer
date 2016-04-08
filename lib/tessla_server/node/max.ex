@@ -20,7 +20,7 @@ defmodule TesslaServer.Node.Max do
   @spec process_values(%{ values: [Event.t], state: State.t }) :: Node.on_process
   def process_values(%{values: values, state: state}) when length(values) < 2, do: {:wait, state}
   def process_values(%{values: values, state: state}) do
-    value = Enum.max_by values, fn event -> event.value end
+    value = Enum.max_by(values, &(&1.value)).value
     event = History.get_latest_input(state.history)
     processed_event = %{event | value: value, stream_name: state.stream_name}
     {:ok, %{event: processed_event, state: state}}

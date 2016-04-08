@@ -35,9 +35,20 @@ defmodule TesslaServer.Node do
     GenServer.call(via_tuple(name), :get_history)
   end
 
+  @doc """
+  Returns the latest output of the named Node
+  """
   @spec get_latest_output(name) :: any
   def get_latest_output(name) do
     GenServer.call(via_tuple(name), :get_latest_output)
+  end
+
+  @doc """
+  Adds a named child to the named `Node`
+  """
+  @spec add_child(name, name) :: :ok
+  def add_child(parent, child) do
+    GenServer.cast(via_tuple(parent), {:add_child, child})
   end
 
   defmacro __using__(_) do
@@ -70,7 +81,6 @@ defmodule TesslaServer.Node do
       def handle_call(:get_history, _,state) do
         {:reply, state.history, state}
       end
-
 
       @spec handle_call(:get_latest_output, pid,State.t) :: {:reply, any, State.t}
       def handle_call(:get_latest_output, _,state) do

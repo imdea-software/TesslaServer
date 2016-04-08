@@ -21,7 +21,7 @@ defmodule TesslaServer.Node.Not do
   def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
   def process_values(%{values: values, state: state}) do
     [op1] = values
-    value = abs op1.value
+    value = not op1.value
     event = History.get_latest_input state.history
     processed_event = %{event | value: value, stream_name: state.stream_name}
     {:ok, %{event: processed_event, state: state}}
