@@ -98,6 +98,7 @@ defmodule TesslaServer.Node do
       @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
       def handle_cast({:add_child, new_child}, state) do
         # TODO: probably send latest event?
+
         {:noreply, %{ state | children: [new_child | state.children]}}
       end
 
@@ -131,7 +132,9 @@ defmodule TesslaServer.Node do
       @spec handle_processed(State.t) :: {:noreply, State.t}
       defp handle_processed(state) do
         IO.puts("output of #{state.stream_name}: #{state.history.output |> hd |> inspect}")
-        Enum.each(state.children, &GenServer.cast(via_tuple(&1), {:process, state.history.output |> hd} ))
+        new_event = state.history.output |> hd
+
+        Enum.each(state.children, &Node.send_event(&1, new_event))
 
         { :noreply, state }
       end

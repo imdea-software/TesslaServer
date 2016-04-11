@@ -5,7 +5,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   alias TesslaServer.Literal
   alias TesslaServer.Node
-  alias TesslaServer.Source.{FunctionCallParameter}
+  alias TesslaServer.Source
 
   @spec build(%{}) :: :ok
   def build(spec = %{}) do
@@ -210,7 +210,15 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     IO.puts("function_call_parameter: #{name}, function name: #{inspect function_name}, param_pos: #{param_pos}")
     options = %{stream_name: name, options: %{function_name: function_name, param_pos: param_pos}}
-    FunctionCallParameter.start options
+    Source.FunctionCallParameter.start options
+  end
+
+  defp build_node(%{def: %{function: :variable_update, args: args}}, name) do
+    [%{def: %{literal: variable_name}}] = args
+
+    IO.puts("variable_update: #{name}, variable name: #{inspect variable_name}")
+    options = %{stream_name: name, options: %{variable_name: variable_name}}
+    Source.VariableUpdate.start options
   end
 
   defp build_node(%{def: %{literal: value}}, name) do

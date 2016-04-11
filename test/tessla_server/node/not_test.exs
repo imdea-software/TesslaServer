@@ -29,7 +29,7 @@ defmodule TesslaServer.Node.NotTest do
 
     assert_receive({_, {:process, event}})
 
-    assert(!event.value)
+    refute(event.value)
 
     Node.send_event(processor, event2)
 

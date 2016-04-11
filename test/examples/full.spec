@@ -1,4 +1,4 @@
-define writes: Events<Int> := variable_updates("main.c:write_ptr")
+define writes: Events<Int> := variable_update("main.c:write_ptr")
 define processed: Events<Int> := function_call_parameter("main.c:process", 0)
 
 define bufLevel: Signal<Int> := diff(eventCount(writes), eventCount(processed))

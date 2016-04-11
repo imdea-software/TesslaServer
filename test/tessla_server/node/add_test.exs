@@ -28,7 +28,7 @@ defmodule TesslaServer.Node.AddTest do
 
     Node.send_event(adder, event1)
     Node.send_event(adder, event2)
-    
+
     assert_receive({_, {:process, event}})
 
     assert(event.value == (event1.value + event2.value))

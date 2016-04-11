@@ -1,6 +1,6 @@
-defmodule TesslaServer.Source.FunctionCallParameter do
+defmodule TesslaServer.Source.VariableUpdate do
   @moduledoc """
-  Implements a `Source` that emits a parameter value for a called function
+  Implements a `Source` that emits the most recent value for a variable
 
   """
 
@@ -17,7 +17,7 @@ defmodule TesslaServer.Source.FunctionCallParameter do
 
   @spec init(%{stream_name: atom | String.t, options: %{}}) :: { :ok, State.t }
   def init(args) do
-    channel = "function_call:#{args[:options][:function_name]}"
+    channel = "variable_update:#{args[:options][:variable_name]}"
     :gproc.reg({:p, :l, channel})
     { :ok,
       %State{stream_name: args[:stream_name], options: args[:options]}
@@ -26,16 +26,15 @@ defmodule TesslaServer.Source.FunctionCallParameter do
 
   @spec prepare_values(State.t) :: %{values: [Event.t], state: State.t}
   def prepare_values(state) do
-    call = History.get_latest_input state.history
-    %{values: [call], state: state}
+    value = History.get_latest_input state.history
+    %{values: [value], state: state}
   end
 
   @spec process_values(%{ values: [Event.t], state: State.t }) :: Node.on_process
   def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
-  def process_values(%{values: values, state: state}) do
-    event = hd values
+  def process_values(%{values: [event], state: state}) do
     {value, _} =  event.value
-                  |> Enum.at(state.options[:param_pos])
+                  |> hd
                   |> Integer.parse # TODO somehow process based on needed type
 
     event = History.get_latest_input(state.history)

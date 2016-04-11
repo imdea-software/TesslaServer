@@ -31,12 +31,12 @@ defmodule TesslaServer.Node.ImpliesTest do
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == false)
+    refute(event.value)
 
     Node.send_event(comparer, event3)
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == true)
+    assert(event.value)
   end
 end
