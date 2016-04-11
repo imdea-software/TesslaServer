@@ -9,6 +9,6 @@ defmodule TesslaServer.SpecProcessor.Preprocessor do
   def process(spec) do
     spec
       |> String.downcase
-
+      |> String.replace(~r/,\s*sourceloc\(\s*\(\s*[0-9]+,[0-9]+\s-\s[0-9]+,[0-9]+\s*\)\s*\)/, " ")
   end
 end

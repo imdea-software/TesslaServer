@@ -3,7 +3,7 @@ defmodule TesslaServer.Literal do
   Represents a Literal
   """
 
-  alias TesslaServer.Event
+  alias TesslaServer.{Event, Node}
   import TesslaServer.Registry, only: [via_tuple: 1]
 
   defstruct children: [], value: nil, name: nil
@@ -17,7 +17,7 @@ defmodule TesslaServer.Literal do
 
   def handle_cast(:update, state) do
     literal = %Event{value: state.value, stream_name: state.name}
-    Enum.each(state.children, &GenServer.cast(via_tuple(&1), {:process, literal} ))
+    Enum.each(state.children, &Node.send_event(&1, literal))
     { :noreply, state }
   end
 
@@ -25,7 +25,7 @@ defmodule TesslaServer.Literal do
   def handle_cast({:add_child, new_child}, state) do
     new_state = %{ state | children: [new_child | state.children]}
     event = %Event{value: state.value, stream_name: state.name}
-    GenServer.cast(via_tuple(new_child), {:process, event})
+    Node.send_event(new_child, event)
     {:noreply, new_state}
   end
 

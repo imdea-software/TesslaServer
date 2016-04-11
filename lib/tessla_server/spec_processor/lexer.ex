@@ -4,6 +4,7 @@ defmodule TesslaServer.SpecProcessor.Lexer do
   """
 
   def lex(spec) do
+    # IO.puts spec
     {_, tokens, _} = spec
                       |> String.to_char_list
                       |> :tessla_lexer.string

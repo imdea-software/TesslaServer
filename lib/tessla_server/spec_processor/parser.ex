@@ -4,7 +4,7 @@ defmodule TesslaServer.SpecProcessor.Parser do
   """
 
   def parse(tokens) do
-    # Enum.each(tokens, &(IO.puts(inspect(&1))))
+    # Enum.each tokens, &(IO.puts inspect &1)
     case :tessla_parser.parse tokens do
       {:ok, parsed } -> parsed
       {:error, {line, _, reason}} ->

@@ -10,7 +10,7 @@ Terminals '(' ')' int string ',' '->' pos
   map generictype literalfn namedfn streamdef exprtree atom.
 
 defs_tag ->
-  defs '(' map_tag ')' : '$3' .
+  defs '(' map_tag ',' map_tag ')' : '$3' .
 
 map_tag          -> map '(' ')' : #{}.
 map_tag          -> map '(' mapentries ')' : '$3'.
@@ -22,6 +22,7 @@ mapentry    -> mapkey '->' mapvalue : #{'$1'=> '$3'}.
 
 mapkey      -> pos '(' int ')' : extract_value('$3').
 mapkey      -> string : extract_atom('$1').
+mapkey      -> atom : extract_atom('$1').
 
 mapvalue    -> streamdef_tag : '$1'.
 mapvalue    -> exprtree_tag : '$1'.
@@ -34,8 +35,8 @@ expression  -> functioncall : #{def => '$1'}.
 expression  -> typedescr ',' def_map_tag : '$3'.
 
 functioncall  -> namedfn_tag ',' arg_map_tag : #{function => '$1', args => '$3'}.
-functioncall  -> namedfn_tag : #{stream => list_to_atom('$1')}.
-functioncall  -> literalfn_tag : #{literal => '$1'}.
+functioncall  -> namedfn_tag ',' map_tag : #{stream => '$1'}.
+functioncall  -> literalfn_tag ',' map_tag : #{literal => '$1'}.
 
 arg_map_tag -> map '(' arg_mapentries ')' : '$3'.
 
@@ -48,8 +49,10 @@ typedescr     -> typeascrfn '(' type ')'.
 
 type          -> generictype_tag.
 type          -> simpletype '(' string ')'.
+type          -> simpletype '(' atom ')'.
 
 generictype_tag   -> generictype '(' string ',' typelist ')'.
+generictype_tag   -> generictype '(' atom ',' typelist ')'.
 
 typelist    -> list '(' types ')'.
 
@@ -60,6 +63,7 @@ literalfn_tag     -> literalfn '(' literal ')' : '$3'.
 
 literal       -> intliteral '(' int ')' : extract_value('$3').
 literal       -> stringliteral '(' string ')' : extract_value('$3').
+literal       -> stringliteral '(' atom ')' : extract_value('$3').
 
 
 namedfn_tag       -> namedfn '(' string  ')' : extract_value('$3').
@@ -69,6 +73,7 @@ namedfn_tag       -> namedfn '(' atom  ')' : extract_atom('$3').
 streamdef_tag     -> streamdef '(' streamname ',' exprtree_tag ')' : maps:merge(#{name => '$3'}, '$5').
 
 streamname    -> string : extract_atom('$1') .
+streamname    -> atom : extract_atom('$1') .
 
 Erlang code.
 

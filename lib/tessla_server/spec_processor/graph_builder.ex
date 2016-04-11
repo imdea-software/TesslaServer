@@ -7,12 +7,11 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   alias TesslaServer.Node
   alias TesslaServer.Source.{FunctionCallParameter}
 
-  import TesslaServer.Registry
-
   @spec build(%{}) :: :ok
   def build(spec = %{}) do
     list = get_ordered_list spec
 
+    IO.puts inspect list
     Enum.map(list, fn key -> build_stream {key, spec[key]} end)
     :ok
   end
@@ -262,6 +261,6 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
     |> Enum.uniq
     |> List.flatten
   end
-  defp get_references(%{def: %{}}), do: nil
+  defp get_references(%{def: %{}}), do: []
 
 end
