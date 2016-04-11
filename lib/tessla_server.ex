@@ -7,13 +7,19 @@ defmodule TesslaServer do
   alias TesslaServer.SpecProcessor
   alias TesslaServer.Source
 
-  def main(_args) do
+  def main(args) do
+    args
+      |> parse_args
+      |> process
+  end
 
-    {:ok, spec} = File.read("test/examples/minimal.tessla")
+  defp process({options, file}) do
+    {:ok, spec} = File.read(file)
 
     SpecProcessor.process(spec)
 
     read
+
   end
 
   defp read do
@@ -29,5 +35,13 @@ defmodule TesslaServer do
         read()
     end
 
+  end
+
+  defp parse_args(argv) do
+    {options, [file],  _} = OptionParser.parse(argv,
+      switches: [debug: :boolean, spec: :string]
+    )
+    IO.puts inspect options
+    {options, file}
   end
 end
