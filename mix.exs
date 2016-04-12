@@ -19,7 +19,8 @@ defmodule TesslaServer.Mixfile do
       applications: [
         :logger,
         :timex,
-        :gproc
+        :gproc,
+        :table_rex
       ]
   ]
   end
@@ -41,7 +42,8 @@ defmodule TesslaServer.Mixfile do
       {:ex_doc, "~> 0.11", only: :dev},
       {:gproc, "~> 0.5"},
       {:dogma, "~> 0.1", only: :dev},
-      {:credo, "~> 0.3", only: [:dev, :test]}
+      {:credo, "~> 0.3", only: [:dev, :test]},
+      {:table_rex, "~> 0.8.0"}
     ]
   end
 

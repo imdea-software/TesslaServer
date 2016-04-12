@@ -13,5 +13,6 @@
   "mimerl": {:hex, :mimerl, "1.0.2"},
   "poison": {:hex, :poison, "2.1.0"},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0"},
+  "table_rex": {:hex, :table_rex, "0.8.0"},
   "timex": {:hex, :timex, "2.1.4"},
   "tzdata": {:hex, :tzdata, "0.1.201603"}}

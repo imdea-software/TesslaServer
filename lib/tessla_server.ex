@@ -39,7 +39,7 @@ defmodule TesslaServer do
 
   defp parse_args(argv) do
     {options, [file],  _} = OptionParser.parse(argv,
-      switches: [debug: :boolean, spec: :string]
+      switches: [debug: :boolean]
     )
     IO.puts inspect options
     {options, file}

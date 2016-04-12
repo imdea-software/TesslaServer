@@ -131,12 +131,22 @@ defmodule TesslaServer.Node do
 
       @spec handle_processed(State.t) :: {:noreply, State.t}
       defp handle_processed(state) do
-        IO.puts("output of #{state.stream_name}: #{state.history.output |> hd |> inspect}")
-        new_event = state.history.output |> hd
+        event = state.history.output |> hd
+        value = event.value
+        timestamp = event.timestamp
 
-        Enum.each(state.children, &Node.send_event(&1, new_event))
+        format(state.stream_name, timestamp, value)
+        |> IO.puts
+
+
+        Enum.each(state.children, &Node.send_event(&1, event))
 
         { :noreply, state }
+      end
+
+      defp format(name, timestamp, value) do
+        header = ~w(stream time value)
+        TableRex.quick_render!([[name, inspect(timestamp), value]], header)
       end
 
       defoverridable [start: 1, update_inputs: 1, update_output: 1, handle_processed: 1,
