@@ -112,6 +112,15 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
+    <a href="#add_child/2">add_child(parent, child)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Adds a named child to the named <code class="inline">Node</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#get_history/1">get_history(name)</a>
   </div>
   
@@ -123,6 +132,9 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
   <div class="summary-signature">
     <a href="#get_latest_output/1">get_latest_output(name)</a>
   </div>
+  
+    <div class="summary-synopsis"><p>Returns the latest output of the named Node</p>
+</div>
   
 </div>
 <div class="summary-row">
@@ -202,7 +214,30 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_history/1">
+          <div class="detail" id="add_child/2">
+  <div class="detail-header">
+    <a href="#add_child/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">add_child(parent, child)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">add_child(<a href="#t:name/0">name</a>, <a href="#t:name/0">name</a>) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Adds a named child to the named <code class="inline">Node</code></p>
+
+  </section>
+</div>
+<div class="detail" id="get_history/1">
   <div class="detail-header">
     <a href="#get_history/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
@@ -244,7 +279,8 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     </div>
   
   <section class="docstring">
-    
+    <p>Returns the latest output of the named Node</p>
+
   </section>
 </div>
 <div class="detail" id="send_event/2">

@@ -276,6 +276,12 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
   <section class="docstring">
     <p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">event</code> to the input stream specified by the <code class="inline">new_event</code></p>
 <p>Returns the new <code class="inline">History</code></p>
+<p>iex&gt; history = %History{}
+iex&gt; timestamp = Timex.Time.zero
+iex&gt; event = %Event{stream_name: :test, value: :value, timestamp: timestamp}
+iex&gt; updated = History.update_input history, event
+iex&gt; updated.inputs[:test] |&gt; hd
+%TesslaServer.Event{stream_name: :test, timestamp: {0, 0, 0}, value: :value}</p>
 
   </section>
 </div>

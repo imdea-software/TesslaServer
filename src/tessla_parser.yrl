@@ -1,6 +1,6 @@
 Rootsymbol defs_tag.
-Nonterminals 
-  defs_tag map_tag mapentries mapentry mapkey mapvalue 
+Nonterminals
+  defs_tag map_tag mapentries mapentry mapkey mapvalue
   exprtree_tag expression literalfn_tag
   namedfn_tag literal functioncall streamname typedescr type
   typelist types generictype_tag streamdef_tag def_map_tag

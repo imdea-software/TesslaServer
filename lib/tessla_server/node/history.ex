@@ -15,10 +15,20 @@ defmodule TesslaServer.Node.History do
   Updates the given `history` to prepend the given `event` to the input stream specified by the `new_event`
 
   Returns the new `History`
+
+  iex> history = %History{}
+  iex> timestamp = Timex.Time.zero
+  iex> event = %Event{stream_name: :test, value: :value, timestamp: timestamp}
+  iex> updated = History.update_input history, event
+  iex> updated.inputs[:test] |> hd
+  %TesslaServer.Event{stream_name: :test, timestamp: {0, 0, 0}, value: :value}
   """
   @spec update_input(History.t, Event.t) :: History.t
   def update_input(history, new_event) do
-    updated_stream = [new_event | history.inputs[new_event.stream_name]]
+    updated_stream = case stream = history.inputs[new_event.stream_name] do
+      nil -> [new_event]
+      _ -> [new_event | stream]
+    end
     put_in(history.inputs[new_event.stream_name], updated_stream)
   end
 
