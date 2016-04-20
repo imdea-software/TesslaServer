@@ -14,6 +14,9 @@ defmodule TesslaServer.EventQueue do
   end
 
   def process_external(event) do
+    GenServer.cast(tick_tuple, {:tick, event.timestamp})
+
+    # TODO Maybe sleep here
     add_event event
     Source.distribute event
   end
@@ -23,11 +26,13 @@ defmodule TesslaServer.EventQueue do
     if (last_processed_time > event.timestamp) do
       raise "External Event received with smaller timestamp than a previous."
     end
-    
+
     Agent.update(__MODULE__, fn event_queue ->
       %{event_queue |
        events: [event | event_queue.events],
        last_processed_time: event.timestamp }
     end)
   end
+
+  def tick_tuple, do: {:via, :gproc, {:p, :l, :tick}}
 end
