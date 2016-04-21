@@ -11,20 +11,17 @@ defmodule TesslaServer.Node.Abs do
 
   use Node
 
-  @spec prepare_values(State.t) :: %{values: [Event.t], state: State.t}
   def prepare_values(state) do
-    operands = get_operands(state)
-    %{values: operands, state: state}
+    {:ok, get_operands(state)}
   end
 
-  @spec process_values(%{ values: [Event.t], state: State.t }) :: Node.on_process
-  def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
-  def process_values(%{values: values, state: state}) do
-    [op1] = values
+  def process_values(state, events) when length(events) < 1, do: {:ok, :wait}
+  def process_values(state, events) do
+    [op1] = events
     value = abs op1.value
-    event = History.get_latest_input state.history
+    event = op1
     processed_event = %{event | value: value, stream_name: state.stream_name}
-    {:ok, %{event: processed_event, state: state}}
+    {:ok, processed_event}
   end
 
 

@@ -24,21 +24,18 @@ defmodule TesslaServer.Source.VariableUpdate do
     }
   end
 
-  @spec prepare_values(State.t) :: %{values: [Event.t], state: State.t}
   def prepare_values(state) do
-    value = History.get_latest_input state.history
-    %{values: [value], state: state}
+    event = History.get_latest_input state.history
+    {:ok, [event]}
   end
 
-  @spec process_values(%{ values: [Event.t], state: State.t }) :: Node.on_process
-  def process_values(%{values: values, state: state}) when length(values) < 1, do: {:wait, state}
-  def process_values(%{values: [event], state: state}) do
+  def process_values(state, events) when length(events) < 1, do: {:ok, :wait}
+  def process_values(state, [event]) do
     {value, _} =  event.value
                   |> hd
                   |> Integer.parse # TODO somehow process based on needed type
 
-    event = History.get_latest_input(state.history)
     processed_event = %{event | value: value, stream_name: state.stream_name}
-    {:ok, %{event: processed_event, state: state}}
+    {:ok, processed_event}
   end
 end

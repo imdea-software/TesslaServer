@@ -11,20 +11,17 @@ defmodule TesslaServer.Node.Eq do
 
   use Node
 
-  @spec prepare_values(State.t) :: %{values: [Event.t], state: State.t}
   def prepare_values(state) do
-    operands = get_operands(state)
-    %{values: operands, state: state}
+    {:ok, get_operands(state)}
   end
 
-  @spec process_values(%{ values: [Event.t], state: State.t }) :: Node.on_process
-  def process_values(%{values: values, state: state}) when length(values) < 2, do: {:wait, state}
-  def process_values(%{values: values, state: state}) do
-    [op1 | [op2]] = values
+  def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
+  def process_values(state, events) do
+    [op1 | [op2]] = events
     value = op1.value == op2.value
-    event = History.get_latest_input(state.history)
-    processed_event = %{event | value: value, stream_name: state.stream_name}
-    {:ok, %{event: processed_event, state: state}}
+    latest_event = Enum.max_by(events, &(&1.timestamp))
+    processed_event = %{latest_event | value: value, stream_name: state.stream_name}
+    {:ok, processed_event}
   end
 
 

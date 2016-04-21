@@ -11,13 +11,14 @@ defmodule TesslaServer.Node do
 
   import TesslaServer.Registry
 
-  @type on_process :: {:wait, State.t} | {:ok, %{ event: Event.t, state: State.t }}
-  @typep prepared_values :: %{ values: [Event.t], state: State.t }
+  @type on_process :: {:ok, :wait} | {:ok, Event.t}
   @type name :: atom | String.t
 
-  @callback prepare_values(state: State.t) :: prepared_values
-  @callback process_values(prepared_values) :: Node.on_process
+  @callback prepare_values(state: State.t) :: {:ok, [Event.t]}
+  @callback process_values(State.t, [Event.t]) :: Node.on_process
   @callback start(%{stream_name: atom | String.t}) :: atom | String.t
+  # TODO Update inputs
+  # TODO Update output
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `name` to process it
@@ -91,7 +92,7 @@ defmodule TesslaServer.Node do
       def handle_cast({:process, event}, state) do
         case process(event, state) do
           {:wait, new_state} -> {:noreply, new_state}
-          {:ok, new_state} -> handle_processed(new_state)
+          {:ok, new_state} -> handle_new_output(new_state)
         end
       end
 
@@ -102,35 +103,29 @@ defmodule TesslaServer.Node do
         {:noreply, %{ state | children: [new_child | state.children]}}
       end
 
-      @spec process(Event.t, State.t) :: Node.on_process
+      @spec process(Event.t, State.t) :: State.t
       defp process(event, state) do
-        processed = %{event: event, state: state}
-                    |> update_inputs
-                    |> prepare_values
-                    |> process_values
-
-        case processed do
-          {:wait, new_state} ->
-            {:wait, new_state}
-          {:ok, map} ->
-            {:ok, update_output(map)}
-        end
+          with {:ok, updated_input} <- update_inputs(state, event),
+               {:ok, prepared_values} <- prepare_values(updated_input),
+               {:ok, processed} <- process_values(updated_input, prepared_values),
+            do: update_output(updated_input, processed)
       end
 
-      @spec update_inputs(%{event: Event.t, state: State.t}) :: State.t
-      defp update_inputs(%{event: event, state: state}) do
+      @spec update_inputs(State.t, Event.t) :: {:ok, State.t}
+      defp update_inputs(state, event) do
         new_history = History.update_input(state.history, event)
-        %{ state | history: new_history }
+        {:ok, %{ state | history: new_history }}
       end
 
-      @spec update_output(%{ state: State.t, event: Event.t }) :: State.t
-      defp update_output(%{ state: state, event: event }) do
+      @spec update_output(State.t, :wait | Event.t) :: {:ok | :wait, State.t}
+      defp update_output(state, :wait), do: {:wait, state}
+      defp update_output(state, event) do
         new_history = History.update_output(state.history, event)
-        %{ state | history: new_history }
+        {:ok, %{ state | history: new_history }}
       end
 
-      @spec handle_processed(State.t) :: {:noreply, State.t}
-      defp handle_processed(state) do
+      @spec handle_new_output(State.t) :: {:noreply, State.t}
+      defp handle_new_output(state) do
         event = state.history.output |> hd
         value = event.value
         timestamp = event.timestamp
@@ -149,7 +144,7 @@ defmodule TesslaServer.Node do
         TableRex.quick_render!([[name, inspect(timestamp), value]], header)
       end
 
-      defoverridable [start: 1, update_inputs: 1, update_output: 1, handle_processed: 1,
+      defoverridable [start: 1, update_inputs: 2, update_output: 2, handle_new_output: 1,
        handle_cast: 2, handle_call: 3, init: 1]
 
     end
