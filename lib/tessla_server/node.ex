@@ -19,6 +19,7 @@ defmodule TesslaServer.Node do
   @callback start(%{stream_name: atom | String.t}) :: atom | String.t
   # TODO Update inputs
   # TODO Update output
+  @callback will_add_child(State.t, name) :: boolean
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `name` to process it
@@ -64,7 +65,6 @@ defmodule TesslaServer.Node do
       use GenServer
       @behaviour Node
 
-      @spec start(%{}) :: Node.name
       def start(args) do
         name = args[:stream_name]
         GenServer.start(__MODULE__, args, name: via_tuple(name))
@@ -98,10 +98,14 @@ defmodule TesslaServer.Node do
 
       @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
       def handle_cast({:add_child, new_child}, state) do
-        # TODO: probably send latest event?
-
-        {:noreply, %{ state | children: [new_child | state.children]}}
+        case will_add_child(state, new_child) do
+          true -> {:noreply, %{ state | children: [new_child | state.children]}}
+          false -> {:noreply, state}
+        end
       end
+
+
+      def will_add_child(_, _), do: true
 
       @spec process(Event.t, State.t) :: State.t
       defp process(event, state) do
@@ -145,7 +149,7 @@ defmodule TesslaServer.Node do
       end
 
       defoverridable [start: 1, update_inputs: 2, update_output: 2, handle_new_output: 1,
-       handle_cast: 2, handle_call: 3, init: 1]
+       handle_cast: 2, handle_call: 3, init: 1, will_add_child: 2]
 
     end
   end
