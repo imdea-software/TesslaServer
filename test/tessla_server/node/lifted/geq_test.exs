@@ -1,42 +1,42 @@
-defmodule TesslaServer.Node.DivTest do
+defmodule TesslaServer.Node.Lifted.GeqTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Div
+  alias TesslaServer.Node.Lifted.Geq
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
 
-  doctest Div
+  doctest Geq
 
   setup do
-    state = %{stream_name: :divider, options: %{operand1: :number1, operand2: :number2}}
-    divider = Div.start state
-    {:ok, divider: divider}
+    state = %{stream_name: :geq, options: %{operand1: :number1, operand2: :number2}}
+    comparer = Geq.start state
+    {:ok, comparer: comparer}
   end
 
-  test "Should div latest Events and notify children", %{divider: divider} do
-    name = :div_test
+  test "Should compare latest Events and notify children", %{comparer: comparer} do
+    name = :geq_test
     :gproc.reg(gproc_tuple(name))
 
-    Node.add_child(divider, name)
+    Node.add_child(comparer, name)
     timestamp = DateTime.now
     event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_name: :number1}
     event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 2, stream_name: :number2}
     event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_name: :number1}
 
-    Node.send_event(divider, event1)
-    Node.send_event(divider, event2)
+    Node.send_event(comparer, event1)
+    Node.send_event(comparer, event2)
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event1.value / event2.value))
+    assert(event.value == (event1.value >= event2.value))
 
-    Node.send_event(divider, event3)
+    Node.send_event(comparer, event3)
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event3.value / event2.value))
+    assert(event.value == (event3.value >= event2.value))
   end
 end

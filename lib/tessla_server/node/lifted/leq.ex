@@ -1,9 +1,10 @@
-defmodule TesslaServer.Node.Div do
+defmodule TesslaServer.Node.Lifted.Leq do
   @moduledoc """
-  Implements a `Node` that divides two event streams
+  Implements a `Node` that compares two integer Streams and returns true if the first is
+  smaller or equal to the second and false otherwise.
 
   To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be divided.
+  which must be atoms representing the names of the event streams that should be compared.
   """
 
   alias TesslaServer.{Node, Event}
@@ -18,12 +19,11 @@ defmodule TesslaServer.Node.Div do
   def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
   def process_values(state, events) do
     [op1 | [op2]] = events
-    value = op1.value / op2.value
+    value = op1.value <= op2.value
     latest_event = Enum.max_by(events, &(&1.timestamp))
     processed_event = %{latest_event | value: value, stream_name: state.stream_name}
     {:ok, processed_event}
   end
-
 
   @spec get_operands(State.t) :: [Event.t]
   defp get_operands(state) do

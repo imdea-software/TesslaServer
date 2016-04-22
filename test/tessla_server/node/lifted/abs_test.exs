@@ -1,8 +1,8 @@
-defmodule TesslaServer.Node.AbsTest do
+defmodule TesslaServer.Node.Lifted.AbsTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Abs
+  alias TesslaServer.Node.Lifted.Abs
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry

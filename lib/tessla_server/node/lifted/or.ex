@@ -1,9 +1,9 @@
-defmodule TesslaServer.Node.Add do
+defmodule TesslaServer.Node.Lifted.Or do
   @moduledoc """
-  Implements a `Node` that adds two event streams
+  Implements a `Node` that performs an `or` on two boolean streams
 
   To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be summed.
+  which must be atoms representing the names of the event streams that should be used.
   """
 
   alias TesslaServer.{Node, Event}
@@ -18,12 +18,11 @@ defmodule TesslaServer.Node.Add do
   def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
   def process_values(state, events) do
     [op1 | [op2]] = events
-    value = op1.value + op2.value
+    value = op1.value or op2.value
     latest_event = Enum.max_by(events, &(&1.timestamp))
     processed_event = %{latest_event | value: value, stream_name: state.stream_name}
     {:ok, processed_event}
   end
-
 
   @spec get_operands(State.t) :: [Event.t]
   defp get_operands(state) do

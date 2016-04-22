@@ -1,23 +1,23 @@
-defmodule TesslaServer.Node.EqTest do
+defmodule TesslaServer.Node.Lifted.LeqTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Eq
+  alias TesslaServer.Node.Lifted.Leq
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
 
-  doctest Eq
+  doctest Leq
 
   setup do
-    state = %{stream_name: :eq, options: %{operand1: :number1, operand2: :number2}}
-    comparer = Eq.start state
+    state = %{stream_name: :leq, options: %{operand1: :number1, operand2: :number2}}
+    comparer = Leq.start state
     {:ok, comparer: comparer}
   end
 
   test "Should compare latest Events and notify children", %{comparer: comparer} do
-    name = :eq_test
+    name = :leq_test
     :gproc.reg(gproc_tuple(name))
 
     Node.add_child(comparer, name)
@@ -31,12 +31,12 @@ defmodule TesslaServer.Node.EqTest do
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event1.value == event2.value))
+    assert(event.value == (event1.value <= event2.value))
 
     Node.send_event(comparer, event3)
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event3.value == event2.value))
+    assert(event.value == (event3.value <= event2.value))
   end
 end

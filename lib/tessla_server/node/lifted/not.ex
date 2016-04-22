@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Abs do
+defmodule TesslaServer.Node.Lifted.Not do
   @moduledoc """
   Implements a `Node` that computes the absolute value of a stream
 
@@ -18,12 +18,11 @@ defmodule TesslaServer.Node.Abs do
   def process_values(state, events) when length(events) < 1, do: {:ok, :wait}
   def process_values(state, events) do
     [op1] = events
-    value = abs op1.value
+    value = not op1.value
     event = op1
     processed_event = %{event | value: value, stream_name: state.stream_name}
     {:ok, processed_event}
   end
-
 
   @spec get_operands(State.t) :: [Event.t]
   defp get_operands(state) do

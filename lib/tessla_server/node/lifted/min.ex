@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Min do
+defmodule TesslaServer.Node.Lifted.Min do
   @moduledoc """
   Implements a `Node` that compares two integer Streams and returns the smaller one
 

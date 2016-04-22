@@ -1,23 +1,23 @@
-defmodule TesslaServer.Node.LeqTest do
+defmodule TesslaServer.Node.Lifted.MinTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Leq
+  alias TesslaServer.Node.Lifted.Min
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
 
-  doctest Leq
+  doctest Min
 
   setup do
-    state = %{stream_name: :leq, options: %{operand1: :number1, operand2: :number2}}
-    comparer = Leq.start state
+    state = %{stream_name: :min, options: %{operand1: :number1, operand2: :number2}}
+    comparer = Min.start state
     {:ok, comparer: comparer}
   end
 
-  test "Should compare latest Events and notify children", %{comparer: comparer} do
-    name = :leq_test
+  test "Should compute min of latest Events and notify children", %{comparer: comparer} do
+    name = :min_test
     :gproc.reg(gproc_tuple(name))
 
     Node.add_child(comparer, name)
@@ -31,12 +31,12 @@ defmodule TesslaServer.Node.LeqTest do
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event1.value <= event2.value))
+    assert(event.value == Enum.min [event1.value | [event2.value]])
 
     Node.send_event(comparer, event3)
 
     assert_receive({_, {:process, event}})
 
-    assert(event.value == (event3.value <= event2.value))
+    assert(event.value == Enum.min [event3.value | [event2.value]])
   end
 end

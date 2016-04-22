@@ -1,9 +1,9 @@
-defmodule TesslaServer.Node.Or do
+defmodule TesslaServer.Node.Lifted.Max do
   @moduledoc """
-  Implements a `Node` that performs an `or` on two boolean streams
+  Implements a `Node` that compares two integer Streams and returns the bigger one
 
   To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be used.
+  which must be atoms representing the names of the event streams that should be compared.
   """
 
   alias TesslaServer.{Node, Event}
@@ -17,8 +17,7 @@ defmodule TesslaServer.Node.Or do
 
   def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
   def process_values(state, events) do
-    [op1 | [op2]] = events
-    value = op1.value or op2.value
+    value = Enum.max_by(events, &(&1.value)).value
     latest_event = Enum.max_by(events, &(&1.timestamp))
     processed_event = %{latest_event | value: value, stream_name: state.stream_name}
     {:ok, processed_event}

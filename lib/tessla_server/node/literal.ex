@@ -1,4 +1,4 @@
-defmodule TesslaServer.Literal do
+defmodule TesslaServer.Node.Literal do
   @moduledoc """
   Represents a Literal
   """

@@ -1,11 +1,9 @@
-defmodule TesslaServer.Node.Max do
+defmodule TesslaServer.Node.Lifted.Mul do
   @moduledoc """
-  Implements a `Node` that compares two integer Streams and returns the bigger one
-
+  Implements a `Node` that multiplies two event streams
   To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be compared.
+  which must be atoms representing the names of the event streams that should be multiplied.
   """
-
   alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
@@ -17,7 +15,8 @@ defmodule TesslaServer.Node.Max do
 
   def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
   def process_values(state, events) do
-    value = Enum.max_by(events, &(&1.value)).value
+    [op1 | [op2]] = events
+    value = op1.value * op2.value
     latest_event = Enum.max_by(events, &(&1.timestamp))
     processed_event = %{latest_event | value: value, stream_name: state.stream_name}
     {:ok, processed_event}

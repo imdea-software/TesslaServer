@@ -1,8 +1,8 @@
-defmodule TesslaServer.Node.ImpliesTest do
+defmodule TesslaServer.Node.Lifted.ImpliesTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Implies
+  alias TesslaServer.Node.Lifted.Implies
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry

@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Geq do
+defmodule TesslaServer.Node.Lifted.Geq do
   @moduledoc """
   Implements a `Node` that compares two integer Streams and returns true if the first is
   greater or equal to the second and false otherwise.

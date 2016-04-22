@@ -3,7 +3,6 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   Takes a Tessla spec and generates a DAG of `TesslaServer.Node` modules which represents the spec
   """
 
-  alias TesslaServer.Literal
   alias TesslaServer.Node
   alias TesslaServer.Source
 
@@ -30,7 +29,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Leq.start options
+    Node.Lifted.Leq.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -43,7 +42,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Add.start options
+    Node.Lifted.Add.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -56,7 +55,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Sub.start options
+    Node.Lifted.Sub.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -69,7 +68,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Mul.start options
+    Node.Lifted.Mul.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -82,7 +81,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Div.start options
+    Node.Lifted.Div.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -95,7 +94,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Geq.start options
+    Node.Lifted.Geq.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -108,7 +107,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Eq.start options
+    Node.Lifted.Eq.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -121,7 +120,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Max.start options
+    Node.Lifted.Max.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -134,7 +133,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Min.start options
+    Node.Lifted.Min.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -147,7 +146,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1}}
 
-    Node.Abs.start options
+    Node.Lifted.Abs.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -160,7 +159,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.And.start options
+    Node.Lifted.And.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -173,7 +172,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Or.start options
+    Node.Lifted.Or.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -186,7 +185,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Implies.start options
+    Node.Lifted.Implies.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -199,7 +198,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
 
-    Node.Not.start options
+    Node.Lifted.Not.start options
 
     add_to_ancestors(name, ancestors)
   end
@@ -223,7 +222,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   defp build_node(%{def: %{literal: value}}, name) do
     IO.puts("Literal #{name}, value: #{inspect value}")
-    Literal.start(name: name, value: value)
+    Node.Literal.start(name: name, value: value)
     name
   end
 
