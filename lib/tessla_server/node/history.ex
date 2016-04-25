@@ -12,7 +12,8 @@ defmodule TesslaServer.Node.History do
   @typep event_stream :: [Event.t]
 
   @doc """
-  Updates the given `history` to prepend the given `event` to the input stream specified by the `new_event`
+  Updates the given `history` to prepend the given `event` to the input stream
+  specified by the `new_event`
 
   Returns the new `History`
 

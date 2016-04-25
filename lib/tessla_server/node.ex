@@ -38,6 +38,14 @@ defmodule TesslaServer.Node do
   end
 
   @doc """
+  Stops a Node and unregisters it's name from gproc
+  """
+  @spec stop(name) :: :ok
+  def stop(name) do
+    GenServer.stop via_tuple name
+  end
+
+  @doc """
   Returns the latest output of the named Node
   """
   @spec get_latest_output(name) :: any
@@ -71,11 +79,9 @@ defmodule TesslaServer.Node do
         name
       end
 
-      @spec init(%{stream_name: atom | String.t, options: %{}}) :: { :ok, State.t }
+      @spec init(%{stream_name: atom | String.t, options: %{}}) :: {:ok, State.t}
       def init(args) do
-        { :ok,
-          %State{stream_name: args[:stream_name], options: args[:options]}
-        }
+        {:ok, %State{stream_name: args[:stream_name], options: args[:options]}}
       end
 
       @spec handle_call(:get_history, pid, State.t) :: {:reply}
@@ -88,7 +94,7 @@ defmodule TesslaServer.Node do
         {:reply, History.get_latest_output(state.history), state}
       end
 
-      @spec handle_cast({:process, Event.t}, State.t) :: { :noreply, State.t }
+      @spec handle_cast({:process, Event.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:process, event}, state) do
         case process(event, state) do
           {:wait, new_state} -> {:noreply, new_state}
@@ -96,14 +102,14 @@ defmodule TesslaServer.Node do
         end
       end
 
-      @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
+      @spec handle_cast({:add_child, String.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:add_child, new_child}, state) do
-        case will_add_child(state, new_child) do
-          true -> {:noreply, %{ state | children: [new_child | state.children]}}
-          false -> {:noreply, state}
+        if will_add_child(state, new_child) do
+          {:noreply, %{state | children: [new_child | state.children]}}
+        else
+          {:noreply, state}
         end
       end
-
 
       def will_add_child(_, _), do: true
 
@@ -118,14 +124,14 @@ defmodule TesslaServer.Node do
       @spec update_inputs(State.t, Event.t) :: {:ok, State.t}
       defp update_inputs(state, event) do
         new_history = History.update_input(state.history, event)
-        {:ok, %{ state | history: new_history }}
+        {:ok, %{state | history: new_history}}
       end
 
       @spec update_output(State.t, :wait | Event.t) :: {:ok | :wait, State.t}
       defp update_output(state, :wait), do: {:wait, state}
       defp update_output(state, event) do
         new_history = History.update_output(state.history, event)
-        {:ok, %{ state | history: new_history }}
+        {:ok, %{state | history: new_history}}
       end
 
       @spec handle_new_output(State.t) :: {:noreply, State.t}
@@ -134,13 +140,14 @@ defmodule TesslaServer.Node do
         value = event.value
         timestamp = event.timestamp
 
-        format(state.stream_name, timestamp, value)
+        state.stream_name
+        |> format(timestamp, value)
         |> IO.puts
 
 
         Enum.each(state.children, &Node.send_event(&1, event))
 
-        { :noreply, state }
+        {:noreply, state}
       end
 
       defp format(name, timestamp, value) do

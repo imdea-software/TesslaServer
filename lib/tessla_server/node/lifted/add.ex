@@ -2,8 +2,9 @@ defmodule TesslaServer.Node.Lifted.Add do
   @moduledoc """
   Implements a `Node` that adds two event streams
 
-  To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be summed.
+  To do so the `state.options` object has to be initialized with the keys `:operand1`
+  and `:operand2`, which must be atoms representing the names of the event streams 
+  that should be summed.
   """
 
   alias TesslaServer.{Node, Event}
@@ -27,8 +28,8 @@ defmodule TesslaServer.Node.Lifted.Add do
 
   @spec get_operands(State.t) :: [Event.t]
   defp get_operands(state) do
-    [ History.get_latest_input_of_stream(state.history, state.options.operand1),
-      History.get_latest_input_of_stream(state.history, state.options.operand2)
-    ] |> Enum.filter(&(!is_nil(&1)))
+    [History.get_latest_input_of_stream(state.history, state.options.operand1),
+     History.get_latest_input_of_stream(state.history, state.options.operand2)]
+    |> Enum.filter(&(!is_nil(&1)))
   end
 end

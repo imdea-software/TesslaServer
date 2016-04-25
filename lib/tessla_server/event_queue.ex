@@ -30,7 +30,7 @@ defmodule TesslaServer.EventQueue do
     Agent.update(__MODULE__, fn event_queue ->
       %{event_queue |
        events: [event | event_queue.events],
-       last_processed_time: event.timestamp }
+       last_processed_time: event.timestamp}
     end)
   end
 

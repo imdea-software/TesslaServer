@@ -18,12 +18,12 @@ defmodule TesslaServer.Node.Literal do
   def handle_cast(:update, state) do
     literal = %Event{value: state.value, stream_name: state.name}
     Enum.each(state.children, &Node.send_event(&1, literal))
-    { :noreply, state }
+    {:noreply, state}
   end
 
-  @spec handle_cast({:add_child, String.t}, State.t) :: { :noreply, State.t }
+  @spec handle_cast({:add_child, String.t}, State.t) :: {:noreply, State.t}
   def handle_cast({:add_child, new_child}, state) do
-    new_state = %{ state | children: [new_child | state.children]}
+    new_state = %{state | children: [new_child | state.children]}
     event = %Event{value: state.value, stream_name: state.name}
     Node.send_event(new_child, event)
     {:noreply, new_state}

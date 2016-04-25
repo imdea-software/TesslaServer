@@ -27,8 +27,8 @@ defmodule TesslaServer.Node.Lifted.Leq do
 
   @spec get_operands(State.t) :: [Event.t]
   defp get_operands(state) do
-    [ History.get_latest_input_of_stream(state.history, state.options.operand1),
-      History.get_latest_input_of_stream(state.history, state.options.operand2)
-    ] |> Enum.filter(&(!is_nil(&1)))
+    [History.get_latest_input_of_stream(state.history, state.options.operand1),
+     History.get_latest_input_of_stream(state.history, state.options.operand2)]
+    |> Enum.filter(&(!is_nil(&1)))
   end
 end

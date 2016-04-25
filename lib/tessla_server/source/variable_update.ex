@@ -15,13 +15,11 @@ defmodule TesslaServer.Source.VariableUpdate do
     GenServer.start(__MODULE__, args, name: via_tuple(args[:stream_name]))
   end
 
-  @spec init(%{stream_name: atom | String.t, options: %{}}) :: { :ok, State.t }
+  @spec init(%{stream_name: atom | String.t, options: %{}}) :: {:ok, State.t}
   def init(args) do
     channel = "variable_update:#{args[:options][:variable_name]}"
     :gproc.reg({:p, :l, channel})
-    { :ok,
-      %State{stream_name: args[:stream_name], options: args[:options]}
-    }
+    {:ok, %State{stream_name: args[:stream_name], options: args[:options]}}
   end
 
   def prepare_values(state) do

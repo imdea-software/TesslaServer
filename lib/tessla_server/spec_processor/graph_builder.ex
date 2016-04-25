@@ -11,7 +11,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
     list = get_ordered_list spec
 
     IO.puts inspect list
-    Enum.map(list, fn key -> build_stream {key, spec[key]} end)
+    Enum.each(list, fn key -> build_stream {key, spec[key]} end)
     :ok
   end
 
