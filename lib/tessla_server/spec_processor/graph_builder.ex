@@ -3,6 +3,8 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   Takes a Tessla spec and generates a DAG of `TesslaServer.Node` modules which represents the spec
   """
 
+  require Logger
+
   alias TesslaServer.Node
   alias TesslaServer.Source
 
@@ -10,7 +12,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   def build(spec = %{}) do
     list = get_ordered_list spec
 
-    IO.puts inspect list
+    Logger.debug inspect list
     Enum.each(list, fn key -> build_stream {key, spec[key]} end)
     :ok
   end
@@ -23,7 +25,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   defp build_node(%{def: %{function: :leq, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
-    IO.puts("leq: #{name}, args: #{inspect ancestors}")
+    Logger.debug("leq: #{name}, args: #{inspect ancestors}")
 
     [stream1 | [stream2 | _]] = ancestors
 
@@ -37,7 +39,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :add, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("add: #{name}, args: #{inspect ancestors}")
+    Logger.debug("add: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -50,7 +52,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :sub, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("sub: #{name}, args: #{inspect ancestors}")
+    Logger.debug("sub: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -63,7 +65,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :mul, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("mul: #{name}, args: #{inspect ancestors}")
+    Logger.debug("mul: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -76,7 +78,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :div, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("div: #{name}, args: #{inspect ancestors}")
+    Logger.debug("div: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -89,7 +91,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :geq, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("geq: #{name}, args: #{inspect ancestors}")
+    Logger.debug("geq: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -102,7 +104,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :eq, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("eq: #{name}, args: #{inspect ancestors}")
+    Logger.debug("eq: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -115,7 +117,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :max, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("max: #{name}, args: #{inspect ancestors}")
+    Logger.debug("max: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -128,7 +130,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :min, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("min: #{name}, args: #{inspect ancestors}")
+    Logger.debug("min: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -141,7 +143,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :abs, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("abs: #{name}, args: #{inspect ancestors}")
+    Logger.debug("abs: #{name}, args: #{inspect ancestors}")
     [stream1 | _] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1}}
@@ -154,7 +156,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :and, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("and: #{name}, args: #{inspect ancestors}")
+    Logger.debug("and: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -167,7 +169,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :or, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("or: #{name}, args: #{inspect ancestors}")
+    Logger.debug("or: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -180,7 +182,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :implies, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("implies: #{name}, args: #{inspect ancestors}")
+    Logger.debug("implies: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -193,7 +195,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :not, args: args}}, name) do
     ancestors = Enum.map(args, &build_node/1)
 
-    IO.puts("not: #{name}, args: #{inspect ancestors}")
+    Logger.debug("not: #{name}, args: #{inspect ancestors}")
     [stream1 | [stream2 | _]] = ancestors
 
     options = %{stream_name: name, options: %{operand1: stream1, operand2: stream2}}
@@ -207,7 +209,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :function_call_parameter, args: args}}, name) do
     [%{def: %{literal: function_name}}| [%{def: %{literal: param_pos}} | []]] = args
 
-    IO.puts("function_call_parameter: #{name}, function name: #{inspect function_name}, param_pos: #{param_pos}")
+    Logger.debug("function_call_parameter: #{name}, function name: #{inspect function_name}, param_pos: #{param_pos}")
     options = %{stream_name: name, options: %{function_name: function_name, param_pos: param_pos}}
     Source.FunctionCallParameter.start options
   end
@@ -215,13 +217,13 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :variable_update, args: args}}, name) do
     [%{def: %{literal: variable_name}}] = args
 
-    IO.puts("variable_update: #{name}, variable name: #{inspect variable_name}")
+    Logger.debug("variable_update: #{name}, variable name: #{inspect variable_name}")
     options = %{stream_name: name, options: %{variable_name: variable_name}}
     Source.VariableUpdate.start options
   end
 
   defp build_node(%{def: %{literal: value}}, name) do
-    IO.puts("Literal #{name}, value: #{inspect value}")
+    Logger.debug("Literal #{name}, value: #{inspect value}")
     Node.Literal.start(name: name, value: value)
     name
   end
@@ -247,7 +249,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
     Enum.each(spec, fn {key, value} ->
       references = get_references(value)
-      # IO.puts("refs for #{inspect key}:  #{inspect references}")
+      # Logger.debug("refs for #{inspect key}:  #{inspect references}")
       Enum.each(references, fn ref ->
         :digraph.add_edge(g, key, ref)
       end)

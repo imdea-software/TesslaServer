@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.4">
+    <meta name="generator" content="ExDoc v0.11.5">
     <title>TesslaServer.Node – tessla_server v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-1e374caa3d.css" />
+    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
@@ -146,6 +147,15 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#stop/1">stop(name)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Stops a Node and unregisters it’s name from gproc</p>
+</div>
+  
+</div>
 
   </div>
 
@@ -165,13 +175,19 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:process_values/1">process_values(prepared_values)</a>
+    <a href="#c:process_values/2">process_values(arg0, list)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:start/1">start(%{})</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:will_add_child/2">will_add_child(arg0, name)</a>
   </div>
   
 </div>
@@ -197,8 +213,8 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 </div>
 <div id="t:on_process/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:on_process/0">on_process</a> ::
-  {:wait, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>} |
-  {:ok, %{event: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, state: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}}</code></pre>
+  {:ok, :wait} |
+  {:ok, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>}</code></pre>
   
 </div>
 
@@ -306,6 +322,29 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 
   </section>
 </div>
+<div class="detail" id="stop/1">
+  <div class="detail-header">
+    <a href="#stop/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">stop(name)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">stop(<a href="#t:name/0">name</a>) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Stops a Node and unregisters it’s name from gproc</p>
+
+  </section>
+</div>
 
         </section>
       
@@ -333,7 +372,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">prepare_values([{:state, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}]) :: prepared_values</code></pre>
+          <pre><code class="elixir">prepare_values([{:state, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}]) :: {:ok, [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>]}</code></pre>
         
       </div>
     </div>
@@ -342,12 +381,12 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     
   </section>
 </div>
-<div class="detail" id="c:process_values/1">
+<div class="detail" id="c:process_values/2">
   <div class="detail-header">
-    <a href="#c:process_values/1" class="detail-link" title="Link to this callback">
+    <a href="#c:process_values/2" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">process_values(prepared_values)</span>
+    <span class="signature">process_values(arg0, list)</span>
       
   </div>
   
@@ -355,7 +394,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">process_values(prepared_values) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
+          <pre><code class="elixir">process_values(<a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>, [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>]) :: <a href="TesslaServer.Node.html#t:on_process/0">TesslaServer.Node.on_process</a></code></pre>
         
       </div>
     </div>
@@ -388,6 +427,28 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     
   </section>
 </div>
+<div class="detail" id="c:will_add_child/2">
+  <div class="detail-header">
+    <a href="#c:will_add_child/2" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">will_add_child(arg0, name)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">will_add_child(<a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>, <a href="#t:name/0">name</a>) :: boolean</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
 
         </section>
       
@@ -395,7 +456,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <p>
         <span class="line">
           Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.4),
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
         </span>
         <span class="line">
           designed by
@@ -407,7 +468,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-918614602f.js"></script>
   </body>
 </html>
 

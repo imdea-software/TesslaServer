@@ -136,13 +136,13 @@ defmodule TesslaServer.Node do
 
       @spec handle_new_output(State.t) :: {:noreply, State.t}
       defp handle_new_output(state) do
-        event = state.history.output |> hd
+        event = state.history.output.events |> hd
         value = event.value
         timestamp = event.timestamp
 
         state.stream_name
         |> format(timestamp, value)
-        |> IO.puts
+        # |> IO.puts
 
 
         Enum.each(state.children, &Node.send_event(&1, event))

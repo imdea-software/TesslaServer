@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.4">
+    <meta name="generator" content="ExDoc v0.11.5">
     <title>API Reference – tessla_server v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-1e374caa3d.css" />
+    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="extras">
@@ -96,13 +97,6 @@
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Literal.html">TesslaServer.Literal</a></div>
-  
-    <div class="summary-synopsis"><p>Represents a Literal</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.html">TesslaServer.Node</a></div>
   
     <div class="summary-synopsis"><p>Base Module to build new Nodes</p>
@@ -110,45 +104,18 @@
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Abs.html">TesslaServer.Node.Abs</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Maximum.html">TesslaServer.Node.Aggregation.Maximum</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the maximum value ever occured on an Event Stream
+or a default value if it’s bigger than all values occured to that point</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Add.html">TesslaServer.Node.Add</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Minimum.html">TesslaServer.Node.Aggregation.Minimum</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that adds two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.And.html">TesslaServer.Node.And</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">and</code> on two boolean streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Div.html">TesslaServer.Node.Div</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that divides two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Eq.html">TesslaServer.Node.Eq</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if both are the same and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Geq.html">TesslaServer.Node.Geq</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
-greater or equal to the second and false otherwise</p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the minimum value ever occured on an Event Stream
+or a default value if it’s smaller than all values occured to that point</p>
 </div>
   
 </div>
@@ -160,14 +127,57 @@ greater or equal to the second and false otherwise</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Implies.html">TesslaServer.Node.Implies</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Abs.html">TesslaServer.Node.Lifted.Abs</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Add.html">TesslaServer.Node.Lifted.Add</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that adds two event streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.And.html">TesslaServer.Node.Lifted.And</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">and</code> on two boolean streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Div.html">TesslaServer.Node.Lifted.Div</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that divides two event streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Eq.html">TesslaServer.Node.Lifted.Eq</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if both are the same and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Geq.html">TesslaServer.Node.Lifted.Geq</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
+greater or equal to the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Implies.html">TesslaServer.Node.Lifted.Implies</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">implies</code> on two boolean streams</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Leq.html">TesslaServer.Node.Leq</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Leq.html">TesslaServer.Node.Lifted.Leq</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
 smaller or equal to the second and false otherwise</p>
@@ -175,21 +185,21 @@ smaller or equal to the second and false otherwise</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Max.html">TesslaServer.Node.Max</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Max.html">TesslaServer.Node.Lifted.Max</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns the bigger one</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Min.html">TesslaServer.Node.Min</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Min.html">TesslaServer.Node.Lifted.Min</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns the smaller one</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Mul.html">TesslaServer.Node.Mul</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Mul.html">TesslaServer.Node.Lifted.Mul</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that multiplies two event streams
 To do so the <code class="inline">state.options</code> object has to be initialized with the keys <code class="inline">:operand1</code> and <code class="inline">:operand2</code>,
@@ -198,16 +208,30 @@ which must be atoms representing the names of the event streams that should be m
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Not.html">TesslaServer.Node.Not</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Not.html">TesslaServer.Node.Lifted.Not</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
 </div>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Or.html">TesslaServer.Node.Or</a></div>
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Or.html">TesslaServer.Node.Lifted.Or</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">or</code> on two boolean streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Sub.html">TesslaServer.Node.Lifted.Sub</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that substracts two event streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Literal.html">TesslaServer.Node.Literal</a></div>
+  
+    <div class="summary-synopsis"><p>Represents a Literal</p>
 </div>
   
 </div>
@@ -215,13 +239,6 @@ which must be atoms representing the names of the event streams that should be m
   <div class="summary-signature"><a href="TesslaServer.Node.State.html">TesslaServer.Node.State</a></div>
   
     <div class="summary-synopsis"><p>Struct to represent the state of a <code class="inline">Node</code></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Sub.html">TesslaServer.Node.Sub</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that substracts two event streams</p>
 </div>
   
 </div>
@@ -288,6 +305,18 @@ which must be atoms representing the names of the event streams that should be m
 </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Stream.html">TesslaServer.Stream</a></div>
+  
+    <div class="summary-synopsis"><p>Represents a Stream, generated either from external Events or by computation through
+a <code class="inline">Node</code>
+Note that <code class="inline">progressed_to</code> can be bigger than the <code class="inline">timestamp</code> of the latest <code class="inline">Event</code>:
+If all Inputs of the <code class="inline">Node</code> generating this <code class="inline">Stream</code> have advanced to at least <code class="inline">t</code> but
+no new Event is generated (e.g. because the <code class="inline">Node</code> is a delay with a higher value)
+the <code class="inline">Stream</code> will be progressed to <code class="inline">t</code> but no Event with a timestamp <code class="inline">t</code> is present</p>
+</div>
+  
+</div>
 
       </div>
     </section>
@@ -300,7 +329,7 @@ which must be atoms representing the names of the event streams that should be m
       <p>
         <span class="line">
           Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.4),
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
         </span>
         <span class="line">
           designed by
@@ -312,7 +341,7 @@ which must be atoms representing the names of the event streams that should be m
   </div>
 </section>
 </div>
-  <script src="dist/app-6d2e071366.js"></script>
+  <script src="dist/app-918614602f.js"></script>
   </body>
 </html>
 

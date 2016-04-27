@@ -2,6 +2,8 @@ defmodule TesslaServer do
   @moduledoc """
   Entry Point for `TesslaServer`
   """
+  require Logger
+
   use Timex
 
   alias TesslaServer.{SpecProcessor, Event, EventQueue}
@@ -26,11 +28,11 @@ defmodule TesslaServer do
   defp read do
     case IO.read(:stdio, :line) do
       :eof -> :ok
-      {:error, reason} -> IO.puts "Error: {reason}"
+      {:error, reason} -> Logger.debug "Error: {reason}"
       data ->
         data = String.rstrip data, ?\n
         [stream_name | values] = String.split(data, " ")
-        IO.puts "values: #{inspect values}"
+        Logger.debug "values: #{inspect values}"
         timestamp = Time.now
         event = %Event{stream_name: stream_name, value: values, timestamp: timestamp}
         EventQueue.process_external event
@@ -43,7 +45,7 @@ defmodule TesslaServer do
     {options, [file],  _} = OptionParser.parse(argv,
       switches: [debug: :boolean]
     )
-    IO.puts inspect options
+    Logger.debug inspect options
     {options, file}
   end
 end

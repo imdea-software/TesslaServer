@@ -8,7 +8,6 @@ defmodule TesslaServer.Node.SpecProcessor.AddTest do
     SpecProcessor.process spec
     :timer.sleep 1000
     output_event = Node.get_latest_output :added
-    IO.puts inspect output_event
     assert(output_event.value == 8)
   end
 end

@@ -6,7 +6,7 @@ defmodule TesslaServer.Node.Lifted.OrTest do
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
+  import DateTime, only: [shift: 2, to_timestamp: 1]
 
   doctest Or
 
