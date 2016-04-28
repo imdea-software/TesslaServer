@@ -3,7 +3,7 @@ defmodule TesslaServer.Node.HistoryTest do
   use Timex
 
   alias TesslaServer.Node.History
-  alias TesslaServer.Event
+  alias TesslaServer.{EventStream, Event}
 
   doctest History
 

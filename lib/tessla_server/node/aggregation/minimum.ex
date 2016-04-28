@@ -14,7 +14,6 @@ defmodule TesslaServer.Node.Aggregation.Minimum do
   use Node
   use Timex
 
-  @spec init(%{stream_name: atom | String.t, options: %{}}) :: {:ok, State.t}
   def init(args) do
     stream_name = args[:stream_name]
     default_value = args[:options][:default]

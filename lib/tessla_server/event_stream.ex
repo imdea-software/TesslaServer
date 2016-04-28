@@ -1,4 +1,4 @@
-defmodule TesslaServer.Stream do
+defmodule TesslaServer.EventStream do
   @moduledoc """
   Represents a Stream, generated either from external Events or by computation through
   a `Node`
@@ -14,70 +14,70 @@ defmodule TesslaServer.Stream do
   defstruct progressed_to: Time.zero, name: :none, events: []
 
   @doc """
-  Progresses the `Stream` to the given `timestamp`.
+  Progresses the `EventStream` to the given `timestamp`.
 
       iex> timestamp = {1234, 123456, 123456}
-      iex> stream = %Stream{}
-      iex> Stream.progress(stream, timestamp)
-      {:ok, %Stream{progressed_to: {1234, 123456, 123456}}}
+      iex> stream = %EventStream{}
+      iex> EventStream.progress(stream, timestamp)
+      {:ok, %EventStream{progressed_to: {1234, 123456, 123456}}}
 
   The `timestamp` has to be bigger than the `stream`s `progressed_to`
   or else an error will be returned.
 
       iex> timestamp = {1, 0, 0}
-      iex> stream = %Stream{progressed_to: {2, 0, 0}}
-      iex> Stream.progress(stream, timestamp)
-      {:error, "Timestamp smaller than progress of Stream"}
+      iex> stream = %EventStream{progressed_to: {2, 0, 0}}
+      iex> EventStream.progress(stream, timestamp)
+      {:error, "Timestamp smaller than progress of EventStream"}
   """
-  @spec progress(Stream.t, Timex.Types.timestamp) :: {:ok, Stream.t} | {:error, String.t}
+  @spec progress(EventStream.t, Timex.Types.timestamp) :: {:ok, EventStream.t} | {:error, String.t}
   def progress(%{progressed_to: progressed_to}, timestamp)
-  when progressed_to > timestamp, do: {:error, "Timestamp smaller than progress of Stream"}
+  when progressed_to > timestamp, do: {:error, "Timestamp smaller than progress of EventStream"}
   def progress(stream, timestamp) when is_tuple(timestamp) do
     {:ok, %{stream | progressed_to: timestamp}}
   end
 
   @doc """
-  Adds the `Event` to the `Stream`.
+  Adds the `Event` to the `EventStream`.
 
       iex> event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
-      iex> stream = %Stream{name: :test}
-      iex> {:ok, updated_stream} = Stream.add_event(stream, event)
+      iex> stream = %EventStream{name: :test}
+      iex> {:ok, updated_stream} = EventStream.add_event(stream, event)
       iex> hd(updated_stream.events)
       %TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
 
-  If the stream is nil it will create a new `Stream` with the name of the `event` and
+  If the stream is nil it will create a new `EventStream` with the name of the `event` and
   `progressed_to` equal to the `timestamp` of the `event`
 
       iex> event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
       iex> stream = nil
-      iex> {:ok, updated_stream} = Stream.add_event(stream, event)
+      iex> {:ok, updated_stream} = EventStream.add_event(stream, event)
       iex> updated_stream
-      %TesslaServer.Stream{
+      %TesslaServer.EventStream{
         events: [%TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}],
         name: :test,
         progressed_to: {1000, 123456, 123456}
       }
 
   The `timestamp` of the `Event` has to be greater or equal to the `progressed_to` value
-  of the `Stream` and it's `stream_name` the same as the `name` of the stream or else an
+  of the `EventStream` and it's `stream_name` the same as the `name` of the EventStream or else an
   error will be returned.
 
-      iex> event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
-      iex> stream = %Stream{name: :test}
-      iex> {:error, reason} = Stream.add_event(stream, event)
+      iex> event = %Event{stream_name: :test, timestamp: {0, 1, 2}, value: 1}
+      iex> stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
+      iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
-      "Event has different stream_name than stream"
+      "Event's timestamp smaller than stream progress"
 
       iex> event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
-      iex> stream = %Stream{name: :test}
-      iex> {:error, reason} = Stream.add_event(stream, event)
+      iex> stream = %EventStream{name: :test}
+      iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
       "Event has different stream_name than stream"
 
 
   This method will advance the `progressed_to` field to the `timestamp` of the `Event`.
   """
-  @spec add_event(nil | Stream.t, Event.t) ::  {:ok, Stream.t} | {:error, String.t}
+  @spec add_event(nil | EventStream.t, Event.t) ::  {:ok, EventStream.t} | {:error, String.t}
   def add_event(nil, event) do
     {:ok, %__MODULE__{name: event.stream_name, progressed_to: event.timestamp, events: [event]}}
   end

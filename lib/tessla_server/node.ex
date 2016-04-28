@@ -6,7 +6,7 @@ defmodule TesslaServer.Node do
   Furthermore you'd have to implement the `prepare_values` and `process_values` functions.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{Node, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
   import TesslaServer.Registry
@@ -27,6 +27,14 @@ defmodule TesslaServer.Node do
   @spec send_event(name, Event.t) :: :ok
   def send_event(name, event) do
     GenServer.cast(via_tuple(name), {:process, event})
+  end
+
+  @doc """
+  Sends the `Node` specified by `name` an `EventStream` so that it can update it's inputs.
+  """
+  @spec update_input_stream(name, EventStream.t) :: :ok
+  def update_input_stream(name, stream) do
+    GenServer.cast(via_tuple(name), {:update_input_stream, stream})
   end
 
   @doc """
@@ -63,6 +71,8 @@ defmodule TesslaServer.Node do
 
   defmacro __using__(_) do
     quote location: :keep do
+      require Logger
+
       alias TesslaServer.{Node, Event}
       alias TesslaServer.Node.{State, History}
       alias TesslaServer.Event
@@ -94,6 +104,14 @@ defmodule TesslaServer.Node do
         {:reply, History.get_latest_output(state.history), state}
       end
 
+      @spec handle_cast({:update_input_stream, EventStream.t}, State.t) :: {:noreply, State.t}
+      def handle_cast({:update_input_stream, stream}, state) do
+        new_history = History.replace_input_stream(state.history, stream)
+        new_state = %{state | history: new_history}
+        updated_state = progress new_state
+        {:noreply, updated_state}
+      end
+
       @spec handle_cast({:process, Event.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:process, event}, state) do
         case process(event, state) do
@@ -113,12 +131,36 @@ defmodule TesslaServer.Node do
 
       def will_add_child(_, _), do: true
 
-      @spec process(Event.t, State.t) :: State.t
+      @spec process(Event.t, State.t) :: {:ok | :wait, State.t}
       defp process(event, state) do
           with {:ok, updated_input} <- update_inputs(state, event),
                {:ok, prepared_values} <- prepare_values(updated_input),
                {:ok, processed} <- process_values(updated_input, prepared_values),
             do: update_output(updated_input, processed)
+      end
+
+      # TODO spec/doc
+      @spec progress(State.t) :: State.t
+      def progress(state) do
+        progress_to = History.minimal_progress(history)
+        progressed_to = history.output.progressed_to
+        change_timestamps =
+          History.processable_events(history)
+          |> Enum.map(&(&1.timestamp))
+          |> Enum.sort
+        #All events between progressed_to and min time of all inputs
+        new_state = do_progress(state, change_timestamp)
+      end
+
+      @spec do_progress(State.t, [Timex.Types.timestamp]) :: State.t
+      defp do_progress(_, []), do: state
+      defp do_progress(state, [at | next]) do
+        events = prepare_events(state, at) #map from stream name to event at timestamp to
+        oupdated_history = process_events(events, at, state)
+
+        updated_state = %{state | history: updated_history}
+
+        do_progress(updated_state, next)
       end
 
       @spec update_inputs(State.t, Event.t) :: {:ok, State.t}
@@ -142,7 +184,7 @@ defmodule TesslaServer.Node do
 
         state.stream_name
         |> format(timestamp, value)
-        # |> IO.puts
+        |> Logger.info
 
 
         Enum.each(state.children, &Node.send_event(&1, event))
@@ -152,7 +194,7 @@ defmodule TesslaServer.Node do
 
       defp format(name, timestamp, value) do
         header = ~w(stream time value)
-        TableRex.quick_render!([[name, inspect(timestamp), value]], header)
+        "\n" <> TableRex.quick_render!([[name, inspect(timestamp), value]], header)
       end
 
       defoverridable [start: 1, update_inputs: 2, update_output: 2, handle_new_output: 1,
