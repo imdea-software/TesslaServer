@@ -22,23 +22,24 @@ defmodule TesslaServer.Node.Aggregation.MaximumTest do
     processor = Maximum.start state
     name = :maximum_test
     Node.add_child(processor, name)
-    assert_receive({_, {:process, event}})
-    assert(event.value == @default_value)
+    assert_receive({_, {:update_input_stream, %{events: events}}})
+    assert(hd(events).value == @default_value)
     timestamp = DateTime.now
     event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: :number}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 7, stream_name: :number}
+    event2 = %Event{
+      timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 7, stream_name: :number
+    }
 
     Node.send_event(processor, event1)
 
-    assert_receive({_, {:process, event}})
+    assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    assert(event.value == event1.value)
+    assert(hd(events).value == event1.value)
 
     Node.send_event(processor, event2)
 
-    assert_receive({_, {:process, event}})
-
-    assert(event.value == event2.value)
+    assert_receive({_, {:update_input_stream, %{events: events}}})
+    assert(hd(events).value == event2.value)
 
     :ok = Node.stop(processor)
   end

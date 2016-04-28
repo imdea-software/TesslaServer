@@ -13,6 +13,8 @@ defmodule TesslaServer.EventStream do
   @type t :: %__MODULE__{progressed_to: Timex.Types.timestamp, name: atom, events: [Event.t]}
   defstruct progressed_to: Time.zero, name: :none, events: []
 
+  @type timestamp :: Timex.Types.timestamp
+
   @doc """
   Progresses the `EventStream` to the given `timestamp`.
 
@@ -87,5 +89,59 @@ defmodule TesslaServer.EventStream do
   when progressed_to > timestamp, do: {:error, "Event's timestamp smaller than stream progress"}
   def add_event(stream, event) do
     {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
+  end
+
+  @doc """
+  Returns all event on the stream with a `timestamp` bigger than `from` and smaller or equal to
+  `to`.
+  To work, the stream has to be ordered by it's `timestamps`, which all `Stream.t` structs should
+  be always.
+
+  ##Examples
+
+      iex> event0 = %Event{timestamp: {0, 0, 0}, stream_name: :test, value: 0}
+      iex> event1 = %Event{timestamp: {1, 0, 0}, stream_name: :test, value: 1}
+      iex> event2 = %Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}
+      iex> event3 = %Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3}
+      iex> event4 = %Event{timestamp: {4, 0, 0}, stream_name: :test, value: 4}
+      iex> events = [event4, event3, event2, event1, event0]
+      iex> stream = %EventStream{name: :test, progressed_to: {4, 0, 0}, events: events}
+      iex> EventStream.events_in_timeslot(stream, {1, 0, 0}, {3,0,0})
+      [%Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3},
+      %Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}]
+
+  """
+  @spec events_in_timeslot(EventStream.t | nil, timestamp, timestamp) :: [Event.t]
+  def events_in_timeslot(nil, _, _), do: []
+  def events_in_timeslot(stream, from, to) do
+    stream.events
+    |> Enum.drop_while(&(&1.timestamp > to))
+    |> Enum.take_while(&(&1.timestamp > from))
+  end
+
+  @doc """
+  Returns the most recent `Event.t` that occured at or before `at`
+
+  ## Examples
+
+      iex> event0 = %Event{stream_name: :test, value: 0, timestamp: {0, 0, 0}}
+      iex> event1 = %Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
+      iex> event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+      iex> events = [event2, event1, event0]
+      iex> stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+      iex> EventStream.event_at(stream, {1, 0, 0})
+      %Event{stream_name: :test, value: 1, timestamp: :{1, 0, 0}}
+
+      iex> event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+      iex> events = [event2]
+      iex> stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+      iex> EventStream.event_at(stream, {1, 0, 0})
+      nil
+  """
+  @spec event_at(EventStream.t, timestamp) :: Event.t | nil
+  def event_at(stream, at) do
+    stream.events
+    |> Enum.drop_while(&(&1.timestamp > at))
+    |> Enum.at(0)
   end
 end

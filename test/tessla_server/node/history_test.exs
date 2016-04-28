@@ -7,13 +7,10 @@ defmodule TesslaServer.Node.HistoryTest do
 
   doctest History
 
-  test "update_input should return an updated History" do
-    timestamp = Time.now
-    stream_name = :counter
-    event = %Event{timestamp: timestamp, value: 1, stream_name: stream_name}
-    history = %History{}
-
-    updated_history = History.update_input(history, event)
-    assert(hd(updated_history.inputs[stream_name].events) == event)
-  end
+  test "processable_events", do: flunk
+  test "replace_input_stream", do: flunk
+  test "update_output", do: flunk
+  test " get_latest_input_of_stream", do: flunk
+  test " get_latest_input", do: flunk
+  test " get_latest_output", do: flunk
 end

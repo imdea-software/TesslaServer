@@ -7,7 +7,9 @@ defmodule TesslaServer.Node.SpecProcessor.AddTest do
     {:ok, spec} = File.read("test/examples/math/add.tessla")
     SpecProcessor.process spec
     :timer.sleep 1000
-    output_event = Node.get_latest_output :added
-    assert(output_event.value == 8)
+    history = Node.get_history :added
+
+    latest_output = hd(history.output.events)
+    assert(latest_output.value == 8)
   end
 end

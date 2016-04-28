@@ -18,7 +18,7 @@ defmodule TesslaServer.Node.Aggregation.MinimumTest do
     {:ok, state: state}
   end
 
-  test "Should take value of new event if it is smaller than previous maximum" , %{state: state} do
+  test "Should take value of new event if it is smaller than previous minimum" , %{state: state} do
     processor = Minimum.start state
     name = :minimum_test
     Node.add_child(processor, name)
