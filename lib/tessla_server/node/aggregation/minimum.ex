@@ -8,7 +8,7 @@ defmodule TesslaServer.Node.Aggregation.Minimum do
   and the key `default` which should hold the default value.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{Node, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
   use Node
@@ -23,30 +23,19 @@ defmodule TesslaServer.Node.Aggregation.Minimum do
     {:ok, %{state | history: history}}
   end
 
-
-  def will_add_child(state, name) do
-    Node.send_event name, History.get_latest_output(state.history)
-    true
-  end
-
-  def prepare_values(state) do
-    {:ok, get_operands(state)}
-  end
-
-  def process_values(state, events) when length(events) < 1, do: {:ok, :wait}
-  def process_values(state, events) do
-    [old | [new]] = events
-    if old.value <= new.value do
-      {:ok, :wait}
+  def process_events(timestamp, event_map, state) do
+    new_event = event_map[state.options.operand1]
+    current_event = EventStream.event_at(state.history.output, timestamp)
+    if new_event.value < current_event.value do
+      output_event = %Event{
+        stream_name: state.stream_name, timestamp: new_event.timestamp, value: new_event.value
+      }
+      updated_history = History.update_output(state.history, output_event)
+      %{state |
+        history: updated_history
+      }
     else
-      {:ok, %{new | stream_name: state.stream_name}}
+      %{state | history: History.progress_output(state.history, timestamp)}
     end
-  end
-
-  @spec get_operands(State.t) :: [Event.t]
-  defp get_operands(state) do
-    [History.get_latest_output(state.history),
-     History.get_latest_input_of_stream(state.history, state.options.operand1)]
-    |> Enum.filter(&(!is_nil(&1)))
   end
 end

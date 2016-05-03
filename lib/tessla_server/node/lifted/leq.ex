@@ -7,28 +7,25 @@ defmodule TesslaServer.Node.Lifted.Leq do
   which must be atoms representing the names of the event streams that should be compared.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{Node, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
   use Node
 
-  def prepare_values(state) do
-    {:ok, get_operands(state)}
+  def init_inputs(%{options: %{operand1: name1, operand2: name2}}) do
+    Map.new [{name1, %EventStream{name: name1}}, {name2, %EventStream{name: name2}}]
   end
 
-  def process_values(state, events) when length(events) < 2, do: {:ok, :wait}
-  def process_values(state, events) do
-    [op1 | [op2]] = events
-    value = op1.value <= op2.value
-    latest_event = Enum.max_by(events, &(&1.timestamp))
-    processed_event = %{latest_event | value: value, stream_name: state.stream_name}
-    {:ok, processed_event}
-  end
+  def perform_computation(timestamp, event_map, state) do
+    event1 = event_map[state.options.operand1]
+    event2 = event_map[state.options.operand2]
 
-  @spec get_operands(State.t) :: [Event.t]
-  defp get_operands(state) do
-    [History.get_latest_input_of_stream(state.history, state.options.operand1),
-     History.get_latest_input_of_stream(state.history, state.options.operand2)]
-    |> Enum.filter(&(!is_nil(&1)))
+    if event1 && event2 do
+      {:ok, %Event{
+        stream_name: state.stream_name, timestamp: timestamp, value: event1.value <= event2.value
+      }}
+    else
+      :wait
+    end
   end
 end

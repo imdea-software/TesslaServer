@@ -31,7 +31,7 @@ defmodule TesslaServer.EventStream do
       iex> EventStream.progress(stream, timestamp)
       {:error, "Timestamp smaller than progress of EventStream"}
   """
-  @spec progress(EventStream.t, Timex.Types.timestamp) :: {:ok, EventStream.t} | {:error, String.t}
+  @spec progress(EventStream.t, timestamp) :: {:ok, EventStream.t} | {:error, String.t}
   def progress(%{progressed_to: progressed_to}, timestamp)
   when progressed_to > timestamp, do: {:error, "Timestamp smaller than progress of EventStream"}
   def progress(stream, timestamp) when is_tuple(timestamp) do
@@ -130,7 +130,7 @@ defmodule TesslaServer.EventStream do
       iex> events = [event2, event1, event0]
       iex> stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
       iex> EventStream.event_at(stream, {1, 0, 0})
-      %Event{stream_name: :test, value: 1, timestamp: :{1, 0, 0}}
+      %Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
 
       iex> event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
       iex> events = [event2]

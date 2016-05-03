@@ -11,32 +11,47 @@ defmodule TesslaServer.Node.Lifted.MinTest do
   doctest Min
 
   setup do
-    state = %{stream_name: :min, options: %{operand1: :number1, operand2: :number2}}
-    comparer = Min.start state
-    {:ok, comparer: comparer}
-  end
-
-  test "Should compute min of latest Events and notify children", %{comparer: comparer} do
     name = :min_test
     :gproc.reg(gproc_tuple(name))
+    state = %{stream_name: :min, options: %{operand1: :number1, operand2: :number2}}
+    {:ok, state: state, name: name}
+  end
 
-    Node.add_child(comparer, name)
+  test "Should compute minimum of latest Events and notify children", %{state: state, name: name} do
+    processor = Min.start state
+
+    Node.add_child(processor, name)
+    assert_receive({_, {:update_input_stream, initial_output}})
+    assert(initial_output.progressed_to == Time.zero)
+    assert(initial_output.events == [])
+
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_name: :number1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 2, stream_name: :number2}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_name: :number1}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 2, stream_name: :number1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_name: :number2}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 1, stream_name: :number1}
+    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_name: :number2}
 
-    Node.send_event(comparer, event1)
-    Node.send_event(comparer, event2)
+    Node.send_event(processor, event1)
 
-    assert_receive({_, {:process, event}})
+    refute_receive(_)
 
-    assert(event.value == Enum.min [event1.value | [event2.value]])
+    Node.send_event(processor, event2)
 
-    Node.send_event(comparer, event3)
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
+    assert(progressed_to == event1.timestamp)
 
-    assert_receive({_, {:process, event}})
+    Node.send_event(processor, event3)
 
-    assert(event.value == Enum.min [event3.value | [event2.value]])
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+    assert(progressed_to == event2.timestamp)
+    assert(hd(events).value == event1.value)
+
+    Node.send_event(processor, event4)
+
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+    assert(progressed_to == event3.timestamp)
+    assert(hd(events).value == event3.value)
+
+    :ok = Node.stop processor
   end
 end

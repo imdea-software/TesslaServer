@@ -11,37 +11,43 @@ defmodule TesslaServer.Node.Lifted.AbsTest do
   doctest Abs
 
   setup do
-    state = %{stream_name: :abs, options: %{operand1: :number1, operand2: :number2}}
-    processor = Abs.start state
-    {:ok, processor: processor}
-  end
-
-  test "Should compute abs of latest Events and notify children", %{processor: processor} do
     name = :abs_test
     :gproc.reg(gproc_tuple(name))
+    state = %{stream_name: :abs, options: %{operand1: :number}}
+    {:ok, state: state, name: name}
+  end
+
+  test "Should compute abs of latest Event and notify children", %{state: state, name: name} do
+    processor = Abs.start state
 
     Node.add_child(processor, name)
+    assert_receive({_, {:update_input_stream, initial_output}})
+    assert(initial_output.progressed_to == Time.zero)
+    assert(initial_output.events == [])
+
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_name: :number1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_name: :number1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_name: :number1}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_name: :number}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_name: :number}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_name: :number}
 
     Node.send_event(processor, event1)
 
-    assert_receive({_, {:process, event}})
+    assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    assert(event.value == abs event1.value)
+    assert(hd(events).value == abs event1.value)
 
     Node.send_event(processor, event2)
 
-    assert_receive({_, {:process, event}})
+    assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    assert(event.value == abs event2.value)
+    assert(hd(events).value == abs event2.value)
 
     Node.send_event(processor, event3)
 
-    assert_receive({_, {:process, event}})
+    assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    assert(event.value == abs event3.value)
+    assert(hd(events).value == abs event3.value)
+
+    :ok = Node.stop(processor)
   end
 end

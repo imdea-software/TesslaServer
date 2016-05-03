@@ -23,6 +23,7 @@ defmodule TesslaServer.Node do
   @callback perform_computation(timestamp, event_map, State.t) :: {:ok, Event.t} | :wait
 
   @callback start(%{stream_name: atom | String.t}) :: atom | String.t
+  @callback init_inputs(State.t) :: %{atom => EventStream.t}
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `name` to process it
@@ -93,7 +94,8 @@ defmodule TesslaServer.Node do
       @spec init(%{stream_name: atom | String.t, options: %{}}) :: {:ok, State.t}
       def init(args) do
         state = %State{stream_name: args[:stream_name], options: args[:options]}
-        history = %{state.history | output: %EventStream{name: args[:stream_name]}}
+        inputs = init_inputs(state)
+        history = %{state.history | output: %EventStream{name: args[:stream_name]}, inputs: inputs}
         {:ok, %{state | history: history}}
       end
 
@@ -150,7 +152,10 @@ defmodule TesslaServer.Node do
 
         Node.log_new_outputs(state.stream_name, new_outputs)
 
-        Enum.each(new_state.children, &Node.update_input_stream(&1, new_state.history.output))
+        if new_progress > old_progress do
+          Enum.each(new_state.children, &Node.update_input_stream(&1, new_state.history.output))
+        end
+
         new_state
       end
 
@@ -181,7 +186,8 @@ defmodule TesslaServer.Node do
         case perform_computation(timestamp, event_map, state) do
           {:ok, new_event} ->
             %{state | history: History.update_output(state.history, new_event)}
-          :wait -> state
+          :wait ->
+            %{state | history: History.progress_output(state.history, timestamp)}
         end
       end
 
@@ -189,8 +195,10 @@ defmodule TesslaServer.Node do
         {:ok, %Event{stream_name: state.stream_name, timestamp: timestamp}}
       end
 
+      def init_inputs(_), do: %{}
+
       defoverridable [start: 1, prepare_events: 2, process_events: 3,
-       perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1]
+       perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1]
 
     end
   end

@@ -32,6 +32,7 @@ defmodule TesslaServer do
       data ->
         data = String.rstrip data, ?\n
         [stream_name | values] = String.split(data, " ")
+        stream_name = String.to_atom stream_name
         Logger.debug "values: #{inspect values}"
         timestamp = Time.now
         event = %Event{stream_name: stream_name, value: values, timestamp: timestamp}

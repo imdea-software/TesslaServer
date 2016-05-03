@@ -14,9 +14,6 @@ defmodule TesslaServer.EventQueue do
   end
 
   def process_external(event) do
-    GenServer.cast(tick_tuple, {:tick, event.timestamp})
-
-    # TODO Maybe sleep here
     add_event event
     Source.distribute event
   end
@@ -33,6 +30,4 @@ defmodule TesslaServer.EventQueue do
        last_processed_time: event.timestamp}
     end)
   end
-
-  def tick_tuple, do: {:via, :gproc, {:p, :l, :tick}}
 end

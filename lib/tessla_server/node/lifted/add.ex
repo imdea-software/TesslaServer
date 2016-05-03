@@ -7,10 +7,14 @@ defmodule TesslaServer.Node.Lifted.Add do
   that should be summed.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{Node, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
   use Node
+
+  def init_inputs(%{options: %{operand1: name1, operand2: name2}}) do
+    Map.new [{name1, %EventStream{name: name1}}, {name2, %EventStream{name: name2}}]
+  end
 
   def perform_computation(timestamp, event_map, state) do
     event1 = event_map[state.options.operand1]

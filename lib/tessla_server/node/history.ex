@@ -20,7 +20,8 @@ defmodule TesslaServer.Node.History do
     upto =
       history.inputs
       |> Map.values
-      |> Enum.min_by(&(&1.progressed_to))
+      |> Enum.map(&(&1.progressed_to))
+      |> Enum.min
     from = history.output.progressed_to
     events =
       Enum.flat_map history.inputs, fn {name, stream} ->
@@ -61,6 +62,19 @@ defmodule TesslaServer.Node.History do
   def update_output(history, new_event) do
     {:ok, updated_output} = EventStream.add_event(history.output, new_event)
     %{history | output: updated_output}
+  end
+
+  @doc """
+  Sets the `progressed_to` of the `output` of the `history` to the `timestamp`
+  """
+  @spec progress_output(History.t, timestamp) :: History
+  def progress_output(history, timestamp) do
+    case EventStream.progress(history.output, timestamp) do
+      {:ok, updated_output} ->
+        %{history | output: updated_output}
+      {:error, reason} ->
+        raise "Couldn't update timestamp of output"
+    end
   end
 
   @doc """
