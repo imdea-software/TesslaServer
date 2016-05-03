@@ -4,6 +4,7 @@ defmodule TesslaServer.Node.State do
   """
   alias TesslaServer.Node.History
 
-  defstruct children: [], history: %History{}, stream_name: :none, options: %{}
-  @type t :: %__MODULE__{stream_name: String.t, history: History.t, children: [String.t], options: %{}}
+  defstruct children: [], history: %History{}, stream_name: :none, operands: [], options: %{}
+  @type t :: %__MODULE__{stream_name: String.t, history: History.t, children: [String.t],
+   operands: [atom], options: %{}}
 end

@@ -13,16 +13,21 @@ defmodule TesslaServer.Node.Aggregation.MaximumTest do
   @default_value 5
 
   setup do
-    name = :maximum_test
-    :gproc.reg(gproc_tuple(name))
+    test_name = :maximum_test
+    :gproc.reg(gproc_tuple(test_name))
     state = %{stream_name: :maximum, options: %{operand1: :number, default: @default_value}}
-    {:ok, state: state, name: name}
+    {
+      :ok, test_name: test_name, process_name: :maximum, operands: [:number], 
+      options: %{default: @default_value}
+    }
   end
 
-  test "Should take value of new event if it is bigger than previous maximum", %{state: state, name: name} do
-    processor = Maximum.start state
+  test "Should take value of new event if it is bigger than previous maximum", %{
+    test_name: test_name, process_name: process_name, operands: operands, options: options
+  } do
+    processor = Maximum.start process_name, operands, options
 
-    Node.add_child(processor, name)
+    Node.add_child(processor, test_name)
     assert_receive({_, {:update_input_stream, %{events: events}}})
     assert(hd(events).value == @default_value)
     timestamp = DateTime.now

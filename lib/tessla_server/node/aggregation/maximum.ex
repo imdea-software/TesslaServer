@@ -15,7 +15,8 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
   use Timex
 
   def process_events(timestamp, event_map, state) do
-    new_event = event_map[state.options.operand1]
+    op1 = hd(state.operands)
+    new_event = event_map[op1]
     current_event = EventStream.event_at(state.history.output, timestamp)
     if new_event.value > current_event.value do
       output_event = %Event{
@@ -30,12 +31,10 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
     end
   end
 
-  def init(args) do
-    stream_name = args[:stream_name]
-    default_value = args[:options][:default]
-    default_event = %Event{stream_name: stream_name, value: default_value}
-    state = %State{stream_name: stream_name, options: args[:options]}
-    history = History.update_output(state.history, default_event)
-    {:ok, %{state | history: history}}
+  def init_output(state) do
+    default_value = state.options[:default]
+    default_event = %Event{stream_name: state.stream_name, value: default_value}
+
+    History.update_output(state.history, default_event).output
   end
 end

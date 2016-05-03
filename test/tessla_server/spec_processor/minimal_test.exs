@@ -8,7 +8,6 @@ defmodule TesslaServer.Node.SpecProcessor.MinimalTest do
   test "Should Setup the minimal testcase and process Events" do
     {:ok, spec} = File.read("test/examples/minimal.tessla")
     SpecProcessor.process spec
-    :timer.sleep 1000
 
     :gproc.reg(gproc_tuple(:minimal_test))
     Node.add_child(:error, :minimal_test)

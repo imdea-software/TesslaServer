@@ -22,8 +22,9 @@ defmodule TesslaServer.Node do
   @callback process_events(timestamp, event_map, State.t) :: State.t
   @callback perform_computation(timestamp, event_map, State.t) :: {:ok, Event.t} | :wait
 
-  @callback start(%{stream_name: atom | String.t}) :: atom | String.t
-  @callback init_inputs(State.t) :: %{atom => EventStream.t}
+  @callback start(atom, [atom], %{}) :: atom
+  @callback init_inputs([atom]) :: %{atom => EventStream.t}
+  @callback init_output(State.t) :: EventStream.t
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `name` to process it
@@ -85,17 +86,17 @@ defmodule TesslaServer.Node do
       use GenServer
       @behaviour Node
 
-      def start(args) do
-        name = args[:stream_name]
-        GenServer.start(__MODULE__, args, name: via_tuple(name))
+      def start(name, operands, options \\ %{}) do
+        state = %State{stream_name: name, operands: operands, options: options}
+        GenServer.start(__MODULE__, state, name: via_tuple(name))
         name
       end
 
-      @spec init(%{stream_name: atom | String.t, options: %{}}) :: {:ok, State.t}
-      def init(args) do
-        state = %State{stream_name: args[:stream_name], options: args[:options]}
-        inputs = init_inputs(state)
-        history = %{state.history | output: %EventStream{name: args[:stream_name]}, inputs: inputs}
+      def init(state) do
+        inputs = init_inputs(state.operands)
+        output = init_output state
+        IO.puts inspect output
+        history = %{state.history | output: output, inputs: inputs}
         {:ok, %{state | history: history}}
       end
 
@@ -195,10 +196,20 @@ defmodule TesslaServer.Node do
         {:ok, %Event{stream_name: state.stream_name, timestamp: timestamp}}
       end
 
-      def init_inputs(_), do: %{}
+      def init_inputs(names) do
+        names
+        |> Enum.map(&({&1, %EventStream{name: &1}}))
+        |> Map.new
+      end
 
-      defoverridable [start: 1, prepare_events: 2, process_events: 3,
-       perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1]
+      def init_output(state) do
+        %EventStream{name: state.stream_name}
+      end
+
+      defoverridable [start: 3, prepare_events: 2, process_events: 3,
+       perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1,
+       init_output: 1
+      ]
 
     end
   end

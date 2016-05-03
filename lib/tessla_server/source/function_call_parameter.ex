@@ -11,18 +11,13 @@ defmodule TesslaServer.Source.FunctionCallParameter do
   alias TesslaServer.{Event, EventStream}
   alias TesslaServer.Node.State
 
-  def init(args) do
-    channel = "function_call:#{args[:options][:function_name]}" |> String.to_atom
-    :gproc.reg({:p, :l, channel})
-    state = %State{stream_name: args[:stream_name], options: args[:options]}
-    inputs = Map.new [{channel, %EventStream{name: channel}}]
-    history = %{state.history | output: %EventStream{name: args[:stream_name]}, inputs: inputs}
-    {:ok, %{state | history: history}}
+  def init(state) do
+    :gproc.reg({:p, :l, hd(state.operands)})
+    super state
   end
 
   def perform_computation(timestamp, event_map, state) do
-    channel = "function_call:#{state.options[:function_name]}" |> String.to_atom
-    event = event_map[channel]
+    event = event_map[hd(state.operands)]
     {value, _} =  event.value
                   |> Enum.at(state.options[:param_pos])
                   |> Integer.parse # TODO somehow process based on needed type
