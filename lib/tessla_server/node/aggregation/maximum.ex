@@ -27,7 +27,8 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
         history: updated_history
       }
     else
-      %{state | history: History.progress_output(state.history, timestamp)}
+      {:ok, updated_history} = History.progress_output(state.history, timestamp)
+      %{state | history: updated_history}
     end
   end
 

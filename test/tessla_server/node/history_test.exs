@@ -32,7 +32,9 @@ defmodule TesslaServer.Node.HistoryTest do
     assert (expected -- processable_events ) == []
   end
 
-  test " get_latest_input_of_stream"
-  test " get_latest_input"
-  test " get_latest_output"
+  test "progress_output works with equal timestamp" do
+    history = %History{output: %EventStream{progressed_to: {2, 0, 0}}}
+    {:ok, new_history} = History.progress_output history, {2, 0, 0}
+    assert new_history.output.progressed_to == {2, 0, 0}
+  end
 end

@@ -23,7 +23,7 @@ defmodule TesslaServer.EventStream do
       iex> EventStream.progress(stream, timestamp)
       {:ok, %EventStream{progressed_to: {1234, 123456, 123456}}}
 
-  The `timestamp` has to be bigger than the `stream`s `progressed_to`
+  The `timestamp` has to be bigger or equal to the `stream`s `progressed_to`
   or else an error will be returned.
 
       iex> timestamp = {1, 0, 0}

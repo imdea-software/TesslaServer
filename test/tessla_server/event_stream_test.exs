@@ -17,6 +17,14 @@ defmodule TesslaServer.EventStreamTest do
     assert updated_stream.progressed_to == timestamp
   end
 
+  test "Should change nothing when progressing to equal timestamp" do
+    stream = %EventStream{name: :stream_test, progressed_to: {3, 4, 5}}
+
+    {:ok, updated_stream} = EventStream.progress(stream, {3, 4, 5})
+
+    assert updated_stream == stream
+  end
+
   test "Shouldn't progress to a timestamp smaller thann current progress"do
     stream = %EventStream{name: :stream_test}
     time = DateTime.now

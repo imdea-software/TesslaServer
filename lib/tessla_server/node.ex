@@ -188,13 +188,12 @@ defmodule TesslaServer.Node do
             {:ok, history} = History.update_output(state.history, new_event)
             %{state | history: history}
           :wait ->
-            %{state | history: History.progress_output(state.history, timestamp)}
+            {:ok, updated_history} = History.progress_output(state.history, timestamp)
+            %{state | history: updated_history}
         end
       end
 
-      def perform_computation(timestamp, _, state) do
-        {:ok, %Event{stream_name: state.stream_name, timestamp: timestamp}}
-      end
+      def perform_computation(timestamp, _, state), do: :wait
 
       def init_inputs(names) do
         names

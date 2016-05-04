@@ -99,21 +99,53 @@ defmodule TesslaServer.Node.History do
   end
 
   @doc """
-  Sets the `progressed_to` of the `output` of the `history` to the `timestamp`
+  Sets the `progressed_to` of the `output` of the `history` to the `timestamp`.
+  The `timestamp` has to be greater or equal than the `progressed_to` of the `output` of the `history`
+  or an `:error` will be returned.
+
+  ## Examples
+
+      iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+      iex> History.progress_output history, {4, 0, 0}
+      {:ok, %History{output: %EventStream{progressed_to: {4, 0, 0}}}}
+
+      iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+      iex> History.progress_output history, {2, 0, 0}
+      {:error, "Timestamp smaller than progress of EventStream"}
   """
-  @spec progress_output(History.t, timestamp) :: History
+  @spec progress_output(History.t, timestamp) :: {:ok, History.t} | {:error, String.t}
   def progress_output(history, timestamp) do
     case EventStream.progress(history.output, timestamp) do
-      {:ok, updated_output} ->
-        %{history | output: updated_output}
-      {:error, reason} ->
-        raise "Couldn't update timestamp of output"
+      {:ok, updated_output} -> {:ok, %{history | output: updated_output}}
+      {:error, reason} -> {:error, reason}
     end
   end
 
   @doc """
   Returns the latest `Event.t` of the input stream specified by `name` in `history`
-  that has a `timestamp` smaller than `at`
+  that has a `timestamp` smaller than `at`.
+
+  If the `history` has no input with the `name` or the input has no `Event` that happened before
+  the `timestamp` `nil` is returned.
+
+  ## Examples
+
+      iex> event1 = %Event{stream_name: :input1, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+      iex> event3 = %Event{stream_name: :input1, timestamp: {4, 0, 0}}
+      iex> events = [event3, event2, event1]
+      iex> input1 = %EventStream{name: :input1, events: events, progressed_to: {4, 0, 0}}
+      iex> history = %History{inputs: %{input1: input1}}
+      iex> History.latest_event_of_input_at(history, :input1, {1, 0, 0})
+      nil
+      iex> History.latest_event_of_input_at(history, :input1, {3, 0, 0})
+      %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+      iex> History.latest_event_of_input_at(history, :input1, {2, 5, 0})
+      %Event{stream_name: :input1, timestamp: {2, 0, 0}}
+
+      iex> history = %History{}
+      iex> History.latest_event_of_input_at(history, :any, {1, 0, 0})
+      nil
   """
   @spec latest_event_of_input_at(History.t, atom, timestamp) :: Event.t | nil
   def latest_event_of_input_at(history, name, timestamp) do
@@ -125,21 +157,72 @@ defmodule TesslaServer.Node.History do
   end
 
   @doc """
-  Returns the latest `Event.t` that is saved on any input stream
+  Returns the latest `Event.t` that is saved on any input stream.
+  If multiple Events happened at the latest point the result is only one of them.
+  Returns `nil` if the `history` has no inputs or if on no input an event has happened before
+  the `timestamp`.
+
+  ## Examples
+
+      iex> event1 = %Event{stream_name: :input1, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+      iex> event3 = %Event{stream_name: :input2, timestamp: {2, 5, 0}}
+      iex> event4 = %Event{stream_name: :input2, timestamp: {4, 0, 0}}
+      iex> input1_events = [event2, event1]
+      iex> input2_events = [event4, event3]
+      iex> input1 = %EventStream{name: :input1, events: input1_events, progressed_to: {3, 0, 0}}
+      iex> input2 = %EventStream{name: :input1, events: input2_events, progressed_to: {4, 0, 0}}
+      iex> history = %History{inputs: %{input1: input1, input2: input2}}
+      iex> History.latest_input_event_at(history, {1, 0, 0})
+      nil
+      iex> History.latest_input_event_at(history, {3, 0, 0})
+      %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+      iex> History.latest_input_event_at(history, {2, 5, 0})
+      %Event{stream_name: :input2, timestamp: {2, 5, 0}}
   """
   @spec latest_input_event_at(History.t, timestamp) :: Event.t | nil
   def latest_input_event_at(history, timestamp) do
-    history.inputs
-    |> Map.values
-    |> Enum.map(&EventStream.event_at(&1, timestamp))
-    |> Enum.max_by(&(&1.timestamp))
+    events = history.inputs
+              |> Map.values
+              |> Enum.map(&EventStream.event_at(&1, timestamp))
+              |> Enum.filter(&(!is_nil &1))
+    if Enum.empty? events do
+      nil
+    else
+      Enum.max_by(events, &(&1.timestamp))
+    end
   end
 
   @doc """
-  Returns the latest `Event` in the output of a History
+  Returns the latest `Event` in the output of a History or `nil` if the output is empty or `nil`.
+
+  ## Examples
+
+      iex> history = %History{}
+      iex> History.latest_output history
+      nil
+
+      iex> output = %EventStream{name: :output, progressed_to: {3, 0, 0}}
+      iex> history = %History{output: output}
+      iex> History.latest_output history
+      nil
+
+      iex> event1 = %Event{stream_name: :output, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_name: :output, timestamp: {3, 0, 0}}
+      iex> events = [event2, event1]
+      iex> output = %EventStream{name: :output, progressed_to: {3, 0, 0}, events: events}
+      iex> history = %History{output: output}
+      iex> History.latest_output history
+      %Event{stream_name: :output, timestamp: {3, 0, 0}}
+
   """
-  @spec latest_output(History.t) :: Event.t
+  @spec latest_output(History.t) :: Event.t | nil
+  def latest_output(%{output: nil}), do: nil
   def latest_output(history) do
-    hd history.output.events
+    if Enum.empty? history.output.events do
+      nil
+    else
+      hd history.output.events
+    end
   end
 end
