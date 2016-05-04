@@ -49,19 +49,53 @@ defmodule TesslaServer.Node.History do
   @spec replace_input_stream(History.t, EventStream.t) :: {:ok, History.t}
   def replace_input_stream(history, stream) do
     inputs = history.inputs
-      updated_inputs = Map.put(inputs, stream.name, stream)
-      {:ok, %{history | inputs: updated_inputs}}
+    updated_inputs = Map.put(inputs, stream.name, stream)
+    {:ok, %{history | inputs: updated_inputs}}
   end
 
   @doc """
-  Updates the given `history` to prepend the given `new_event` to the output stream
+  Updates the given `history` to prepend the given `new_event` to the output stream.
+  The `event` has to have the same `stream_name` than the `name` of the `output`, else an
+  error will be returned.
+  Also the `timestamp` of the `event` has to be bigger than the `progressed_to` of the `output`,
+  else an error will be returned.
+  The `progressed_to` of the `output` will be set to the `timestamp` of the `event`
+  Returns the new `history` if no errors occur.
 
-  Returns the new `history`
+  ## Examples
+
+      iex> output = %EventStream{name: :output, progressed_to: {0, 2, 3}}
+      iex> history = %History{output: output}
+      iex> new_event = %Event{stream_name: :output, timestamp: {1, 0, 0}}
+      iex> History.update_output(history, new_event)
+      {:ok,
+        %History{
+          output: %EventStream{
+            name: :output,
+            progressed_to: {1, 0, 0},
+            events: [%Event{stream_name: :output, timestamp: {1, 0, 0}}]
+          }
+        }
+      }
+
+      iex> output = %EventStream{name: :output, progressed_to: {1, 2, 3}}
+      iex> history = %History{output: output}
+      iex> new_event = %Event{stream_name: :output, timestamp: {1, 0, 0}}
+      iex> History.update_output(history, new_event)
+      {:error, "Event's timestamp smaller than stream progress"}
+
+      iex> output = %EventStream{name: :output, progressed_to: {0, 2, 3}}
+      iex> history = %History{output: output}
+      iex> new_event = %Event{stream_name: :wrong, timestamp: {1, 0, 0}}
+      iex> History.update_output(history, new_event)
+      {:error, "Event has different stream_name than stream"}
   """
-  @spec update_output(History.t, Event.t) :: History.t
+  @spec update_output(History.t, Event.t) :: {:ok, History.t} | {:error, String.t}
   def update_output(history, new_event) do
-    {:ok, updated_output} = EventStream.add_event(history.output, new_event)
-    %{history | output: updated_output}
+    case  EventStream.add_event(history.output, new_event) do
+      {:ok, updated_output} -> {:ok, %{history | output: updated_output}}
+      {:error, reason} -> {:error, reason}
+    end
   end
 
   @doc """

@@ -61,14 +61,16 @@ defmodule TesslaServer.EventStream do
       }
 
   The `timestamp` of the `Event` has to be greater or equal to the `progressed_to` value
-  of the `EventStream` and it's `stream_name` the same as the `name` of the EventStream or else an
-  error will be returned.
+  of the `EventStream`.
 
       iex> event = %Event{stream_name: :test, timestamp: {0, 1, 2}, value: 1}
       iex> stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
       iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
       "Event's timestamp smaller than stream progress"
+
+  The `stream_name` of the `Event` has to be the same as the `name` of the EventStream or else an
+  error will be returned.
 
       iex> event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
       iex> stream = %EventStream{name: :test}

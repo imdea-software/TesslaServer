@@ -185,7 +185,8 @@ defmodule TesslaServer.Node do
       def process_events(timestamp, event_map, state) do
         case perform_computation(timestamp, event_map, state) do
           {:ok, new_event} ->
-            %{state | history: History.update_output(state.history, new_event)}
+            {:ok, history} = History.update_output(state.history, new_event)
+            %{state | history: history}
           :wait ->
             %{state | history: History.progress_output(state.history, timestamp)}
         end

@@ -58,6 +58,6 @@ defmodule TesslaServer.EventStreamTest do
     {:error, _} = EventStream.add_event(stream, event)
   end
 
-  test "event_at", do: flunk
-  test "events_in_timeslot:", do: flunk
+  test "event_at"
+  test "events_in_timeslot:"
 end

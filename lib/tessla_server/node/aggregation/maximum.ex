@@ -8,7 +8,7 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
   which should hold the default value.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{Node, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
   use Node
@@ -22,7 +22,7 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
       output_event = %Event{
         stream_name: state.stream_name, timestamp: new_event.timestamp, value: new_event.value
       }
-      updated_history = History.update_output(state.history, output_event)
+      {:ok, updated_history} = History.update_output(state.history, output_event)
       %{state |
         history: updated_history
       }
@@ -35,6 +35,7 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
     default_value = state.options[:default]
     default_event = %Event{stream_name: state.stream_name, value: default_value}
 
-    History.update_output(state.history, default_event).output
+    {:ok, history} = History.update_output(state.history, default_event)
+    history.output
   end
 end
