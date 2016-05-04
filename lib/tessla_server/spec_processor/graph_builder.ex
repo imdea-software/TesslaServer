@@ -166,7 +166,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   defp build_node(%{def: %{function: :function_call_parameter, args: args}}, name) do
     [%{def: %{literal: function_name}}| [%{def: %{literal: param_pos}} | []]] = args
 
-    Logger.debug("function_call_parameter: #{name}, function name: #{inspect function_name}, 
+    Logger.debug("function_call_parameter: #{name}, function name: #{inspect function_name},
     param_pos: #{param_pos}")
     options = %{param_pos: param_pos}
     input_name = "function_call:#{function_name}" |> String.to_atom

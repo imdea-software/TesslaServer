@@ -10,48 +10,50 @@ defmodule TesslaServer.Node.Lifted.ImpliesTest do
 
   doctest Implies
 
+  @op1 :boolean1
+  @op2 :boolean2
+  @test :implies_test
+  @processor :implies
+
   setup do
-    name = :implies_test
-    :gproc.reg(gproc_tuple(name))
-    state = %{stream_name: :implies, options: %{operand1: :number1, operand2: :number2}}
-    {:ok, state: state, name: name}
+    :gproc.reg(gproc_tuple(@test))
+    Implies.start @processor, [@op1, @op2]
+    :ok
   end
 
-  test "Should compute implies of latest events", %{state: state, name: name} do
-    processor = Implies.start state
-
-    Node.add_child(processor, name)
+  test "Should compute implies of latest events" do
+    Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, initial_output}})
     assert(initial_output.progressed_to == Time.zero)
     assert(initial_output.events == [])
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: true, stream_name: :number1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: false, stream_name: :number2}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_name: :number1}
-    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: true, stream_name: :number2}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: true, stream_name: @op1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: false, stream_name: @op2}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_name: @op1}
+    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: true, stream_name: @op2}
 
-    Node.send_event(processor, event1)
+    Node.send_event(@processor, event1)
 
     refute_receive(_)
 
-    Node.send_event(processor, event2)
+    Node.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
     assert(progressed_to == event1.timestamp)
 
-    Node.send_event(processor, event3)
+    Node.send_event(@processor, event3)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(progressed_to == event2.timestamp)
     refute hd(events).value
 
-    Node.send_event(processor, event4)
+    Node.send_event(@processor, event4)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(progressed_to == event3.timestamp)
     assert hd(events).value
 
-    :ok = Node.stop processor
+    :ok = Node.stop @processor
   end
 end

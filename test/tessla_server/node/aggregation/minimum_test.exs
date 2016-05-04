@@ -11,94 +11,91 @@ defmodule TesslaServer.Node.Aggregation.MinimumTest do
   doctest Minimum
 
   @default_value 5
+  @op1 :number
+  @test :minimum_test
+  @processor :minimum
 
   setup do
-    :gproc.reg(gproc_tuple(:minimum_test))
-    state = %{stream_name: :minimum, options: %{operand1: :number, default: @default_value}}
-    {:ok, state: state}
+    :gproc.reg(gproc_tuple(@test))
+    Minimum.start @processor, [@op1], %{default: @default_value}
+    :ok
   end
 
-  test "Should take value of new event if it is smaller than previous minimum" , %{state: state} do
-    processor = Minimum.start state
-    name = :minimum_test
-    Node.add_child(processor, name)
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-    assert(hd(events).value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: :number}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_name: :number}
+  test "Should take value of new event if it is smaller than previous minimum" do
+  Node.add_child(@processor, @test)
+  assert_receive({_, {:update_input_stream, %{events: events}}})
+  assert(hd(events).value == @default_value)
+  timestamp = DateTime.now
+  event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: @op1}
+  event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_name: @op1}
 
-    Node.send_event(processor, event1)
+  Node.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
+  assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    assert(hd(events).value == event1.value)
+  assert(hd(events).value == event1.value)
 
-    Node.send_event(processor, event2)
+  Node.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-    assert(hd(events).value == event2.value)
+  assert_receive({_, {:update_input_stream, %{events: events}}})
+  assert(hd(events).value == event2.value)
 
-    :ok = Node.stop(processor)
+  :ok = Node.stop(@processor)
   end
 
-  test "Should keep previous value if new value is bigger" , %{state: state} do
-    processor = Minimum.start state
-    name = :minimum_test
-    Node.add_child(processor, name)
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-    assert(hd(events).value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: :number}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: :number}
+  test "Should keep previous value if new value is bigger" do
+  Node.add_child(@processor, @test)
+  assert_receive({_, {:update_input_stream, %{events: events}}})
+  assert(hd(events).value == @default_value)
+  timestamp = DateTime.now
+  event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: @op1}
+  event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: @op1}
 
-    Node.send_event(processor, event1)
+  Node.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
+  assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    last_event = hd(events)
-    assert(last_event.value == event1.value)
+  last_event = hd(events)
+  assert(last_event.value == event1.value)
 
-    Node.send_event(processor, event2)
+  Node.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+  assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
 
-    new_event = hd(events)
-    assert(new_event == last_event)
-    assert(progressed_to == event2.timestamp)
+  new_event = hd(events)
+  assert(new_event == last_event)
+  assert(progressed_to == event2.timestamp)
 
-    :ok = Node.stop(processor)
+  :ok = Node.stop(@processor)
   end
 
-  test "Should keep default value until smaller value occurs" , %{state: state} do
-    processor = Minimum.start state
-    name = :minimum_test
-    Node.add_child(processor, name)
-    assert_receive({_, {:update_input_stream, %{events: events}}})
+  test "Should keep default value until smaller value occurs" do
+  Node.add_child(@processor, @test)
+  assert_receive({_, {:update_input_stream, %{events: events}}})
 
-    first_event = hd(events)
-    assert(first_event.value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: :number}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: :number}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 3, stream_name: :number}
+  first_event = hd(events)
+  assert(first_event.value == @default_value)
+  timestamp = DateTime.now
+  event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: @op1}
+  event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: @op1}
+  event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 3, stream_name: @op1}
 
-    Node.send_event(processor, event1)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    assert(hd(events) == first_event)
-    assert(progressed_to == event1.timestamp)
+  Node.send_event(@processor, event1)
+  assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+  assert(hd(events) == first_event)
+  assert(progressed_to == event1.timestamp)
 
-    Node.send_event(processor, event2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    assert(hd(events) == first_event)
-    assert(progressed_to == event2.timestamp)
+  Node.send_event(@processor, event2)
+  assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+  assert(hd(events) == first_event)
+  assert(progressed_to == event2.timestamp)
 
-    Node.send_event(processor, event3)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    refute(hd(events) == first_event)
-    assert(progressed_to == event3.timestamp)
-    assert(hd(events).value == event3.value)
+  Node.send_event(@processor, event3)
+  assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+  refute(hd(events) == first_event)
+  assert(progressed_to == event3.timestamp)
+  assert(hd(events).value == event3.value)
 
-    :ok = Node.stop(processor)
+  :ok = Node.stop(@processor)
   end
 end

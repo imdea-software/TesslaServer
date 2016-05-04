@@ -97,6 +97,18 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.EventStream.html">TesslaServer.EventStream</a></div>
+  
+    <div class="summary-synopsis"><p>Represents a Stream, generated either from external Events or by computation through
+a <code class="inline">Node</code>
+Note that <code class="inline">progressed_to</code> can be bigger than the <code class="inline">timestamp</code> of the latest <code class="inline">Event</code>:
+If all Inputs of the <code class="inline">Node</code> generating this <code class="inline">Stream</code> have advanced to at least <code class="inline">t</code> but
+no new Event is generated (e.g. because the <code class="inline">Node</code> is a delay with a higher value)
+the <code class="inline">Stream</code> will be progressed to <code class="inline">t</code> but no Event with a timestamp <code class="inline">t</code> is present</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.html">TesslaServer.Node</a></div>
   
     <div class="summary-synopsis"><p>Base Module to build new Nodes</p>
@@ -157,7 +169,8 @@ or a default value if it’s smaller than all values occured to that point</p>
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Eq.html">TesslaServer.Node.Lifted.Eq</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if both are the same and false otherwise</p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true 
+if both are the same and false otherwise</p>
 </div>
   
 </div>
@@ -201,16 +214,14 @@ smaller or equal to the second and false otherwise</p>
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Mul.html">TesslaServer.Node.Lifted.Mul</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that multiplies two event streams
-To do so the <code class="inline">state.options</code> object has to be initialized with the keys <code class="inline">:operand1</code> and <code class="inline">:operand2</code>,
-which must be atoms representing the names of the event streams that should be multiplied</p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that multiplies two event streams</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Not.html">TesslaServer.Node.Lifted.Not</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the boolean not of a boolean stream</p>
 </div>
   
 </div>
@@ -239,6 +250,14 @@ which must be atoms representing the names of the event streams that should be m
   <div class="summary-signature"><a href="TesslaServer.Node.State.html">TesslaServer.Node.State</a></div>
   
     <div class="summary-synopsis"><p>Struct to represent the state of a <code class="inline">Node</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Timing.Delay.html">TesslaServer.Node.Timing.Delay</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that delays the values of an <code class="inline">EventStream</code> by the amount specified in
+<code class="inline">options</code> under the key <code class="inline">delay</code></p>
 </div>
   
 </div>
@@ -302,18 +321,6 @@ which must be atoms representing the names of the event streams that should be m
   <div class="summary-signature"><a href="TesslaServer.SpecProcessor.Preprocessor.html">TesslaServer.SpecProcessor.Preprocessor</a></div>
   
     <div class="summary-synopsis"><p>Preprocesses a Tessla Spec</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Stream.html">TesslaServer.Stream</a></div>
-  
-    <div class="summary-synopsis"><p>Represents a Stream, generated either from external Events or by computation through
-a <code class="inline">Node</code>
-Note that <code class="inline">progressed_to</code> can be bigger than the <code class="inline">timestamp</code> of the latest <code class="inline">Event</code>:
-If all Inputs of the <code class="inline">Node</code> generating this <code class="inline">Stream</code> have advanced to at least <code class="inline">t</code> but
-no new Event is generated (e.g. because the <code class="inline">Node</code> is a delay with a higher value)
-the <code class="inline">Stream</code> will be progressed to <code class="inline">t</code> but no Event with a timestamp <code class="inline">t</code> is present</p>
 </div>
   
 </div>

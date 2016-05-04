@@ -92,6 +92,12 @@
   </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:timestamp/0">timestamp()</a>
+  </div>
+  
+</div>
 
   </div>
 
@@ -103,26 +109,26 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_latest_input/1">get_latest_input(history)</a>
+    <a href="#latest_event_of_input_at/3">latest_event_of_input_at(history, name, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream
-It assumes that every Stream is ordered by time, meaning it only looks at the head of every Stream</p>
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code>
+that has a <code class="inline">timestamp</code> smaller than <code class="inline">at</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_latest_input_of_stream/2">get_latest_input_of_stream(history, name)</a>
+    <a href="#latest_input_event_at/2">latest_input_event_at(history, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code></p>
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_latest_output/1">get_latest_output(history)</a>
+    <a href="#latest_output/1">latest_output(history)</a>
   </div>
   
     <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event</code> in the output of a History</p>
@@ -131,11 +137,30 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_input/2">update_input(history, new_event)</a>
+    <a href="#processable_events/1">processable_events(history)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">event</code> to the input stream
-specified by the <code class="inline">new_event</code></p>
+    <div class="summary-synopsis"><p>Returns all events on all inputs with a <code class="inline">timestamp</code> between <code class="inline">progressed_to</code> of the output and
+the minimum of the <code class="inline">progressed_to</code> of all inputs</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#progress_output/2">progress_output(history, timestamp)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#replace_input_stream/2">replace_input_stream(history, stream)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Replaces the input <code class="inline">EventStream</code> with the same name as <code class="inline">stream</code> of the <code class="inline">history</code>.
+If the history doesn’t include an <code class="inline">EventStream</code> with the name an error will be returned</p>
 </div>
   
 </div>
@@ -169,7 +194,11 @@ specified by the <code class="inline">new_event</code></p>
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: %TesslaServer.Node.History{inputs: input_streams, output: <a href="TesslaServer.Stream.html#t:t/0">TesslaServer.Stream.t</a>}</code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: %TesslaServer.Node.History{inputs: input_streams, output: <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>}</code></pre>
+  
+</div>
+<div id="t:timestamp/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:timestamp/0">timestamp</a> :: Timex.Types.timestamp</code></pre>
   
 </div>
 
@@ -185,12 +214,12 @@ specified by the <code class="inline">new_event</code></p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_latest_input/1">
+          <div class="detail" id="latest_event_of_input_at/3">
   <div class="detail-header">
-    <a href="#get_latest_input/1" class="detail-link" title="Link to this function">
+    <a href="#latest_event_of_input_at/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_latest_input(history)</span>
+    <span class="signature">latest_event_of_input_at(history, name, timestamp)</span>
       
   </div>
   
@@ -198,31 +227,7 @@ specified by the <code class="inline">new_event</code></p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_latest_input(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    <p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream
-It assumes that every Stream is ordered by time, meaning it only looks at the head of every Stream</p>
-
-  </section>
-</div>
-<div class="detail" id="get_latest_input_of_stream/2">
-  <div class="detail-header">
-    <a href="#get_latest_input_of_stream/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_latest_input_of_stream(history, name)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_latest_input_of_stream(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, atom) ::
+          <pre><code class="elixir">latest_event_of_input_at(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, atom, <a href="#t:timestamp/0">timestamp</a>) ::
   <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a> |
   nil</code></pre>
         
@@ -230,16 +235,17 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
     </div>
   
   <section class="docstring">
-    <p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code></p>
+    <p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code>
+that has a <code class="inline">timestamp</code> smaller than <code class="inline">at</code></p>
 
   </section>
 </div>
-<div class="detail" id="get_latest_output/1">
+<div class="detail" id="latest_input_event_at/2">
   <div class="detail-header">
-    <a href="#get_latest_output/1" class="detail-link" title="Link to this function">
+    <a href="#latest_input_event_at/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_latest_output(history)</span>
+    <span class="signature">latest_input_event_at(history, timestamp)</span>
       
   </div>
   
@@ -247,7 +253,32 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_latest_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
+          <pre><code class="elixir">latest_input_event_at(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="#t:timestamp/0">timestamp</a>) ::
+  <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a> |
+  nil</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream</p>
+
+  </section>
+</div>
+<div class="detail" id="latest_output/1">
+  <div class="detail-header">
+    <a href="#latest_output/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">latest_output(history)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">latest_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
         
       </div>
     </div>
@@ -257,12 +288,12 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
 
   </section>
 </div>
-<div class="detail" id="update_input/2">
+<div class="detail" id="processable_events/1">
   <div class="detail-header">
-    <a href="#update_input/2" class="detail-link" title="Link to this function">
+    <a href="#processable_events/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">update_input(history, new_event)</span>
+    <span class="signature">processable_events(history)</span>
       
   </div>
   
@@ -270,22 +301,72 @@ It assumes that every Stream is ordered by time, meaning it only looks at the he
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_input(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a></code></pre>
+          <pre><code class="elixir">processable_events(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>]</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">event</code> to the input stream
-specified by the <code class="inline">new_event</code></p>
-<p>Returns the new <code class="inline">History</code>.</p>
+    <p>Returns all events on all inputs with a <code class="inline">timestamp</code> between <code class="inline">progressed_to</code> of the output and
+the minimum of the <code class="inline">progressed_to</code> of all inputs.</p>
+
+  </section>
+</div>
+<div class="detail" id="progress_output/2">
+  <div class="detail-header">
+    <a href="#progress_output/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">progress_output(history, timestamp)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">progress_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="#t:timestamp/0">timestamp</a>) :: TesslaServer.Node.History</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code></p>
+
+  </section>
+</div>
+<div class="detail" id="replace_input_stream/2">
+  <div class="detail-header">
+    <a href="#replace_input_stream/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">replace_input_stream(history, stream)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">replace_input_stream(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>) :: {:ok, <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Replaces the input <code class="inline">EventStream</code> with the same name as <code class="inline">stream</code> of the <code class="inline">history</code>.
+If the history doesn’t include an <code class="inline">EventStream</code> with the name an error will be returned.</p>
 <h2>Examples</h2>
-<pre><code class="iex elixir">iex&gt; history = %History{}
-iex&gt; timestamp = Timex.Time.zero
-iex&gt; event = %Event{stream_name: :test, value: :value, timestamp: timestamp}
-iex&gt; updated = History.update_input history, event
-iex&gt; updated.inputs[:test].events |&gt; hd
-%TesslaServer.Event{stream_name: :test, timestamp: {0, 0, 0}, value: :value}</code></pre>
+<pre><code class="iex elixir">iex&gt; stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
+iex&gt; history = %History{inputs: %{test: stream}}
+iex&gt; new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+iex&gt; History.replace_input_stream(history, new_stream)
+{:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}
+
+iex&gt; history = %History{}
+iex&gt; new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+iex&gt; History.replace_input_stream(history, new_stream)
+{:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}</code></pre>
 
   </section>
 </div>

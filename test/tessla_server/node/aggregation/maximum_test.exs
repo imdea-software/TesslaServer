@@ -11,63 +11,56 @@ defmodule TesslaServer.Node.Aggregation.MaximumTest do
   doctest Maximum
 
   @default_value 5
+  @op1 :number
+  @test :maximum_test
+  @processor :maximum
 
   setup do
-    test_name = :maximum_test
-    :gproc.reg(gproc_tuple(test_name))
-    state = %{stream_name: :maximum, options: %{operand1: :number, default: @default_value}}
-    {
-      :ok, test_name: test_name, process_name: :maximum, operands: [:number], 
-      options: %{default: @default_value}
-    }
+    :gproc.reg(gproc_tuple(@test))
+    Maximum.start @processor, [@op1], %{default: @default_value}
+    :ok
   end
 
-  test "Should take value of new event if it is bigger than previous maximum", %{
-    test_name: test_name, process_name: process_name, operands: operands, options: options
-  } do
-    processor = Maximum.start process_name, operands, options
-
-    Node.add_child(processor, test_name)
+  test "Should take value of new event if it is bigger than previous maximum" do
+    Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{events: events}}})
     assert(hd(events).value == @default_value)
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: :number}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: @op1}
     event2 = %Event{
-      timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 7, stream_name: :number
+      timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 7, stream_name: @op1
     }
 
-    Node.send_event(processor, event1)
+    Node.send_event(@processor, event1)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     assert(hd(events).value == event1.value)
 
-    Node.send_event(processor, event2)
+    Node.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
     assert(hd(events).value == event2.value)
 
-    :ok = Node.stop(processor)
+    :ok = Node.stop(@processor)
   end
 
-  test "Should keep previous value if new value is smaller" , %{state: state} do
-    processor = Maximum.start state
-    name = :maximum_test
-    Node.add_child(processor, name)
+  test "Should keep previous value if new value is smaller" do
+    Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{events: events}}})
     assert(hd(events).value == @default_value)
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: :number}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: :number}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_name: @op1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: @op1}
 
-    Node.send_event(processor, event1)
+    Node.send_event(@processor, event1)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     last_event = hd(events)
     assert(last_event.value == event1.value)
 
-    Node.send_event(processor, event2)
+    Node.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
 
@@ -75,42 +68,40 @@ defmodule TesslaServer.Node.Aggregation.MaximumTest do
     assert(new_event == last_event)
     assert(progressed_to == event2.timestamp)
 
-    :ok = Node.stop(processor)
+    :ok = Node.stop(@processor)
   end
-  test "Should keep default value until bigger value occurs" , %{state: state} do
-    processor = Maximum.start state
-    name = :maximum_test
-    Node.add_child(processor, name)
+  test "Should keep default value until bigger value occurs" do
+    Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     first_event = hd(events)
     assert(first_event.value == @default_value)
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: :number}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_name: @op1}
     event2 = %Event{
-      timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: :number
+      timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_name: @op1
     }
     event3 = %Event{
-      timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 6, stream_name: :number
+      timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 6, stream_name: @op1
     }
 
-    Node.send_event(processor, event1)
+    Node.send_event(@processor, event1)
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(hd(events) == first_event)
     assert(progressed_to == event1.timestamp)
 
-    Node.send_event(processor, event2)
+    Node.send_event(@processor, event2)
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(hd(events) == first_event)
     assert(progressed_to == event2.timestamp)
 
-    Node.send_event(processor, event3)
+    Node.send_event(@processor, event3)
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     refute(hd(events) == first_event)
     assert(progressed_to == event3.timestamp)
     assert(hd(events).value == event3.value)
 
-    :ok = Node.stop(processor)
+    :ok = Node.stop(@processor)
   end
 end

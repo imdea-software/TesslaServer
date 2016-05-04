@@ -24,7 +24,7 @@ defmodule TesslaServer.Node.SpecProcessor.MinimalTest do
     variable_update_1 = %Event{stream_name: variable_update_channel, value: ["1"], timestamp: timestamp1}
 
     Source.distribute(variable_update_1)
-    refute_receive update
+    refute_receive _
 
     function_call_1 = %Event{stream_name: function_call_channel, value: ["1"], timestamp: timestamp1}
 
@@ -41,21 +41,21 @@ defmodule TesslaServer.Node.SpecProcessor.MinimalTest do
 
     Source.distribute(function_call_2)
 
-    refute_receive update
+    refute_receive _
 
     timestamp3 = {3, 0, 0}
     function_call_3 = %Event{stream_name: function_call_channel, value: ["2"], timestamp: timestamp3}
 
     Source.distribute(function_call_3)
 
-    refute_receive update
+    refute_receive _
 
     timestamp4 = {4, 0, 0}
     function_call_4 = %Event{stream_name: function_call_channel, value: ["3"], timestamp: timestamp4}
 
     Source.distribute(function_call_4)
 
-    refute_receive update
+    refute_receive _
 
     variable_update_2 = %Event{stream_name: variable_update_channel, value: ["2"], timestamp: timestamp3}
 

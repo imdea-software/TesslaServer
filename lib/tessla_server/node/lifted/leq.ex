@@ -3,11 +3,12 @@ defmodule TesslaServer.Node.Lifted.Leq do
   Implements a `Node` that compares two integer Streams and returns true if the first is
   smaller or equal to the second and false otherwise.
 
-  To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be compared.
+  To do so the `state.operands` list has to be initialized with two atoms representing the names
+  of the streams that should be compared.
+  The first stream has to be leq than the second to yield `true`
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node

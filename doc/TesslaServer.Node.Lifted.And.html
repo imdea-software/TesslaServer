@@ -69,9 +69,8 @@
       
         <section id="moduledoc" class="docstring">
           <p>Implements a <code class="inline">Node</code> that performs an <code class="inline">and</code> on two boolean streams</p>
-<p>To do so the <code class="inline">state.options</code> object has to be initialized with the keys <code class="inline">:operand1</code>
-and <code class="inline">:operand2</code>, which must be atoms representing the names of the event streams
-that should be used.</p>
+<p>To do so the <code class="inline">state.operands</code> list has to be initialized with two atoms representing the names
+of the streams which should be the base of the computation</p>
 
         </section>
       
@@ -93,37 +92,61 @@ that should be used.</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#prepare_values/1">prepare_values(state)</a>
+    <a href="#init_inputs/1">init_inputs(names)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_values/1"><code class="inline">TesslaServer.Node.prepare_values/1</code></a></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:init_inputs/1"><code class="inline">TesslaServer.Node.init_inputs/1</code></a></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#process_values/2">process_values(state, events)</a>
+    <a href="#init_output/1">init_output(state)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:process_values/2"><code class="inline">TesslaServer.Node.process_values/2</code></a></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:init_output/1"><code class="inline">TesslaServer.Node.init_output/1</code></a></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start/1">start(args)</a>
+    <a href="#perform_computation/3">perform_computation(timestamp, event_map, state)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:start/1"><code class="inline">TesslaServer.Node.start/1</code></a></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:perform_computation/3"><code class="inline">TesslaServer.Node.perform_computation/3</code></a></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#will_add_child/2">will_add_child(, )</a>
+    <a href="#prepare_events/2">prepare_events(at, state)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:will_add_child/2"><code class="inline">TesslaServer.Node.will_add_child/2</code></a></p>
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_events/2"><code class="inline">TesslaServer.Node.prepare_events/2</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#process_events/3">process_events(timestamp, event_map, state)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:process_events/3"><code class="inline">TesslaServer.Node.process_events/3</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#progress/1">progress(state)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#start/3">start(name, operands, options \\ %{})</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:start/3"><code class="inline">TesslaServer.Node.start/3</code></a></p>
 </div>
   
 </div>
@@ -148,59 +171,109 @@ that should be used.</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="prepare_values/1">
+          <div class="detail" id="init_inputs/1">
   <div class="detail-header">
-    <a href="#prepare_values/1" class="detail-link" title="Link to this function">
+    <a href="#init_inputs/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">prepare_values(state)</span>
+    <span class="signature">init_inputs(names)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_values/1"><code class="inline">TesslaServer.Node.prepare_values/1</code></a>.</p>
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:init_inputs/1"><code class="inline">TesslaServer.Node.init_inputs/1</code></a>.</p>
 
   </section>
 </div>
-<div class="detail" id="process_values/2">
+<div class="detail" id="init_output/1">
   <div class="detail-header">
-    <a href="#process_values/2" class="detail-link" title="Link to this function">
+    <a href="#init_output/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">process_values(state, events)</span>
+    <span class="signature">init_output(state)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="TesslaServer.Node.html#c:process_values/2"><code class="inline">TesslaServer.Node.process_values/2</code></a>.</p>
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:init_output/1"><code class="inline">TesslaServer.Node.init_output/1</code></a>.</p>
 
   </section>
 </div>
-<div class="detail" id="start/1">
+<div class="detail" id="perform_computation/3">
   <div class="detail-header">
-    <a href="#start/1" class="detail-link" title="Link to this function">
+    <a href="#perform_computation/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start(args)</span>
+    <span class="signature">perform_computation(timestamp, event_map, state)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="TesslaServer.Node.html#c:start/1"><code class="inline">TesslaServer.Node.start/1</code></a>.</p>
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:perform_computation/3"><code class="inline">TesslaServer.Node.perform_computation/3</code></a>.</p>
 
   </section>
 </div>
-<div class="detail" id="will_add_child/2">
+<div class="detail" id="prepare_events/2">
   <div class="detail-header">
-    <a href="#will_add_child/2" class="detail-link" title="Link to this function">
+    <a href="#prepare_events/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">will_add_child(, )</span>
+    <span class="signature">prepare_events(at, state)</span>
       
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <a href="TesslaServer.Node.html#c:will_add_child/2"><code class="inline">TesslaServer.Node.will_add_child/2</code></a>.</p>
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:prepare_events/2"><code class="inline">TesslaServer.Node.prepare_events/2</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="process_events/3">
+  <div class="detail-header">
+    <a href="#process_events/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">process_events(timestamp, event_map, state)</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:process_events/3"><code class="inline">TesslaServer.Node.process_events/3</code></a>.</p>
+
+  </section>
+</div>
+<div class="detail" id="progress/1">
+  <div class="detail-header">
+    <a href="#progress/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">progress(state)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">progress(<a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="start/3">
+  <div class="detail-header">
+    <a href="#start/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">start(name, operands, options \\ %{})</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:start/3"><code class="inline">TesslaServer.Node.start/3</code></a>.</p>
 
   </section>
 </div>

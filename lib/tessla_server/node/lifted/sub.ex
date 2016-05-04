@@ -2,22 +2,19 @@ defmodule TesslaServer.Node.Lifted.Sub do
   @moduledoc """
   Implements a `Node` that substracts two event streams
 
-  To do so the `state.options` object has to be initialized with the keys `:operand1` and `:operand2`,
-  which must be atoms representing the names of the event streams that should be substracted.
+  To do so the `state.operands` kust has to be initialized with two atoms representing the names
+  of the two streams that are the base of the computation.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node
 
-  def init_inputs(%{options: %{operand1: name1, operand2: name2}}) do
-    Map.new [{name1, %EventStream{name: name1}}, {name2, %EventStream{name: name2}}]
-  end
-
   def perform_computation(timestamp, event_map, state) do
-    event1 = event_map[state.options.operand1]
-    event2 = event_map[state.options.operand2]
+    [op1, op2] = state.operands
+    event1 = event_map[op1]
+    event2 = event_map[op2]
 
     if event1 && event2 do
       {:ok, %Event{

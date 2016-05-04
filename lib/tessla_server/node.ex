@@ -95,7 +95,6 @@ defmodule TesslaServer.Node do
       def init(state) do
         inputs = init_inputs(state.operands)
         output = init_output state
-        IO.puts inspect output
         history = %{state.history | output: output, inputs: inputs}
         {:ok, %{state | history: history}}
       end

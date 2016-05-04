@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.5">
-    <title>TesslaServer.Stream – tessla_server v0.0.1</title>
+    <title>TesslaServer.EventStream – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -61,7 +61,7 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Stream
+        TesslaServer.EventStream
         
         
       </h1>
@@ -97,6 +97,12 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
   </div>
   
 </div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:timestamp/0">timestamp()</a>
+  </div>
+  
+</div>
 
   </div>
 
@@ -111,7 +117,28 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
     <a href="#add_event/2">add_event(stream, event)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Adds the <code class="inline">Event</code> to the <code class="inline">Stream</code></p>
+    <div class="summary-synopsis"><p>Adds the <code class="inline">Event</code> to the <code class="inline">EventStream</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#event_at/2">event_at(stream, at)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns the most recent <code class="inline">Event.t</code> that occured at or before <code class="inline">at</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#events_in_timeslot/3">events_in_timeslot(stream, from, to)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Returns all event on the stream with a <code class="inline">timestamp</code> bigger than <code class="inline">from</code> and smaller or equal to
+<code class="inline">to</code>.
+To work, the stream has to be ordered by it’s <code class="inline">timestamps</code>, which all <code class="inline">Stream.t</code> structs should
+be always</p>
 </div>
   
 </div>
@@ -120,7 +147,7 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
     <a href="#progress/2">progress(stream, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Progresses the <code class="inline">Stream</code> to the given <code class="inline">timestamp</code></p>
+    <div class="summary-synopsis"><p>Progresses the <code class="inline">EventStream</code> to the given <code class="inline">timestamp</code></p>
 </div>
   
 </div>
@@ -145,7 +172,11 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
           </h1>
           <div class="types-list">
             <div id="t:t/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:t/0">t</a> :: %TesslaServer.Stream{events: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>], name: atom, progressed_to: Timex.Types.timestamp}</code></pre>
+  <pre><code class="elixir"><a href="#t:t/0">t</a> :: %TesslaServer.EventStream{events: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>], name: atom, progressed_to: Timex.Types.timestamp}</code></pre>
+  
+</div>
+<div id="t:timestamp/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:timestamp/0">timestamp</a> :: Timex.Types.timestamp</code></pre>
   
 </div>
 
@@ -174,46 +205,122 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_event(nil | <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) ::
-  {:ok, <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>} |
+          <pre><code class="elixir">add_event(nil | EventStream.t, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) ::
+  {:ok, EventStream.t} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Adds the <code class="inline">Event</code> to the <code class="inline">Stream</code>.</p>
+    <p>Adds the <code class="inline">Event</code> to the <code class="inline">EventStream</code>.</p>
 <pre><code class="iex elixir">iex&gt; event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
-iex&gt; stream = %Stream{name: :test}
-iex&gt; {:ok, updated_stream} = Stream.add_event(stream, event)
+iex&gt; stream = %EventStream{name: :test}
+iex&gt; {:ok, updated_stream} = EventStream.add_event(stream, event)
 iex&gt; hd(updated_stream.events)
 %TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}</code></pre>
-<p>If the stream is nil it will create a new <code class="inline">Stream</code> with the name of the <code class="inline">event</code> and
+<p>If the stream is nil it will create a new <code class="inline">EventStream</code> with the name of the <code class="inline">event</code> and
 <code class="inline">progressed_to</code> equal to the <code class="inline">timestamp</code> of the <code class="inline">event</code></p>
 <pre><code class="iex elixir">iex&gt; event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
 iex&gt; stream = nil
-iex&gt; {:ok, updated_stream} = Stream.add_event(stream, event)
+iex&gt; {:ok, updated_stream} = EventStream.add_event(stream, event)
 iex&gt; updated_stream
-%TesslaServer.Stream{
+%TesslaServer.EventStream{
   events: [%TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}],
   name: :test,
   progressed_to: {1000, 123456, 123456}
 }</code></pre>
 <p>The <code class="inline">timestamp</code> of the <code class="inline">Event</code> has to be greater or equal to the <code class="inline">progressed_to</code> value
-of the <code class="inline">Stream</code> and it’s <code class="inline">stream_name</code> the same as the <code class="inline">name</code> of the stream or else an
+of the <code class="inline">EventStream</code> and it’s <code class="inline">stream_name</code> the same as the <code class="inline">name</code> of the EventStream or else an
 error will be returned.</p>
-<pre><code class="iex elixir">iex&gt; event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
-iex&gt; stream = %Stream{name: :test}
-iex&gt; {:error, reason} = Stream.add_event(stream, event)
+<pre><code class="iex elixir">iex&gt; event = %Event{stream_name: :test, timestamp: {0, 1, 2}, value: 1}
+iex&gt; stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
+iex&gt; {:error, reason} = EventStream.add_event(stream, event)
 iex&gt; reason
-&quot;Event has different stream_name than stream&quot;
+&quot;Event&#39;s timestamp smaller than stream progress&quot;
 
 iex&gt; event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
-iex&gt; stream = %Stream{name: :test}
-iex&gt; {:error, reason} = Stream.add_event(stream, event)
+iex&gt; stream = %EventStream{name: :test}
+iex&gt; {:error, reason} = EventStream.add_event(stream, event)
 iex&gt; reason
 &quot;Event has different stream_name than stream&quot;</code></pre>
 <p>This method will advance the <code class="inline">progressed_to</code> field to the <code class="inline">timestamp</code> of the <code class="inline">Event</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="event_at/2">
+  <div class="detail-header">
+    <a href="#event_at/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">event_at(stream, at)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">event_at(EventStream.t, <a href="#t:timestamp/0">timestamp</a>) ::
+  <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a> |
+  nil</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns the most recent <code class="inline">Event.t</code> that occured at or before <code class="inline">at</code></p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; event0 = %Event{stream_name: :test, value: 0, timestamp: {0, 0, 0}}
+iex&gt; event1 = %Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
+iex&gt; event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+iex&gt; events = [event2, event1, event0]
+iex&gt; stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+iex&gt; EventStream.event_at(stream, {1, 0, 0})
+%Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
+
+iex&gt; event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+iex&gt; events = [event2]
+iex&gt; stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+iex&gt; EventStream.event_at(stream, {1, 0, 0})
+nil</code></pre>
+
+  </section>
+</div>
+<div class="detail" id="events_in_timeslot/3">
+  <div class="detail-header">
+    <a href="#events_in_timeslot/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">events_in_timeslot(stream, from, to)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">events_in_timeslot(EventStream.t | nil, <a href="#t:timestamp/0">timestamp</a>, <a href="#t:timestamp/0">timestamp</a>) :: [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>]</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Returns all event on the stream with a <code class="inline">timestamp</code> bigger than <code class="inline">from</code> and smaller or equal to
+<code class="inline">to</code>.
+To work, the stream has to be ordered by it’s <code class="inline">timestamps</code>, which all <code class="inline">Stream.t</code> structs should
+be always.</p>
+<p>##Examples</p>
+<pre><code class="iex elixir">iex&gt; event0 = %Event{timestamp: {0, 0, 0}, stream_name: :test, value: 0}
+iex&gt; event1 = %Event{timestamp: {1, 0, 0}, stream_name: :test, value: 1}
+iex&gt; event2 = %Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}
+iex&gt; event3 = %Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3}
+iex&gt; event4 = %Event{timestamp: {4, 0, 0}, stream_name: :test, value: 4}
+iex&gt; events = [event4, event3, event2, event1, event0]
+iex&gt; stream = %EventStream{name: :test, progressed_to: {4, 0, 0}, events: events}
+iex&gt; EventStream.events_in_timeslot(stream, {1, 0, 0}, {3,0,0})
+[%Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3},
+%Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}]</code></pre>
 
   </section>
 </div>
@@ -230,25 +337,25 @@ iex&gt; reason
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">progress(<a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>, Timex.Types.timestamp) ::
-  {:ok, <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>} |
+          <pre><code class="elixir">progress(EventStream.t, <a href="#t:timestamp/0">timestamp</a>) ::
+  {:ok, EventStream.t} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Progresses the <code class="inline">Stream</code> to the given <code class="inline">timestamp</code>.</p>
+    <p>Progresses the <code class="inline">EventStream</code> to the given <code class="inline">timestamp</code>.</p>
 <pre><code class="iex elixir">iex&gt; timestamp = {1234, 123456, 123456}
-iex&gt; stream = %Stream{}
-iex&gt; Stream.progress(stream, timestamp)
-{:ok, %Stream{progressed_to: {1234, 123456, 123456}}}</code></pre>
+iex&gt; stream = %EventStream{}
+iex&gt; EventStream.progress(stream, timestamp)
+{:ok, %EventStream{progressed_to: {1234, 123456, 123456}}}</code></pre>
 <p>The <code class="inline">timestamp</code> has to be bigger than the <code class="inline">stream</code>s <code class="inline">progressed_to</code>
 or else an error will be returned.</p>
 <pre><code class="iex elixir">iex&gt; timestamp = {1, 0, 0}
-iex&gt; stream = %Stream{progressed_to: {2, 0, 0}}
-iex&gt; Stream.progress(stream, timestamp)
-{:error, &quot;Timestamp smaller than progress of Stream&quot;}</code></pre>
+iex&gt; stream = %EventStream{progressed_to: {2, 0, 0}}
+iex&gt; EventStream.progress(stream, timestamp)
+{:error, &quot;Timestamp smaller than progress of EventStream&quot;}</code></pre>
 
   </section>
 </div>

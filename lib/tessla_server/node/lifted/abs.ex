@@ -2,21 +2,18 @@ defmodule TesslaServer.Node.Lifted.Abs do
   @moduledoc """
   Implements a `Node` that computes the absolute value of a stream
 
-  To do so the `state.options` object has to be initialized with the key `:operand1`
-  which must be an atom representing the name of the event stream that should be the base for the computation.
+  To do so the `state.operands` list has to be initialized with one atom which is equal to
+  the name of the stream that should be the base of the computation
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node
 
-  def init_inputs(%{options: %{operand1: name}}) do
-    Map.new [{name, %EventStream{name: name}}]
-  end
-
   def perform_computation(timestamp, event_map, state) do
-    event = event_map[state.options.operand1]
+    op1 = hd(state.operands)
+    event = event_map[op1]
     new_event = %Event{stream_name: state.stream_name, timestamp: timestamp, value: abs event.value}
     {:ok, new_event}
   end

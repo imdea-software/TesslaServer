@@ -3,12 +3,12 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
   Implements a `Node` that emits the maximum value ever occured on an Event Stream
   or a default value if it's bigger than all values occured to that point.
 
-  To do so the `state.options` object has to be initialized with the key `:operand1`
-  which must be an atom representing the name of the event stream that should be aggregated over
-  and the key `default` which should hold the default value.
+  To do so the `state.operands` list has to be initialized with one atom representing the name of
+  the stream that should be aggregated over and the `options` map has to have a key `default`
+  which should hold the default value.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{Node, Event}
   alias TesslaServer.Node.{History, State}
 
   use Node
