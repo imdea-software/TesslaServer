@@ -7,10 +7,12 @@ defmodule TesslaServer.SpecProcessor do
 
   @spec process(String.t) :: any
   def process(spec) do
-    processed = spec
-                |> Preprocessor.process
-                |> Lexer.lex
-                |> Parser.parse
-                |> GraphBuilder.build
+    json = Poison.decode! spec, keys: :atoms
+    GraphBuilder.build json[:"@items"]
+    # processed = spec
+    #             |> Preprocessor.process
+    #             |> Lexer.lex
+    #             |> Parser.parse
+    #             |> GraphBuilder.build
   end
 end

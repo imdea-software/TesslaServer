@@ -10,8 +10,8 @@ defmodule TesslaServer.EventStream do
   use Timex
   alias TesslaServer.Event
 
-  @type t :: %__MODULE__{progressed_to: Timex.Types.timestamp, name: atom, events: [Event.t]}
-  defstruct progressed_to: Time.zero, name: :none, events: []
+  @type t :: %__MODULE__{progressed_to: Timex.Types.timestamp, id: integer | nil, events: [Event.t]}
+  defstruct progressed_to: Time.zero, id: nil, events: []
 
   @type timestamp :: Timex.Types.timestamp
 
@@ -41,52 +41,52 @@ defmodule TesslaServer.EventStream do
   @doc """
   Adds the `Event` to the `EventStream`.
 
-      iex> event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
-      iex> stream = %EventStream{name: :test}
+      iex> event = %Event{stream_id: :test, timestamp: {1000, 123456, 123456}, value: 1}
+      iex> stream = %EventStream{id: :test}
       iex> {:ok, updated_stream} = EventStream.add_event(stream, event)
       iex> hd(updated_stream.events)
-      %TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
+      %TesslaServer.Event{stream_id: :test, timestamp: {1000, 123456, 123456}, value: 1}
 
-  If the stream is nil it will create a new `EventStream` with the name of the `event` and
+  If the stream is nil it will create a new `EventStream` with the id of the `event` and
   `progressed_to` equal to the `timestamp` of the `event`
 
-      iex> event = %Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}
+      iex> event = %Event{stream_id: :test, timestamp: {1000, 123456, 123456}, value: 1}
       iex> stream = nil
       iex> {:ok, updated_stream} = EventStream.add_event(stream, event)
       iex> updated_stream
       %TesslaServer.EventStream{
-        events: [%TesslaServer.Event{stream_name: :test, timestamp: {1000, 123456, 123456}, value: 1}],
-        name: :test,
+        events: [%TesslaServer.Event{stream_id: :test, timestamp: {1000, 123456, 123456}, value: 1}],
+        id: :test,
         progressed_to: {1000, 123456, 123456}
       }
 
   The `timestamp` of the `Event` has to be greater or equal to the `progressed_to` value
   of the `EventStream`.
 
-      iex> event = %Event{stream_name: :test, timestamp: {0, 1, 2}, value: 1}
-      iex> stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
+      iex> event = %Event{stream_id: :test, timestamp: {0, 1, 2}, value: 1}
+      iex> stream = %EventStream{id: :test, progressed_to: {1, 2, 3}}
       iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
       "Event's timestamp smaller than stream progress"
 
-  The `stream_name` of the `Event` has to be the same as the `name` of the EventStream or else an
+  The `stream_id` of the `Event` has to be the same as the `id` of the EventStream or else an
   error will be returned.
 
-      iex> event = %Event{stream_name: :wrong_name, timestamp: {1000, 123456, 123456}, value: 1}
-      iex> stream = %EventStream{name: :test}
+      iex> event = %Event{stream_id: :wrong_id, timestamp: {1000, 123456, 123456}, value: 1}
+      iex> stream = %EventStream{id: :test}
       iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
-      "Event has different stream_name than stream"
+      "Event has different stream_id than stream"
 
 
   This method will advance the `progressed_to` field to the `timestamp` of the `Event`.
   """
   @spec add_event(nil | EventStream.t, Event.t) ::  {:ok, EventStream.t} | {:error, String.t}
   def add_event(nil, event) do
-    {:ok, %__MODULE__{name: event.stream_name, progressed_to: event.timestamp, events: [event]}}
+    {:ok, %__MODULE__{id: event.stream_id, progressed_to: event.timestamp, events: [event]}}
   end
-  def add_event(%{name: name}, %{stream_name: stream_name})
-  when name != stream_name, do: {:error, "Event has different stream_name than stream"}
+  def add_event(%{id: id}, %{stream_id: stream_id})
+  when id != stream_id, do: {:error, "Event has different stream_id than stream"}
   def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp})
   when progressed_to > timestamp, do: {:error, "Event's timestamp smaller than stream progress"}
   def add_event(stream, event) do
@@ -101,16 +101,16 @@ defmodule TesslaServer.EventStream do
 
   ##Examples
 
-      iex> event0 = %Event{timestamp: {0, 0, 0}, stream_name: :test, value: 0}
-      iex> event1 = %Event{timestamp: {1, 0, 0}, stream_name: :test, value: 1}
-      iex> event2 = %Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}
-      iex> event3 = %Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3}
-      iex> event4 = %Event{timestamp: {4, 0, 0}, stream_name: :test, value: 4}
+      iex> event0 = %Event{timestamp: {0, 0, 0}, stream_id: :test, value: 0}
+      iex> event1 = %Event{timestamp: {1, 0, 0}, stream_id: :test, value: 1}
+      iex> event2 = %Event{timestamp: {2, 0, 0}, stream_id: :test, value: 2}
+      iex> event3 = %Event{timestamp: {3, 0, 0}, stream_id: :test, value: 3}
+      iex> event4 = %Event{timestamp: {4, 0, 0}, stream_id: :test, value: 4}
       iex> events = [event4, event3, event2, event1, event0]
-      iex> stream = %EventStream{name: :test, progressed_to: {4, 0, 0}, events: events}
+      iex> stream = %EventStream{id: :test, progressed_to: {4, 0, 0}, events: events}
       iex> EventStream.events_in_timeslot(stream, {1, 0, 0}, {3,0,0})
-      [%Event{timestamp: {3, 0, 0}, stream_name: :test, value: 3},
-      %Event{timestamp: {2, 0, 0}, stream_name: :test, value: 2}]
+      [%Event{timestamp: {3, 0, 0}, stream_id: :test, value: 3},
+      %Event{timestamp: {2, 0, 0}, stream_id: :test, value: 2}]
 
   """
   @spec events_in_timeslot(EventStream.t | nil, timestamp, timestamp) :: [Event.t]
@@ -126,17 +126,17 @@ defmodule TesslaServer.EventStream do
 
   ## Examples
 
-      iex> event0 = %Event{stream_name: :test, value: 0, timestamp: {0, 0, 0}}
-      iex> event1 = %Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
-      iex> event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+      iex> event0 = %Event{stream_id: :test, value: 0, timestamp: {0, 0, 0}}
+      iex> event1 = %Event{stream_id: :test, value: 1, timestamp: {1, 0, 0}}
+      iex> event2 = %Event{stream_id: :test, value: 2, timestamp: {2, 0, 0}}
       iex> events = [event2, event1, event0]
-      iex> stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+      iex> stream = %EventStream{id: :test, progressed_to: {2, 0, 0}, events: events}
       iex> EventStream.event_at(stream, {1, 0, 0})
-      %Event{stream_name: :test, value: 1, timestamp: {1, 0, 0}}
+      %Event{stream_id: :test, value: 1, timestamp: {1, 0, 0}}
 
-      iex> event2 = %Event{stream_name: :test, value: 2, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_id: :test, value: 2, timestamp: {2, 0, 0}}
       iex> events = [event2]
-      iex> stream = %EventStream{name: :test, progressed_to: {2, 0, 0}, events: events}
+      iex> stream = %EventStream{id: :test, progressed_to: {2, 0, 0}, events: events}
       iex> EventStream.event_at(stream, {1, 0, 0})
       nil
   """

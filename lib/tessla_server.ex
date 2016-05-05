@@ -35,7 +35,7 @@ defmodule TesslaServer do
         stream_name = String.to_atom stream_name
         Logger.debug "values: #{inspect values}"
         timestamp = Time.now
-        event = %Event{stream_name: stream_name, value: values, timestamp: timestamp}
+        event = %Event{value: values, timestamp: timestamp}
         EventQueue.process_external event
         read()
     end

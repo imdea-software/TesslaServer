@@ -2,7 +2,7 @@ defmodule TesslaServer.Node.Lifted.Sub do
   @moduledoc """
   Implements a `Node` that substracts two event streams
 
-  To do so the `state.operands` kust has to be initialized with two atoms representing the names
+  To do so the `state.operands` kust has to be initialized with two atoms representing the ids
   of the two streams that are the base of the computation.
   """
 
@@ -18,7 +18,7 @@ defmodule TesslaServer.Node.Lifted.Sub do
 
     if event1 && event2 do
       {:ok, %Event{
-        stream_name: state.stream_name, timestamp: timestamp, value: event1.value - event2.value
+        stream_id: state.stream_id, timestamp: timestamp, value: event1.value - event2.value
       }}
     else
       :wait

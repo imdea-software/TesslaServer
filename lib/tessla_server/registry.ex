@@ -3,10 +3,9 @@ defmodule TesslaServer.Registry do
   Helper functions for node registration
   """
 
-  def via_tuple(name), do: {:via, :gproc, gproc_tuple(name)}
+  def via_tuple(id), do: {:via, :gproc, gproc_tuple(id)}
 
   def get_pid(key), do: :gproc.lookup_pid gproc_tuple(key)
 
-  def gproc_tuple(name) when is_atom(name), do: {:n, :l, name}
-  def gproc_tuple(name) when is_binary(name), do: {:n, :l, String.to_atom name}
+  def gproc_tuple(id) when is_integer(id), do: {:n, :l, id}
 end

@@ -14,9 +14,9 @@ defmodule TesslaServer.Node do
   import TesslaServer.Registry
 
   @type on_process :: {:ok, :wait} | {:ok, Event.t}
-  @type name :: atom | String.t
+  @type id :: integer
   @typep timestamp :: Timex.Types.timestamp
-  @typep event_map :: %{atom => Event.t}
+  @typep event_map :: %{id => Event.t}
 
   @callback prepare_events(timestamp, State.t) :: event_map
   @callback process_events(timestamp, event_map, State.t) :: State.t
@@ -27,49 +27,49 @@ defmodule TesslaServer.Node do
   @callback init_output(State.t) :: EventStream.t
 
   @doc """
-  Sends a new `Event` to the `Node` that is registered with `name` to process it
+  Sends a new `Event` to the `Node` that is registered with `id` to process it
   """
-  @spec send_event(name, Event.t) :: :ok
-  def send_event(name, event) do
-    GenServer.cast(via_tuple(name), {:process, event})
+  @spec send_event(id, Event.t) :: :ok
+  def send_event(id, event) do
+    GenServer.cast(via_tuple(id), {:process, event})
   end
 
   @doc """
-  Sends the `Node` specified by `name` an `EventStream.t` so that it can update it's inputs.
+  Sends the `Node` specified by `id` an `EventStream.t` so that it can update it's inputs.
   """
-  @spec update_input_stream(name, EventStream.t) :: :ok
-  def update_input_stream(name, stream) do
-    GenServer.cast(via_tuple(name), {:update_input_stream, stream})
+  @spec update_input_stream(id, EventStream.t) :: :ok
+  def update_input_stream(id, stream) do
+    GenServer.cast(via_tuple(id), {:update_input_stream, stream})
   end
 
   @doc """
-  Gets the `State.t` of the `Node` that is registered under `name`
+  Gets the `State.t` of the `Node` that is registered under `id`
   """
-  @spec get_history(name) :: State.t
-  def get_history(name) do
-    GenServer.call(via_tuple(name), :get_history)
+  @spec get_history(id) :: State.t
+  def get_history(id) do
+    GenServer.call(via_tuple(id), :get_history)
   end
 
   @doc """
-  Stops a `Node` and unregisters it's name from `gproc`
+  Stops a `Node` and unregisters it's id from `gproc`
   """
-  @spec stop(name) :: :ok
-  def stop(name) do
-    GenServer.stop via_tuple name
+  @spec stop(id) :: :ok
+  def stop(id) do
+    GenServer.stop via_tuple id
   end
 
   @doc """
-  Returns the latest output of the named Node
+  Returns the latest output of the idd Node
   """
-  @spec get_latest_output(name) :: any
-  def get_latest_output(name) do
-    GenServer.call(via_tuple(name), :get_latest_output)
+  @spec get_latest_output(id) :: any
+  def get_latest_output(id) do
+    GenServer.call(via_tuple(id), :get_latest_output)
   end
 
   @doc """
-  Adds a named child to the named `Node`
+  Adds a idd child to the idd `Node`
   """
-  @spec add_child(name, name) :: :ok
+  @spec add_child(id, id) :: :ok
   def add_child(parent, child) do
     GenServer.cast(via_tuple(parent), {:add_child, child})
   end
@@ -86,10 +86,10 @@ defmodule TesslaServer.Node do
       use GenServer
       @behaviour Node
 
-      def start(name, operands, options \\ %{}) do
-        state = %State{stream_name: name, operands: operands, options: options}
-        GenServer.start(__MODULE__, state, name: via_tuple(name))
-        name
+      def start(id, operands, options \\ %{}) do
+        state = %State{stream_id: id, operands: operands, options: options}
+        GenServer.start(__MODULE__, state, id: via_tuple(id))
+        id
       end
 
       def init(state) do
@@ -117,7 +117,7 @@ defmodule TesslaServer.Node do
 
       @spec handle_cast({:process, Event.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:process, event}, state) do
-        input_stream = state.history.inputs[event.stream_name]
+        input_stream = state.history.inputs[event.stream_id]
         {:ok, updated_input_stream} = EventStream.add_event(input_stream, event)
         updated_state = update_input_stream(updated_input_stream, state)
         {:noreply, updated_state}
@@ -150,7 +150,7 @@ defmodule TesslaServer.Node do
           |> EventStream.events_in_timeslot(old_progress, new_progress)
           |> Enum.sort_by(&(&1.timestamp))
 
-        Node.log_new_outputs(state.stream_name, new_outputs)
+        Node.log_new_outputs(state.stream_id, new_outputs)
 
         if new_progress > old_progress do
           Enum.each(new_state.children, &Node.update_input_stream(&1, new_state.history.output))
@@ -178,7 +178,7 @@ defmodule TesslaServer.Node do
       def prepare_events(at, state) do
         events =
           state.history.inputs
-          |> Enum.map(fn {name, stream} -> {name, EventStream.event_at(stream, at)} end)
+          |> Enum.map(fn {id, stream} -> {id, EventStream.event_at(stream, at)} end)
           |> Enum.into(%{})
       end
 
@@ -195,14 +195,14 @@ defmodule TesslaServer.Node do
 
       def perform_computation(timestamp, _, state), do: :wait
 
-      def init_inputs(names) do
-        names
-        |> Enum.map(&({&1, %EventStream{name: &1}}))
+      def init_inputs(ids) do
+        ids
+        |> Enum.map(&({&1, %EventStream{id: &1}}))
         |> Map.new
       end
 
       def init_output(state) do
-        %EventStream{name: state.stream_name}
+        %EventStream{id: state.stream_id}
       end
 
       defoverridable [start: 3, prepare_events: 2, process_events: 3,
@@ -215,8 +215,8 @@ defmodule TesslaServer.Node do
 
   @spec log_new_outputs(String.t, [Event.t]) :: nil
   def log_new_outputs(_, []), do: nil
-  def log_new_outputs(name, events) do
-    message = "New outputs of #{name}: \n" <> format(events)
+  def log_new_outputs(id, events) do
+    message = "New outputs of #{id}: \n" <> format(events)
     Logger.debug message
   end
 

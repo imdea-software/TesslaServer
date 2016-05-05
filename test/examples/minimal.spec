@@ -1,6 +1,7 @@
-define test_calls: Events<Int> := function_call_parameter("minimal.c:test", 0)
-define x_values: Events<Int> := variable_update("minimal.c:x")
+define counter_values := variable_values("minimal.c:counter")
+define inc_returns := function_calls("minimal.c:inc")
 
-define error: Events<Unit> := leq(x_values,test_calls)
+define return_count := eventCount(inc_returns)
+define error := gt(return_count, counter_values)
 
 -- out error
