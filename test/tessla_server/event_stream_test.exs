@@ -9,7 +9,7 @@ defmodule TesslaServer.EventStreamTest do
   doctest EventStream
 
   test "Should update progressed_to with valid timestamp" do
-    stream = %EventStream{name: :stream_test}
+    stream = %EventStream{id: 1}
     timestamp = Time.now
 
     {:ok, updated_stream} = EventStream.progress(stream, timestamp)
@@ -18,7 +18,7 @@ defmodule TesslaServer.EventStreamTest do
   end
 
   test "Should change nothing when progressing to equal timestamp" do
-    stream = %EventStream{name: :stream_test, progressed_to: {3, 4, 5}}
+    stream = %EventStream{id: 1, progressed_to: {3, 4, 5}}
 
     {:ok, updated_stream} = EventStream.progress(stream, {3, 4, 5})
 
@@ -26,7 +26,7 @@ defmodule TesslaServer.EventStreamTest do
   end
 
   test "Shouldn't progress to a timestamp smaller thann current progress"do
-    stream = %EventStream{name: :stream_test}
+    stream = %EventStream{id: 1}
     time = DateTime.now
     timestamp1 = to_timestamp time
     timestamp2 = time |> shift(seconds: -1) |> to_timestamp
@@ -36,9 +36,9 @@ defmodule TesslaServer.EventStreamTest do
   end
 
   test "Should add valid Event and progress EventStream" do
-    stream = %EventStream{name: :stream_test}
+    stream = %EventStream{id: 1}
     timestamp = Time.now
-    event = %Event{timestamp: timestamp, stream_name: :stream_test}
+    event = %Event{timestamp: timestamp, stream_id: 1}
 
     {:ok, updated_stream} = EventStream.add_event(stream, event)
 
@@ -46,10 +46,10 @@ defmodule TesslaServer.EventStreamTest do
     assert updated_stream.progressed_to == event.timestamp
   end
 
-  test "Should not add Event with wrong stream_name" do
-    stream = %EventStream{name: :stream_test}
+  test "Should not add Event with wrong stream_id" do
+    stream = %EventStream{id: 1}
     timestamp = Time.now
-    event = %Event{timestamp: timestamp, stream_name: :wrong_name}
+    event = %Event{timestamp: timestamp, stream_id: 2}
 
     {:error, _} = EventStream.add_event(stream, event)
 
@@ -60,8 +60,8 @@ defmodule TesslaServer.EventStreamTest do
     timestamp1 = to_timestamp time
     timestamp2 = time |> shift(seconds: -1) |> to_timestamp
 
-    stream = %EventStream{name: :stream_test, progressed_to: timestamp1}
-    event = %Event{timestamp: timestamp2, stream_name: :stream_test}
+    stream = %EventStream{id: 1, progressed_to: timestamp1}
+    event = %Event{timestamp: timestamp2, stream_id: 1}
 
     {:error, _} = EventStream.add_event(stream, event)
   end

@@ -2,7 +2,7 @@ defmodule TesslaServer.Node.Lifted.Implies do
   @moduledoc """
   Implements a `Node` that performs an `implies` on two boolean streams
 
-  To do so the `state.operands` list has to be initialized with two atoms representing the names
+  To do so the `state.operands` list has to be initialized with two integers representing the ids
   of the streams that should be the base of the computation.
   The first stream will be used as the left side of the implies formula.
   """
@@ -19,7 +19,7 @@ defmodule TesslaServer.Node.Lifted.Implies do
 
     if event1 && event2 do
       {:ok, %Event{
-        stream_name: state.stream_name, timestamp: timestamp, value: !event1.value or event2.value
+        stream_id: state.stream_id, timestamp: timestamp, value: !event1.value or event2.value
       }}
     else
       :wait

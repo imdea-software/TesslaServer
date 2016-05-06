@@ -2,7 +2,7 @@ defmodule TesslaServer.Node.Lifted.And do
   @moduledoc """
   Implements a `Node` that performs an `and` on two boolean streams
 
-  To do so the `state.operands` list has to be initialized with two atoms representing the names
+  To do so the `state.operands` list has to be initialized with two integers representing the ids
   of the streams which should be the base of the computation
   """
 
@@ -18,7 +18,7 @@ defmodule TesslaServer.Node.Lifted.And do
 
     if event1 && event2 do
       {:ok, %Event{
-        stream_name: state.stream_name, timestamp: timestamp, value: event1.value and event2.value
+        stream_id: state.stream_id, timestamp: timestamp, value: event1.value and event2.value
       }}
     else
       :wait

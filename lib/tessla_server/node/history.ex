@@ -8,7 +8,7 @@ defmodule TesslaServer.Node.History do
 
   defstruct inputs: %{}, output: nil
   @type t :: %__MODULE__{inputs: input_streams, output: EventStream.t}
-  @typep input_streams :: %{atom => EventStream.t}
+  @typep input_streams :: %{integer => EventStream.t}
   @type timestamp :: Timex.Types.timestamp
 
   @doc """
@@ -24,38 +24,40 @@ defmodule TesslaServer.Node.History do
       |> Enum.min
     from = history.output.progressed_to
     events =
-      Enum.flat_map history.inputs, fn {name, stream} ->
+      Enum.flat_map history.inputs, fn {id, stream} ->
         EventStream.events_in_timeslot(stream, from, upto)
       end
   end
 
   @doc """
-  Replaces the input `EventStream` with the same name as `stream` of the `history`.
-  If the history doesn't include an `EventStream` with the name an error will be returned.
+  Replaces the `input_stream` of the `history` with the same `id` as the new `stream` with
+  the new stream.
+  If the `inputs` of the `history` don't include an `EventStream` with the `id` the new `stream`
+  will be added to the `history`
 
   ## Examples
 
-      iex> stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
-      iex> history = %History{inputs: %{test: stream}}
-      iex> new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+      iex> stream = %EventStream{id: 1, progressed_to: {1, 2, 3}}
+      iex> history = %History{inputs: %{1 => stream}}
+      iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
       iex> History.replace_input_stream(history, new_stream)
-      {:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}
+      {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
 
       iex> history = %History{}
-      iex> new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+      iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
       iex> History.replace_input_stream(history, new_stream)
-      {:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}
+      {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
   """
   @spec replace_input_stream(History.t, EventStream.t) :: {:ok, History.t}
   def replace_input_stream(history, stream) do
     inputs = history.inputs
-    updated_inputs = Map.put(inputs, stream.name, stream)
+    updated_inputs = Map.put(inputs, stream.id, stream)
     {:ok, %{history | inputs: updated_inputs}}
   end
 
   @doc """
   Updates the given `history` to prepend the given `new_event` to the output stream.
-  The `event` has to have the same `stream_name` than the `name` of the `output`, else an
+  The `event` has to have the same `stream_id` than the `id` of the `output`, else an
   error will be returned.
   Also the `timestamp` of the `event` has to be bigger than the `progressed_to` of the `output`,
   else an error will be returned.
@@ -64,31 +66,31 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> output = %EventStream{name: :output, progressed_to: {0, 2, 3}}
+      iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
       iex> history = %History{output: output}
-      iex> new_event = %Event{stream_name: :output, timestamp: {1, 0, 0}}
+      iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
       iex> History.update_output(history, new_event)
       {:ok,
         %History{
           output: %EventStream{
-            name: :output,
+            id: 1,
             progressed_to: {1, 0, 0},
-            events: [%Event{stream_name: :output, timestamp: {1, 0, 0}}]
+            events: [%Event{stream_id: 1, timestamp: {1, 0, 0}}]
           }
         }
       }
 
-      iex> output = %EventStream{name: :output, progressed_to: {1, 2, 3}}
+      iex> output = %EventStream{id: 1, progressed_to: {1, 2, 3}}
       iex> history = %History{output: output}
-      iex> new_event = %Event{stream_name: :output, timestamp: {1, 0, 0}}
+      iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
       iex> History.update_output(history, new_event)
       {:error, "Event's timestamp smaller than stream progress"}
 
-      iex> output = %EventStream{name: :output, progressed_to: {0, 2, 3}}
+      iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
       iex> history = %History{output: output}
-      iex> new_event = %Event{stream_name: :wrong, timestamp: {1, 0, 0}}
+      iex> new_event = %Event{stream_id: 2, timestamp: {1, 0, 0}}
       iex> History.update_output(history, new_event)
-      {:error, "Event has different stream_name than stream"}
+      {:error, "Event has different stream_id than stream"}
   """
   @spec update_output(History.t, Event.t) :: {:ok, History.t} | {:error, String.t}
   def update_output(history, new_event) do
@@ -122,34 +124,34 @@ defmodule TesslaServer.Node.History do
   end
 
   @doc """
-  Returns the latest `Event.t` of the input stream specified by `name` in `history`
+  Returns the latest `Event.t` of the input stream specified by `id` in `history`
   that has a `timestamp` smaller than `at`.
 
-  If the `history` has no input with the `name` or the input has no `Event` that happened before
+  If the `history` has no input with the `id` or the input has no `Event` that happened before
   the `timestamp` `nil` is returned.
 
   ## Examples
 
-      iex> event1 = %Event{stream_name: :input1, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_name: :input1, timestamp: {3, 0, 0}}
-      iex> event3 = %Event{stream_name: :input1, timestamp: {4, 0, 0}}
+      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+      iex> event3 = %Event{stream_id: 1, timestamp: {4, 0, 0}}
       iex> events = [event3, event2, event1]
-      iex> input1 = %EventStream{name: :input1, events: events, progressed_to: {4, 0, 0}}
-      iex> history = %History{inputs: %{input1: input1}}
-      iex> History.latest_event_of_input_at(history, :input1, {1, 0, 0})
+      iex> input1 = %EventStream{id: 1, events: events, progressed_to: {4, 0, 0}}
+      iex> history = %History{inputs: %{1 => input1}}
+      iex> History.latest_event_of_input_at(history, 1, {1, 0, 0})
       nil
-      iex> History.latest_event_of_input_at(history, :input1, {3, 0, 0})
-      %Event{stream_name: :input1, timestamp: {3, 0, 0}}
-      iex> History.latest_event_of_input_at(history, :input1, {2, 5, 0})
-      %Event{stream_name: :input1, timestamp: {2, 0, 0}}
+      iex> History.latest_event_of_input_at(history, 1, {3, 0, 0})
+      %Event{stream_id: 1, timestamp: {3, 0, 0}}
+      iex> History.latest_event_of_input_at(history, 1, {2, 5, 0})
+      %Event{stream_id: 1, timestamp: {2, 0, 0}}
 
       iex> history = %History{}
       iex> History.latest_event_of_input_at(history, :any, {1, 0, 0})
       nil
   """
-  @spec latest_event_of_input_at(History.t, atom, timestamp) :: Event.t | nil
-  def latest_event_of_input_at(history, name, timestamp) do
-    case get_in(history.inputs, [name]) do
+  @spec latest_event_of_input_at(History.t, integer, timestamp) :: Event.t | nil
+  def latest_event_of_input_at(history, id, timestamp) do
+    case get_in(history.inputs, [id]) do
       nil -> nil
       stream ->
         EventStream.event_at(stream, timestamp)
@@ -164,21 +166,21 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> event1 = %Event{stream_name: :input1, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_name: :input1, timestamp: {3, 0, 0}}
-      iex> event3 = %Event{stream_name: :input2, timestamp: {2, 5, 0}}
-      iex> event4 = %Event{stream_name: :input2, timestamp: {4, 0, 0}}
+      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+      iex> event3 = %Event{stream_id: 2, timestamp: {2, 5, 0}}
+      iex> event4 = %Event{stream_id: 2, timestamp: {4, 0, 0}}
       iex> input1_events = [event2, event1]
       iex> input2_events = [event4, event3]
-      iex> input1 = %EventStream{name: :input1, events: input1_events, progressed_to: {3, 0, 0}}
-      iex> input2 = %EventStream{name: :input1, events: input2_events, progressed_to: {4, 0, 0}}
+      iex> input1 = %EventStream{id: 1, events: input1_events, progressed_to: {3, 0, 0}}
+      iex> input2 = %EventStream{id: 1, events: input2_events, progressed_to: {4, 0, 0}}
       iex> history = %History{inputs: %{input1: input1, input2: input2}}
       iex> History.latest_input_event_at(history, {1, 0, 0})
       nil
       iex> History.latest_input_event_at(history, {3, 0, 0})
-      %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+      %Event{stream_id: 1, timestamp: {3, 0, 0}}
       iex> History.latest_input_event_at(history, {2, 5, 0})
-      %Event{stream_name: :input2, timestamp: {2, 5, 0}}
+      %Event{stream_id: 2, timestamp: {2, 5, 0}}
   """
   @spec latest_input_event_at(History.t, timestamp) :: Event.t | nil
   def latest_input_event_at(history, timestamp) do
@@ -202,18 +204,18 @@ defmodule TesslaServer.Node.History do
       iex> History.latest_output history
       nil
 
-      iex> output = %EventStream{name: :output, progressed_to: {3, 0, 0}}
+      iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}}
       iex> history = %History{output: output}
       iex> History.latest_output history
       nil
 
-      iex> event1 = %Event{stream_name: :output, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_name: :output, timestamp: {3, 0, 0}}
+      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
       iex> events = [event2, event1]
-      iex> output = %EventStream{name: :output, progressed_to: {3, 0, 0}, events: events}
+      iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}, events: events}
       iex> history = %History{output: output}
       iex> History.latest_output history
-      %Event{stream_name: :output, timestamp: {3, 0, 0}}
+      %Event{stream_id: 1, timestamp: {3, 0, 0}}
 
   """
   @spec latest_output(History.t) :: Event.t | nil

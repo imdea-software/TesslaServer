@@ -3,7 +3,7 @@ defmodule TesslaServer.Node.Lifted.Leq do
   Implements a `Node` that compares two integer Streams and returns true if the first is
   smaller or equal to the second and false otherwise.
 
-  To do so the `state.operands` list has to be initialized with two atoms representing the names
+  To do so the `state.operands` list has to be initialized with two integers representing the ids
   of the streams that should be compared.
   The first stream has to be leq than the second to yield `true`
   """
@@ -20,7 +20,7 @@ defmodule TesslaServer.Node.Lifted.Leq do
 
     if event1 && event2 do
       {:ok, %Event{
-        stream_name: state.stream_name, timestamp: timestamp, value: event1.value <= event2.value
+        stream_id: state.stream_id, timestamp: timestamp, value: event1.value <= event2.value
       }}
     else
       :wait

@@ -7,12 +7,13 @@ defmodule TesslaServer.Node.Lifted.AbsTest do
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
+  import System, only: [unique_integer: 0]
+
+  @op1 unique_integer
+  @test unique_integer
+  @processor unique_integer
 
   doctest Abs
-
-  @op1 :number
-  @test :abs_test
-  @processor :abs
 
   setup do
     :gproc.reg(gproc_tuple(@test))
@@ -27,9 +28,9 @@ defmodule TesslaServer.Node.Lifted.AbsTest do
     assert(initial_output.events == [])
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_name: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_name: @op1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_name: @op1}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_id: @op1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_id: @op1}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_id: @op1}
 
     Node.send_event(@processor, event1)
 

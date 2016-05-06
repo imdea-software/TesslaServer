@@ -2,7 +2,7 @@ defmodule TesslaServer.Node.Lifted.Min do
   @moduledoc """
   Implements a `Node` that compares two integer Streams and returns the smaller one
 
-  To do so the `state.operands` list has to be initialized with two atoms representing the names
+  To do so the `state.operands` list has to be initialized with two integers representing the ids
   of the streams that should be compared
   """
 
@@ -19,7 +19,7 @@ defmodule TesslaServer.Node.Lifted.Min do
     if event1 && event2 do
       value = if event1.value <= event2.value, do: event1.value, else: event2.value
       {:ok, %Event{
-        stream_name: state.stream_name, timestamp: timestamp, value: value
+        stream_id: state.stream_id, timestamp: timestamp, value: value
       }}
     else
       :wait

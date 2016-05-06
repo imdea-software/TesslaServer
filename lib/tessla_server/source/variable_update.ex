@@ -22,7 +22,7 @@ defmodule TesslaServer.Source.VariableUpdate do
                   |> hd
                   |> Integer.parse # TODO somehow process based on needed type
 
-    processed_event = %Event{timestamp: timestamp, value: value, stream_name: state.stream_name}
+    processed_event = %Event{timestamp: timestamp, value: value, stream_id: state.stream_id}
     {:ok, processed_event}
   end
 end

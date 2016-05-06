@@ -8,20 +8,20 @@ defmodule TesslaServer.Node.HistoryTest do
   doctest History
 
   test "processable_events" do
-    output_event = %Event{stream_name: :output, timestamp: {2, 0, 0}}
-    output = %EventStream{name: :output, progressed_to: {2, 0, 0}, events: [output_event]}
+    output_event = %Event{stream_id: 3, timestamp: {2, 0, 0}}
+    output = %EventStream{id: 3, progressed_to: {2, 0, 0}, events: [output_event]}
 
-    input1_event1 = %Event{stream_name: :input1, timestamp: {1, 0, 0}}
-    input1_event2 = %Event{stream_name: :input1, timestamp: {2, 5, 0}}
-    input1_event3 = %Event{stream_name: :input1, timestamp: {3, 0, 0}}
+    input1_event1 = %Event{stream_id: 1, timestamp: {1, 0, 0}}
+    input1_event2 = %Event{stream_id: 1, timestamp: {2, 5, 0}}
+    input1_event3 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
     input1_events = [input1_event3, input1_event2, input1_event1]
-    input1 = %EventStream{name: :input1, progressed_to: {3, 0, 0}, events: input1_events}
+    input1 = %EventStream{id: 1, progressed_to: {3, 0, 0}, events: input1_events}
 
-    input2_event1 = %Event{stream_name: :input2, timestamp: {2, 0, 0}}
-    input2_event2 = %Event{stream_name: :input2, timestamp: {3, 0, 0}}
-    input2_event3 = %Event{stream_name: :input2, timestamp: {4, 0, 0}}
+    input2_event1 = %Event{stream_id: 2, timestamp: {2, 0, 0}}
+    input2_event2 = %Event{stream_id: 2, timestamp: {3, 0, 0}}
+    input2_event3 = %Event{stream_id: 2, timestamp: {4, 0, 0}}
     input2_events = [input2_event3, input2_event2, input2_event1]
-    input2 = %EventStream{name: :input2, progressed_to: {4, 0, 0}, events: input2_events}
+    input2 = %EventStream{id: 2, progressed_to: {4, 0, 0}, events: input2_events}
 
     history = %History{inputs: %{input1: input1, input2: input2}, output: output}
     processable_events = History.processable_events history

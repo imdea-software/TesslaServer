@@ -7,12 +7,13 @@ defmodule TesslaServer.Node.Lifted.NotTest do
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
+  import System, only: [unique_integer: 0]
+
+  @op unique_integer
+  @test unique_integer
+  @processor unique_integer
 
   doctest Not
-
-  @op :boolean
-  @test :not_test
-  @processor :not
 
   setup do
     :gproc.reg(gproc_tuple(@test))
@@ -27,9 +28,9 @@ defmodule TesslaServer.Node.Lifted.NotTest do
     assert(initial_output.events == [])
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: false, stream_name: @op}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: true, stream_name: @op}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: false, stream_name: @op}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: false, stream_id: @op}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: true, stream_id: @op}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: false, stream_id: @op}
 
     Node.send_event(@processor, event1)
 

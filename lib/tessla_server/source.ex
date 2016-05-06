@@ -8,7 +8,7 @@ defmodule TesslaServer.Source do
   alias TesslaServer.Event
 
   def distribute(event) do
-    GenServer.cast(subscribe_tuple(event.stream_name), {:process, event})
+    GenServer.cast(subscribe_tuple(event.stream_id), {:process, event})
   end
 
   defp subscribe_tuple(name) do

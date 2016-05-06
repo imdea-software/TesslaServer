@@ -6,5 +6,5 @@ defmodule TesslaServer.Node.State do
 
   defstruct children: [], history: %History{}, stream_id: nil, operands: [], options: %{}
   @type t :: %__MODULE__{stream_id: integer | nil, history: History.t, children: [String.t],
-   operands: [atom], options: %{}}
+   operands: [integer], options: %{}}
 end

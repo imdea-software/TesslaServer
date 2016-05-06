@@ -7,13 +7,14 @@ defmodule TesslaServer.Node.Lifted.MinTest do
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
+  import System, only: [unique_integer: 0]
+
+  @op1 unique_integer
+  @op2 unique_integer
+  @test unique_integer
+  @processor unique_integer
 
   doctest Min
-
-  @op1 :number1
-  @op2 :number2
-  @test :min_test
-  @processor :min
 
   setup do
     :gproc.reg(gproc_tuple(@test))
@@ -28,10 +29,10 @@ defmodule TesslaServer.Node.Lifted.MinTest do
     assert(initial_output.events == [])
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 2, stream_name: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_name: @op2}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 1, stream_name: @op1}
-    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_name: @op2}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: 2, stream_id: @op1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_id: @op2}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 1, stream_id: @op1}
+    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_id: @op2}
 
     Node.send_event(@processor, event1)
 

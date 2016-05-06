@@ -7,13 +7,14 @@ defmodule TesslaServer.Node.Lifted.OrTest do
 
   import TesslaServer.Registry
   import DateTime, only: [shift: 2, to_timestamp: 1]
+  import System, only: [unique_integer: 0]
+
+  @op1 unique_integer
+  @op2 unique_integer
+  @test unique_integer
+  @processor unique_integer
 
   doctest Or
-
-  @op1 :boolean1
-  @op2 :boolean2
-  @test :or_test
-  @processor :or
 
   setup do
     :gproc.reg(gproc_tuple(@test))
@@ -28,10 +29,10 @@ defmodule TesslaServer.Node.Lifted.OrTest do
     assert(initial_output.events == [])
 
     timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: true, stream_name: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: false, stream_name: @op2}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_name: @op1}
-    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_name: @op2}
+    event1 = %Event{timestamp: to_timestamp(timestamp), value: true, stream_id: @op1}
+    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: false, stream_id: @op2}
+    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_id: @op1}
+    event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: false, stream_id: @op2}
 
     Node.send_event(@processor, event1)
 

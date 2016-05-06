@@ -31,8 +31,8 @@ defmodule TesslaServer do
       {:error, reason} -> Logger.debug "Error: {reason}"
       data ->
         data = String.rstrip data, ?\n
-        [stream_name | values] = String.split(data, " ")
-        stream_name = String.to_atom stream_name
+        [stream_id | values] = String.split(data, " ")
+        stream_id = String.to_atom stream_id
         Logger.debug "values: #{inspect values}"
         timestamp = Time.now
         event = %Event{value: values, timestamp: timestamp}
