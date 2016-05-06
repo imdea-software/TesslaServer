@@ -109,10 +109,10 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#latest_event_of_input_at/3">latest_event_of_input_at(history, name, timestamp)</a>
+    <a href="#latest_event_of_input_at/3">latest_event_of_input_at(history, id, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code>
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">id</code> in <code class="inline">history</code>
 that has a <code class="inline">timestamp</code> smaller than <code class="inline">at</code></p>
 </div>
   
@@ -122,7 +122,10 @@ that has a <code class="inline">timestamp</code> smaller than <code class="inlin
     <a href="#latest_input_event_at/2">latest_input_event_at(history, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream</p>
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream.
+If multiple Events happened at the latest point the result is only one of them.
+Returns <code class="inline">nil</code> if the <code class="inline">history</code> has no inputs or if on no input an event has happened before
+the <code class="inline">timestamp</code></p>
 </div>
   
 </div>
@@ -131,7 +134,7 @@ that has a <code class="inline">timestamp</code> smaller than <code class="inlin
     <a href="#latest_output/1">latest_output(history)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event</code> in the output of a History</p>
+    <div class="summary-synopsis"><p>Returns the latest <code class="inline">Event</code> in the output of a History or <code class="inline">nil</code> if the output is empty or <code class="inline">nil</code></p>
 </div>
   
 </div>
@@ -150,7 +153,9 @@ the minimum of the <code class="inline">progressed_to</code> of all inputs</p>
     <a href="#progress_output/2">progress_output(history, timestamp)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code></p>
+    <div class="summary-synopsis"><p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code>.
+The <code class="inline">timestamp</code> has to be greater or equal than the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code>
+or an <code class="inline">:error</code> will be returned</p>
 </div>
   
 </div>
@@ -159,8 +164,10 @@ the minimum of the <code class="inline">progressed_to</code> of all inputs</p>
     <a href="#replace_input_stream/2">replace_input_stream(history, stream)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Replaces the input <code class="inline">EventStream</code> with the same name as <code class="inline">stream</code> of the <code class="inline">history</code>.
-If the history doesn’t include an <code class="inline">EventStream</code> with the name an error will be returned</p>
+    <div class="summary-synopsis"><p>Replaces the <code class="inline">input_stream</code> of the <code class="inline">history</code> with the same <code class="inline">id</code> as the new <code class="inline">stream</code> with
+the new stream.
+If the <code class="inline">inputs</code> of the <code class="inline">history</code> don’t include an <code class="inline">EventStream</code> with the <code class="inline">id</code> the new <code class="inline">stream</code>
+will be added to the <code class="inline">history</code></p>
 </div>
   
 </div>
@@ -169,7 +176,13 @@ If the history doesn’t include an <code class="inline">EventStream</code> with
     <a href="#update_output/2">update_output(history, new_event)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">new_event</code> to the output stream</p>
+    <div class="summary-synopsis"><p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">new_event</code> to the output stream.
+The <code class="inline">event</code> has to have the same <code class="inline">stream_id</code> than the <code class="inline">id</code> of the <code class="inline">output</code>, else an
+error will be returned.
+Also the <code class="inline">timestamp</code> of the <code class="inline">event</code> has to be bigger than the <code class="inline">progressed_to</code> of the <code class="inline">output</code>,
+else an error will be returned.
+The <code class="inline">progressed_to</code> of the <code class="inline">output</code> will be set to the <code class="inline">timestamp</code> of the <code class="inline">event</code>
+Returns the new <code class="inline">history</code> if no errors occur</p>
 </div>
   
 </div>
@@ -219,7 +232,7 @@ If the history doesn’t include an <code class="inline">EventStream</code> with
     <a href="#latest_event_of_input_at/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">latest_event_of_input_at(history, name, timestamp)</span>
+    <span class="signature">latest_event_of_input_at(history, id, timestamp)</span>
       
   </div>
   
@@ -227,7 +240,7 @@ If the history doesn’t include an <code class="inline">EventStream</code> with
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">latest_event_of_input_at(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, atom, <a href="#t:timestamp/0">timestamp</a>) ::
+          <pre><code class="elixir">latest_event_of_input_at(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, integer, <a href="#t:timestamp/0">timestamp</a>) ::
   <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a> |
   nil</code></pre>
         
@@ -235,8 +248,27 @@ If the history doesn’t include an <code class="inline">EventStream</code> with
     </div>
   
   <section class="docstring">
-    <p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">name</code> in <code class="inline">history</code>
-that has a <code class="inline">timestamp</code> smaller than <code class="inline">at</code></p>
+    <p>Returns the latest <code class="inline">Event.t</code> of the input stream specified by <code class="inline">id</code> in <code class="inline">history</code>
+that has a <code class="inline">timestamp</code> smaller than <code class="inline">at</code>.</p>
+<p>If the <code class="inline">history</code> has no input with the <code class="inline">id</code> or the input has no <code class="inline">Event</code> that happened before
+the <code class="inline">timestamp</code> <code class="inline">nil</code> is returned.</p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+iex&gt; event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex&gt; event3 = %Event{stream_id: 1, timestamp: {4, 0, 0}}
+iex&gt; events = [event3, event2, event1]
+iex&gt; input1 = %EventStream{id: 1, events: events, progressed_to: {4, 0, 0}}
+iex&gt; history = %History{inputs: %{1 =&gt; input1}}
+iex&gt; History.latest_event_of_input_at(history, 1, {1, 0, 0})
+nil
+iex&gt; History.latest_event_of_input_at(history, 1, {3, 0, 0})
+%Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex&gt; History.latest_event_of_input_at(history, 1, {2, 5, 0})
+%Event{stream_id: 1, timestamp: {2, 0, 0}}
+
+iex&gt; history = %History{}
+iex&gt; History.latest_event_of_input_at(history, :any, {1, 0, 0})
+nil</code></pre>
 
   </section>
 </div>
@@ -261,7 +293,26 @@ that has a <code class="inline">timestamp</code> smaller than <code class="inlin
     </div>
   
   <section class="docstring">
-    <p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream</p>
+    <p>Returns the latest <code class="inline">Event.t</code> that is saved on any input stream.
+If multiple Events happened at the latest point the result is only one of them.
+Returns <code class="inline">nil</code> if the <code class="inline">history</code> has no inputs or if on no input an event has happened before
+the <code class="inline">timestamp</code>.</p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+iex&gt; event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex&gt; event3 = %Event{stream_id: 2, timestamp: {2, 5, 0}}
+iex&gt; event4 = %Event{stream_id: 2, timestamp: {4, 0, 0}}
+iex&gt; input1_events = [event2, event1]
+iex&gt; input2_events = [event4, event3]
+iex&gt; input1 = %EventStream{id: 1, events: input1_events, progressed_to: {3, 0, 0}}
+iex&gt; input2 = %EventStream{id: 1, events: input2_events, progressed_to: {4, 0, 0}}
+iex&gt; history = %History{inputs: %{input1: input1, input2: input2}}
+iex&gt; History.latest_input_event_at(history, {1, 0, 0})
+nil
+iex&gt; History.latest_input_event_at(history, {3, 0, 0})
+%Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex&gt; History.latest_input_event_at(history, {2, 5, 0})
+%Event{stream_id: 2, timestamp: {2, 5, 0}}</code></pre>
 
   </section>
 </div>
@@ -278,13 +329,32 @@ that has a <code class="inline">timestamp</code> smaller than <code class="inlin
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">latest_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) :: <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a></code></pre>
+          <pre><code class="elixir">latest_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>) ::
+  <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a> |
+  nil</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Returns the latest <code class="inline">Event</code> in the output of a History</p>
+    <p>Returns the latest <code class="inline">Event</code> in the output of a History or <code class="inline">nil</code> if the output is empty or <code class="inline">nil</code>.</p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; history = %History{}
+iex&gt; History.latest_output history
+nil
+
+iex&gt; output = %EventStream{id: 1, progressed_to: {3, 0, 0}}
+iex&gt; history = %History{output: output}
+iex&gt; History.latest_output history
+nil
+
+iex&gt; event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+iex&gt; event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex&gt; events = [event2, event1]
+iex&gt; output = %EventStream{id: 1, progressed_to: {3, 0, 0}, events: events}
+iex&gt; history = %History{output: output}
+iex&gt; History.latest_output history
+%Event{stream_id: 1, timestamp: {3, 0, 0}}</code></pre>
 
   </section>
 </div>
@@ -325,13 +395,25 @@ the minimum of the <code class="inline">progressed_to</code> of all inputs.</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">progress_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="#t:timestamp/0">timestamp</a>) :: TesslaServer.Node.History</code></pre>
+          <pre><code class="elixir">progress_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="#t:timestamp/0">timestamp</a>) ::
+  {:ok, <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code></p>
+    <p>Sets the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code> to the <code class="inline">timestamp</code>.
+The <code class="inline">timestamp</code> has to be greater or equal than the <code class="inline">progressed_to</code> of the <code class="inline">output</code> of the <code class="inline">history</code>
+or an <code class="inline">:error</code> will be returned.</p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+iex&gt; History.progress_output history, {4, 0, 0}
+{:ok, %History{output: %EventStream{progressed_to: {4, 0, 0}}}}
+
+iex&gt; history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+iex&gt; History.progress_output history, {2, 0, 0}
+{:error, &quot;Timestamp smaller than progress of EventStream&quot;}</code></pre>
 
   </section>
 </div>
@@ -354,19 +436,21 @@ the minimum of the <code class="inline">progressed_to</code> of all inputs.</p>
     </div>
   
   <section class="docstring">
-    <p>Replaces the input <code class="inline">EventStream</code> with the same name as <code class="inline">stream</code> of the <code class="inline">history</code>.
-If the history doesn’t include an <code class="inline">EventStream</code> with the name an error will be returned.</p>
+    <p>Replaces the <code class="inline">input_stream</code> of the <code class="inline">history</code> with the same <code class="inline">id</code> as the new <code class="inline">stream</code> with
+the new stream.
+If the <code class="inline">inputs</code> of the <code class="inline">history</code> don’t include an <code class="inline">EventStream</code> with the <code class="inline">id</code> the new <code class="inline">stream</code>
+will be added to the <code class="inline">history</code></p>
 <h2>Examples</h2>
-<pre><code class="iex elixir">iex&gt; stream = %EventStream{name: :test, progressed_to: {1, 2, 3}}
-iex&gt; history = %History{inputs: %{test: stream}}
-iex&gt; new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+<pre><code class="iex elixir">iex&gt; stream = %EventStream{id: 1, progressed_to: {1, 2, 3}}
+iex&gt; history = %History{inputs: %{1 =&gt; stream}}
+iex&gt; new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
 iex&gt; History.replace_input_stream(history, new_stream)
-{:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}
+{:ok, %History{inputs: %{1 =&gt; %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
 
 iex&gt; history = %History{}
-iex&gt; new_stream = %EventStream{name: :test, progressed_to: {2, 3, 4}}
+iex&gt; new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
 iex&gt; History.replace_input_stream(history, new_stream)
-{:ok, %History{inputs: %{test: %EventStream{name: :test, progressed_to: {2, 3, 4}}}}}</code></pre>
+{:ok, %History{inputs: %{1 =&gt; %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}</code></pre>
 
   </section>
 </div>
@@ -383,14 +467,47 @@ iex&gt; History.replace_input_stream(history, new_stream)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a></code></pre>
+          <pre><code class="elixir">update_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) ::
+  {:ok, <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">new_event</code> to the output stream</p>
-<p>Returns the new <code class="inline">history</code></p>
+    <p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">new_event</code> to the output stream.
+The <code class="inline">event</code> has to have the same <code class="inline">stream_id</code> than the <code class="inline">id</code> of the <code class="inline">output</code>, else an
+error will be returned.
+Also the <code class="inline">timestamp</code> of the <code class="inline">event</code> has to be bigger than the <code class="inline">progressed_to</code> of the <code class="inline">output</code>,
+else an error will be returned.
+The <code class="inline">progressed_to</code> of the <code class="inline">output</code> will be set to the <code class="inline">timestamp</code> of the <code class="inline">event</code>
+Returns the new <code class="inline">history</code> if no errors occur.</p>
+<h2>Examples</h2>
+<pre><code class="iex elixir">iex&gt; output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
+iex&gt; history = %History{output: output}
+iex&gt; new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
+iex&gt; History.update_output(history, new_event)
+{:ok,
+  %History{
+    output: %EventStream{
+      id: 1,
+      progressed_to: {1, 0, 0},
+      events: [%Event{stream_id: 1, timestamp: {1, 0, 0}}]
+    }
+  }
+}
+
+iex&gt; output = %EventStream{id: 1, progressed_to: {1, 2, 3}}
+iex&gt; history = %History{output: output}
+iex&gt; new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
+iex&gt; History.update_output(history, new_event)
+{:error, &quot;Event&#39;s timestamp smaller than stream progress&quot;}
+
+iex&gt; output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
+iex&gt; history = %History{output: output}
+iex&gt; new_event = %Event{stream_id: 2, timestamp: {1, 0, 0}}
+iex&gt; History.update_output(history, new_event)
+{:error, &quot;Event has different stream_id than stream&quot;}</code></pre>
 
   </section>
 </div>

@@ -69,8 +69,8 @@
       
         <section id="moduledoc" class="docstring">
           <p>Implements a <code class="inline">Node</code> that computes the boolean not of a boolean stream.</p>
-<p>To do so the <code class="inline">state.operands</code> list has to be initialized with one atom which is equal to
-the name of the stream that should be the base of the computation</p>
+<p>To do so the <code class="inline">state.operands</code> list has to be initialized with one integer which is equal to
+the id of the stream that should be the base of the computation</p>
 
         </section>
       
@@ -92,7 +92,13 @@ the name of the stream that should be the base of the computation</p>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#init_inputs/1">init_inputs(names)</a>
+    <a href="#handle_call/2">handle_call(atom, state)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#init_inputs/1">init_inputs(ids)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:init_inputs/1"><code class="inline">TesslaServer.Node.init_inputs/1</code></a></p>
@@ -143,7 +149,7 @@ the name of the stream that should be the base of the computation</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#start/3">start(name, operands, options \\ %{})</a>
+    <a href="#start/3">start(id, operands, options \\ %{})</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:start/3"><code class="inline">TesslaServer.Node.start/3</code></a></p>
@@ -171,12 +177,34 @@ the name of the stream that should be the base of the computation</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="init_inputs/1">
+          <div class="detail" id="handle_call/2">
+  <div class="detail-header">
+    <a href="#handle_call/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">handle_call(atom, state)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">handle_call(:subscribe_to_operands, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: {:reply, :ok, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="init_inputs/1">
   <div class="detail-header">
     <a href="#init_inputs/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">init_inputs(names)</span>
+    <span class="signature">init_inputs(ids)</span>
       
   </div>
   
@@ -268,7 +296,7 @@ the name of the stream that should be the base of the computation</p>
     <a href="#start/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start(name, operands, options \\ %{})</span>
+    <span class="signature">start(id, operands, options \\ %{})</span>
       
   </div>
   

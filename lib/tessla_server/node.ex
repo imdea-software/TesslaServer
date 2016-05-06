@@ -59,7 +59,7 @@ defmodule TesslaServer.Node do
   end
 
   @doc """
-  Returns the latest output of the idd Node
+  Returns the latest output of the specified Node
   """
   @spec get_latest_output(id) :: any
   def get_latest_output(id) do
@@ -67,11 +67,19 @@ defmodule TesslaServer.Node do
   end
 
   @doc """
-  Adds a idd child to the idd `Node`
+  Adds a new child to the specifiedied `Node`
   """
   @spec add_child(id, id) :: :ok
   def add_child(parent, child) do
     GenServer.cast(via_tuple(parent), {:add_child, child})
+  end
+
+  @doc """
+  Subscribes the `Node` specified by `id` to all `Nodes` it is a descendant of.
+  """
+  @spec subscribe_to_operands(id) :: :ok
+  def subscribe_to_operands(id) do
+    GenServer.call(via_tuple(id), :subscribe_to_operands)
   end
 
   defmacro __using__(_) do
@@ -121,6 +129,14 @@ defmodule TesslaServer.Node do
         {:ok, updated_input_stream} = EventStream.add_event(input_stream, event)
         updated_state = update_input_stream(updated_input_stream, state)
         {:noreply, updated_state}
+      end
+
+      @spec handle_call(:subscribe_to_operands, State.t) :: {:reply, :ok, State.t}
+      def handle_call(:subscribe_to_operands, state) do
+        Enum.each state.operands, fn id ->
+          Node.add_child(id, state.id)
+        end
+        {:reply, :ok, state}
       end
 
       @spec handle_cast({:add_child, String.t}, State.t) :: {:noreply, State.t}

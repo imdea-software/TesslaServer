@@ -92,7 +92,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#t:name/0">name()</a>
+    <a href="#t:id/0">id()</a>
   </div>
   
 </div>
@@ -116,58 +116,67 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#add_child/2">add_child(parent, child)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Adds a named child to the named <code class="inline">Node</code></p>
+    <div class="summary-synopsis"><p>Adds a new child to the specifiedied <code class="inline">Node</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_history/1">get_history(name)</a>
+    <a href="#get_history/1">get_history(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Gets the <code class="inline">State.t</code> of the <code class="inline">Node</code> that is registered under <code class="inline">name</code></p>
+    <div class="summary-synopsis"><p>Gets the <code class="inline">State.t</code> of the <code class="inline">Node</code> that is registered under <code class="inline">id</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_latest_output/1">get_latest_output(name)</a>
+    <a href="#get_latest_output/1">get_latest_output(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Returns the latest output of the named Node</p>
+    <div class="summary-synopsis"><p>Returns the latest output of the specified Node</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#log_new_outputs/2">log_new_outputs(name, events)</a>
+    <a href="#log_new_outputs/2">log_new_outputs(id, events)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#send_event/2">send_event(name, event)</a>
+    <a href="#send_event/2">send_event(id, event)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">name</code> to process it</p>
+    <div class="summary-synopsis"><p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">id</code> to process it</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#stop/1">stop(name)</a>
+    <a href="#stop/1">stop(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Stops a <code class="inline">Node</code> and unregisters it’s name from <code class="inline">gproc</code></p>
+    <div class="summary-synopsis"><p>Stops a <code class="inline">Node</code> and unregisters it’s id from <code class="inline">gproc</code></p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_input_stream/2">update_input_stream(name, stream)</a>
+    <a href="#subscribe_to_operands/1">subscribe_to_operands(id)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Sends the <code class="inline">Node</code> specified by <code class="inline">name</code> an <code class="inline">EventStream.t</code> so that it can update it’s inputs</p>
+    <div class="summary-synopsis"><p>Subscribes the <code class="inline">Node</code> specified by <code class="inline">id</code> to all <code class="inline">Nodes</code> it is a descendant of</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#update_input_stream/2">update_input_stream(id, stream)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Sends the <code class="inline">Node</code> specified by <code class="inline">id</code> an <code class="inline">EventStream.t</code> so that it can update it’s inputs</p>
 </div>
   
 </div>
@@ -214,7 +223,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:start/3">start(atom, list, %{})</a>
+    <a href="#c:start/3">start(id, list, %{})</a>
   </div>
   
 </div>
@@ -234,8 +243,8 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
             Types
           </h1>
           <div class="types-list">
-            <div id="t:name/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:name/0">name</a> :: atom | <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+            <div id="t:id/0" class="type-detail">
+  <pre><code class="elixir"><a href="#t:id/0">id</a> :: integer</code></pre>
   
 </div>
 <div id="t:on_process/0" class="type-detail">
@@ -270,13 +279,13 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_child(<a href="#t:name/0">name</a>, <a href="#t:name/0">name</a>) :: :ok</code></pre>
+          <pre><code class="elixir">add_child(<a href="#t:id/0">id</a>, <a href="#t:id/0">id</a>) :: :ok</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Adds a named child to the named <code class="inline">Node</code></p>
+    <p>Adds a new child to the specifiedied <code class="inline">Node</code></p>
 
   </section>
 </div>
@@ -285,7 +294,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#get_history/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_history(name)</span>
+    <span class="signature">get_history(id)</span>
       
   </div>
   
@@ -293,13 +302,13 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_history(<a href="#t:name/0">name</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
+          <pre><code class="elixir">get_history(<a href="#t:id/0">id</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Gets the <code class="inline">State.t</code> of the <code class="inline">Node</code> that is registered under <code class="inline">name</code></p>
+    <p>Gets the <code class="inline">State.t</code> of the <code class="inline">Node</code> that is registered under <code class="inline">id</code></p>
 
   </section>
 </div>
@@ -308,7 +317,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#get_latest_output/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_latest_output(name)</span>
+    <span class="signature">get_latest_output(id)</span>
       
   </div>
   
@@ -316,13 +325,13 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_latest_output(<a href="#t:name/0">name</a>) :: any</code></pre>
+          <pre><code class="elixir">get_latest_output(<a href="#t:id/0">id</a>) :: any</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Returns the latest output of the named Node</p>
+    <p>Returns the latest output of the specified Node</p>
 
   </section>
 </div>
@@ -331,7 +340,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#log_new_outputs/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">log_new_outputs(name, events)</span>
+    <span class="signature">log_new_outputs(id, events)</span>
       
   </div>
   
@@ -353,7 +362,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#send_event/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">send_event(name, event)</span>
+    <span class="signature">send_event(id, event)</span>
       
   </div>
   
@@ -361,13 +370,13 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">send_event(<a href="#t:name/0">name</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: :ok</code></pre>
+          <pre><code class="elixir">send_event(<a href="#t:id/0">id</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: :ok</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">name</code> to process it</p>
+    <p>Sends a new <code class="inline">Event</code> to the <code class="inline">Node</code> that is registered with <code class="inline">id</code> to process it</p>
 
   </section>
 </div>
@@ -376,7 +385,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#stop/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">stop(name)</span>
+    <span class="signature">stop(id)</span>
       
   </div>
   
@@ -384,13 +393,36 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">stop(<a href="#t:name/0">name</a>) :: :ok</code></pre>
+          <pre><code class="elixir">stop(<a href="#t:id/0">id</a>) :: :ok</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Stops a <code class="inline">Node</code> and unregisters it’s name from <code class="inline">gproc</code></p>
+    <p>Stops a <code class="inline">Node</code> and unregisters it’s id from <code class="inline">gproc</code></p>
+
+  </section>
+</div>
+<div class="detail" id="subscribe_to_operands/1">
+  <div class="detail-header">
+    <a href="#subscribe_to_operands/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">subscribe_to_operands(id)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">subscribe_to_operands(<a href="#t:id/0">id</a>) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    <p>Subscribes the <code class="inline">Node</code> specified by <code class="inline">id</code> to all <code class="inline">Nodes</code> it is a descendant of.</p>
 
   </section>
 </div>
@@ -399,7 +431,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#update_input_stream/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">update_input_stream(name, stream)</span>
+    <span class="signature">update_input_stream(id, stream)</span>
       
   </div>
   
@@ -407,13 +439,13 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_input_stream(<a href="#t:name/0">name</a>, <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>) :: :ok</code></pre>
+          <pre><code class="elixir">update_input_stream(<a href="#t:id/0">id</a>, <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>) :: :ok</code></pre>
         
       </div>
     </div>
   
   <section class="docstring">
-    <p>Sends the <code class="inline">Node</code> specified by <code class="inline">name</code> an <code class="inline">EventStream.t</code> so that it can update it’s inputs.</p>
+    <p>Sends the <code class="inline">Node</code> specified by <code class="inline">id</code> an <code class="inline">EventStream.t</code> so that it can update it’s inputs.</p>
 
   </section>
 </div>
@@ -444,7 +476,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">init_inputs([atom]) :: %{atom => <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>}</code></pre>
+          <pre><code class="elixir">init_inputs([<a href="#t:id/0">id</a>]) :: %{<a href="#t:id/0">id</a> => <a href="TesslaServer.EventStream.html#t:t/0">TesslaServer.EventStream.t</a>}</code></pre>
         
       </div>
     </div>
@@ -548,7 +580,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <a href="#c:start/3" class="detail-link" title="Link to this callback">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">start(atom, list, %{})</span>
+    <span class="signature">start(id, list, %{})</span>
       
   </div>
   
@@ -556,7 +588,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">start(atom, [atom], %{}) :: atom</code></pre>
+          <pre><code class="elixir">start(<a href="#t:id/0">id</a>, [<a href="#t:id/0">id</a>], %{}) :: atom</code></pre>
         
       </div>
     </div>
