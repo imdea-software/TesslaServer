@@ -131,8 +131,8 @@ defmodule TesslaServer.Node do
         {:noreply, updated_state}
       end
 
-      @spec handle_call(:subscribe_to_operands, State.t) :: {:reply, :ok, State.t}
-      def handle_call(:subscribe_to_operands, state) do
+      @spec handle_call(:subscribe_to_operands, GenServer.from, State.t) :: {:reply, :ok, State.t}
+      def handle_call(:subscribe_to_operands, _, state) do
         Enum.each state.operands, fn id ->
           Node.add_child(id, state.id)
         end

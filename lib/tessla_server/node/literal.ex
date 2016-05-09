@@ -11,8 +11,8 @@ defmodule TesslaServer.Node.Literal do
 
   use GenServer
 
-  def init(args) do
-    {:ok, %__MODULE__{id: args[:id], value: args[:value]}}
+  def init(state) do
+    {:ok, state}
   end
 
   def handle_cast(:update, state) do
@@ -29,8 +29,11 @@ defmodule TesslaServer.Node.Literal do
     {:noreply, new_state}
   end
 
+  @spec handle_call(:subscribe_to_operands, GenServer.from, Literal.t) :: {:reply, :ok, Literal.t}
+  def handle_call(:subscribe_to_operands, _, state), do: {:reply, :ok, state}
 
-  def start(defaults) do
-    GenServer.start(__MODULE__, defaults, id: via_tuple(defaults[:id]))
+  def start(id, [], %{value: value}) do
+    state = %__MODULE__{id: id, value: value}
+    GenServer.start(__MODULE__, state, name: via_tuple(id))
   end
 end
