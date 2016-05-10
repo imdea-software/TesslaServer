@@ -14,21 +14,16 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
   use Node
   use Timex
 
-  def process_events(timestamp, event_map, state) do
+  def perform_computation(timestamp, event_map, state) do
     op1 = hd(state.operands)
     new_event = event_map[op1]
     current_event = EventStream.event_at(state.history.output, timestamp)
     if new_event.value > current_event.value do
-      output_event = %Event{
+      {:ok, %Event{
         stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-      }
-      {:ok, updated_history} = History.update_output(state.history, output_event)
-      %{state |
-        history: updated_history
-      }
+      }}
     else
-      {:ok, updated_history} = History.progress_output(state.history, timestamp)
-      %{state | history: updated_history}
+      :wait
     end
   end
 

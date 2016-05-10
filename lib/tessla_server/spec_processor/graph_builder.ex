@@ -20,10 +20,14 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
   end
 
   defp build_node(json = %{nodetype: nodetype, id: id}) do
-    Logger.debug("#{inspect nodetype}, id: %{inspect id}")
+    Logger.debug("----------------")
+    Logger.debug("#{inspect nodetype}, id: #{inspect id}")
 
     ancestors = get_references json
     options = get_options json
+
+    Logger.debug("operands: #{inspect ancestors}")
+    Logger.debug("options: #{inspect options}")
 
     mod = String.to_atom("Elixir." <> nodetype)
     mod.start id, ancestors, options

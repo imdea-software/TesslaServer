@@ -116,6 +116,16 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.EventCount.html">TesslaServer.Node.Aggregation.EventCount</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the amount of Events happened on an Event
+Stream.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events should be counted</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Maximum.html">TesslaServer.Node.Aggregation.Maximum</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the maximum value ever occured on an Event Stream
@@ -128,6 +138,16 @@ or a default value if it’s bigger than all values occured to that point</p>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the minimum value ever occured on an Event Stream
 or a default value if it’s smaller than all values occured to that point</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Sum.html">TesslaServer.Node.Aggregation.Sum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the summed value of all events happened on the
+input EventStream.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events’ values should be summed</p>
 </div>
   
 </div>

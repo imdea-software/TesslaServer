@@ -1,9 +1,9 @@
 defmodule TesslaServer.Node.SpecProcessor.MinimalTest do
   use ExUnit.Case, async: true
 
-  alias TesslaServer.{Node, SpecProcessor, Event, Source}
+  # alias TesslaServer.{Node, SpecProcessor, Event, Source}
 
-  import TesslaServer.Registry
+  # import TesslaServer.Registry
 
   # test "Should Setup the minimal testcase and process Events" do
   #   {:ok, spec} = File.read("test/examples/minimal.tessla")
