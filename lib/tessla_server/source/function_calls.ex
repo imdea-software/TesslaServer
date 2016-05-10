@@ -1,7 +1,8 @@
 defmodule TesslaServer.Source.FunctionCalls do
   @moduledoc """
-  Implements a `Source` that emits Events whenever the specified Function is called.
-  The Function specifier has to be in the `option` key `argument`
+  Implements a `Source` that emits events without a value whenever a specified Function is
+  called.
+  The function has to be specified as a `String.t` in `options` under the key `function`.
 
   """
 
@@ -13,12 +14,13 @@ defmodule TesslaServer.Source.FunctionCalls do
   alias TesslaServer.Node.State
 
   def init(state) do
-    :gproc.reg({:p, :l, hd(state.options[:argument])})
+    channel = "function_calls:" <> state.options[:function]
+    :gproc.reg({:p, :l, channel})
     super state
   end
 
-  def perform_computation(timestamp, event_map, state) do
-    processed_event = %Event{timestamp: timestamp, stream_id: state.stream_id}
+  def perform_computation(timestamp, _, state) do
+    processed_event = %Event{timestamp: timestamp,  stream_id: state.stream_id}
     {:ok, processed_event}
   end
 end

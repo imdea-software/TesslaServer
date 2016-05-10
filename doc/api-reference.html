@@ -132,6 +132,22 @@ or a default value if it’s smaller than all values occured to that point</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Filter.html">TesslaServer.Node.Filter.Filter</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that filters an event stream by the value of a boolean Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Merge.html">TesslaServer.Node.Filter.Merge</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that merges two event streams.
+The first specified stream takes presedence over the second, meaning if on both streams
+an event happens at the same time, the value of the first will be used</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.History.html">TesslaServer.Node.History</a></div>
   
     <div class="summary-synopsis"><p>Contains the Structure and Methods to work with the History of a <a href="TesslaServer.Node.html"><code class="inline">TesslaServer.Node</code></a></p>
@@ -183,6 +199,14 @@ greater or equal to the second and false otherwise</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Gt.html">TesslaServer.Node.Lifted.Gt</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
+greater than the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Implies.html">TesslaServer.Node.Lifted.Implies</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">implies</code> on two boolean streams</p>
@@ -194,6 +218,14 @@ greater or equal to the second and false otherwise</p>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
 smaller or equal to the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Lt.html">TesslaServer.Node.Lifted.Lt</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
+smaller than the second and false otherwise</p>
 </div>
   
 </div>
@@ -215,6 +247,13 @@ smaller or equal to the second and false otherwise</p>
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Mul.html">TesslaServer.Node.Lifted.Mul</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that multiplies two event streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Neg.html">TesslaServer.Node.Lifted.Neg</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the negative value of a stream</p>
 </div>
   
 </div>
@@ -278,8 +317,26 @@ smaller or equal to the second and false otherwise</p>
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Source.FunctionCalls.html">TesslaServer.Source.FunctionCalls</a></div>
   
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Source</code> that emits Events whenever the specified Function is called.
-The Function specifier has to be in the <code class="inline">option</code> key <code class="inline">argument</code></p>
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified Function is
+called.
+The function has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">function</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Source.FunctionReturns.html">TesslaServer.Source.FunctionReturns</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified Function returns.
+The function has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">function</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Source.InstructionExecutions.html">TesslaServer.Source.InstructionExecutions</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
+executed.
+The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code></p>
 </div>
   
 </div>
@@ -287,7 +344,7 @@ The Function specifier has to be in the <code class="inline">option</code> key <
   <div class="summary-signature"><a href="TesslaServer.Source.VariableValues.html">TesslaServer.Source.VariableValues</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Source</code> that emits a Signal holding the most recent value of a variable.
-The variable has to be specified in <code class="inline">options</code> under the key <code class="inline">argument</code></p>
+The variable has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">variable</code></p>
 </div>
   
 </div>

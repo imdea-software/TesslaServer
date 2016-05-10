@@ -1,6 +1,6 @@
 defmodule TesslaServer.Node.Literal do
   @moduledoc """
-  Represents a Literal
+  Represents a Literal.
   """
 
   alias TesslaServer.{Event, Node}

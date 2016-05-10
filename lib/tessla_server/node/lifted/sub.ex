@@ -2,7 +2,7 @@ defmodule TesslaServer.Node.Lifted.Sub do
   @moduledoc """
   Implements a `Node` that substracts two event streams
 
-  To do so the `state.operands` kust has to be initialized with two atoms representing the ids
+  To do so the `state.operands` list has to be initialized with two atoms representing the ids
   of the two streams that are the base of the computation.
   """
 

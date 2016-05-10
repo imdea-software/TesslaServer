@@ -5,7 +5,7 @@ defmodule TesslaServer.Node.Lifted.Geq do
 
   To do so the `state.operands` list has to be initialized with two integers representing the ids of
   the streams that should be the base for the computation.
-  The first Stream must be greater than the second to yield `true`.
+  The first Stream must be greater or equal than the second to yield `true`.
   """
 
   alias TesslaServer.{Node, Event}

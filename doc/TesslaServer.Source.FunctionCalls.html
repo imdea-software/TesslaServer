@@ -68,8 +68,9 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Implements a <code class="inline">Source</code> that emits Events whenever the specified Function is called.
-The Function specifier has to be in the <code class="inline">option</code> key <code class="inline">argument</code></p>
+          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified Function is
+called.
+The function has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">function</code>.</p>
 
         </section>
       
@@ -91,12 +92,6 @@ The Function specifier has to be in the <code class="inline">option</code> key <
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#handle_call/2">handle_call(atom, state)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#init_inputs/1">init_inputs(ids)</a>
   </div>
   
@@ -115,7 +110,7 @@ The Function specifier has to be in the <code class="inline">option</code> key <
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#perform_computation/3">perform_computation(timestamp, event_map, state)</a>
+    <a href="#perform_computation/3">perform_computation(timestamp, , state)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:perform_computation/3"><code class="inline">TesslaServer.Node.perform_computation/3</code></a></p>
@@ -176,29 +171,7 @@ The Function specifier has to be in the <code class="inline">option</code> key <
             </a>
             Functions
           </h1>
-          <div class="detail" id="handle_call/2">
-  <div class="detail-header">
-    <a href="#handle_call/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">handle_call(atom, state)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">handle_call(:subscribe_to_operands, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: {:reply, :ok, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>}</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="init_inputs/1">
+          <div class="detail" id="init_inputs/1">
   <div class="detail-header">
     <a href="#init_inputs/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
@@ -231,7 +204,7 @@ The Function specifier has to be in the <code class="inline">option</code> key <
     <a href="#perform_computation/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">perform_computation(timestamp, event_map, state)</span>
+    <span class="signature">perform_computation(timestamp, , state)</span>
       
   </div>
   

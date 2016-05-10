@@ -1,8 +1,7 @@
 defmodule TesslaServer.Source.VariableValues do
   @moduledoc """
   Implements a `Source` that emits a Signal holding the most recent value of a variable.
-  The variable has to be specified in `options` under the key `argument`.
-
+  The variable has to be specified as a `String.t` in `options` under the key `variable`.
   """
 
   alias TesslaServer.Node
@@ -13,7 +12,8 @@ defmodule TesslaServer.Source.VariableValues do
   alias TesslaServer.Node.State
 
   def init(state) do
-    :gproc.reg({:p, :l, hd(state.options[:argument])})
+    channel = "variable_values:" <> state.options[:variable]
+    :gproc.reg({:p, :l, channel})
     super state
   end
 
