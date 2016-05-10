@@ -12,7 +12,6 @@ defmodule TesslaServer.Node.Filter.Filter do
   use Node
 
   def perform_computation(timestamp, event_map, state) do
-    IO.puts inspect event_map
     [op1, op2] = state.operands
     to_filter = event_map[op1]
     filter = event_map[op2]

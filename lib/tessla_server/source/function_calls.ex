@@ -10,8 +10,7 @@ defmodule TesslaServer.Source.FunctionCalls do
 
   use Node
 
-  alias TesslaServer.{Event, EventStream}
-  alias TesslaServer.Node.State
+  alias TesslaServer.Event
 
   def init(state) do
     channel = "function_calls:" <> state.options[:function]

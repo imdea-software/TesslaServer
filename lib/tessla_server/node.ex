@@ -17,12 +17,13 @@ defmodule TesslaServer.Node do
   @type id :: integer
   @typep timestamp :: Timex.Types.timestamp
   @typep event_map :: %{id => Event.t}
+  @typep computed_event :: {:ok, Event.t} | :wait
 
   @callback prepare_events(timestamp, State.t) :: event_map
   @callback process_events(timestamp, event_map, State.t) :: State.t
-  @callback perform_computation(timestamp, event_map, State.t) :: {:ok, Event.t} | :wait
+  @callback perform_computation(timestamp, event_map, State.t) :: computed_event
 
-  @callback start(id, [id], %{}) :: atom
+  @callback start(id, [id], %{}) :: id
   @callback init_inputs([id]) :: %{id => EventStream.t}
   @callback init_output(State.t) :: EventStream.t
 

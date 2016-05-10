@@ -4,7 +4,7 @@ defmodule TesslaServer.EventQueue do
   """
 
   use Timex
-  alias TesslaServer.{Event, Source}
+  alias TesslaServer.Source
   alias __MODULE__
 
   defstruct events: [], last_processed_time: Time.zero

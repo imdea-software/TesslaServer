@@ -132,9 +132,35 @@ or a default value if it’s smaller than all values occured to that point</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.ChangeOf.html">TesslaServer.Node.Filter.ChangeOf</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever the Signal changes
+it’s value.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one integer specifying the id of
+the Signal of which the changes should be emitted</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Filter.Filter.html">TesslaServer.Node.Filter.Filter</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that filters an event stream by the value of a boolean Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.IfThen.html">TesslaServer.Node.Filter.IfThen</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever an input Event is
+received</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.IfThenElse.html">TesslaServer.Node.Filter.IfThenElse</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal with the value of the second input Signal if the first
+boolean Signal is <code class="inline">true</code> or with the value of the third signal otherwise</p>
 </div>
   
 </div>
@@ -144,6 +170,28 @@ or a default value if it’s smaller than all values occured to that point</p>
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that merges two event streams.
 The first specified stream takes presedence over the second, meaning if on both streams
 an event happens at the same time, the value of the first will be used</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.OccurAll.html">TesslaServer.Node.Filter.OccurAll</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events whenever both input stream are emitting an Event</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.OccurAny.html">TesslaServer.Node.Filter.OccurAny</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events whenever one input stream is emitting an Event</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Sample.html">TesslaServer.Node.Filter.Sample</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever an input Event is
+received</p>
 </div>
   
 </div>

@@ -9,8 +9,7 @@ defmodule TesslaServer.Source.InstructionExecutions do
 
   use Node
 
-  alias TesslaServer.{Event, EventStream}
-  alias TesslaServer.Node.State
+  alias TesslaServer.Event
 
   def init(state) do
     channel = "instruction_executions:" <> state.options[:instruction]

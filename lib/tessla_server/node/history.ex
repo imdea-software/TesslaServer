@@ -23,10 +23,9 @@ defmodule TesslaServer.Node.History do
       |> Enum.map(&(&1.progressed_to))
       |> Enum.min
     from = history.output.progressed_to
-    events =
-      Enum.flat_map history.inputs, fn {id, stream} ->
-        EventStream.events_in_timeslot(stream, from, upto)
-      end
+    Enum.flat_map history.inputs, fn {_, stream} ->
+      EventStream.events_in_timeslot(stream, from, upto)
+    end
   end
 
   @doc """

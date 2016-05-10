@@ -5,8 +5,6 @@ defmodule TesslaServer.Source do
   Distributes Events to subscribers via `gproc`
   """
 
-  alias TesslaServer.Event
-
   def distribute(event) do
     GenServer.cast(subscribe_tuple(event.stream_id), {:process, event})
   end
