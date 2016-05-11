@@ -142,6 +142,26 @@ or a default value if it’s smaller than all values occured to that point</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Mrv.html">TesslaServer.Node.Aggregation.Mrv</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the value of the latest event happened on the input.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the EventStream which values should be converted into a Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Sma.html">TesslaServer.Node.Aggregation.Sma</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits an Event with the simple moving average of the last x input events every time a
+new Event is received.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events should be the base for the computation and the options map has to hold a key
+<code class="inline">count</code> specifying the amount of Events which the average should be formed over</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Sum.html">TesslaServer.Node.Aggregation.Sum</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the summed value of all events happened on the

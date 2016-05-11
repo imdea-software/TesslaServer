@@ -193,10 +193,9 @@ defmodule TesslaServer.Node do
       end
 
       def prepare_events(at, state) do
-        events =
-          state.history.inputs
-          |> Enum.map(fn {id, stream} -> {id, EventStream.event_at(stream, at)} end)
-          |> Enum.into(%{})
+        state.history.inputs
+        |> Enum.map(fn {id, stream} -> {id, EventStream.event_at(stream, at)} end)
+        |> Enum.into(%{})
       end
 
       def process_events(timestamp, event_map, state) do
