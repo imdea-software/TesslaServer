@@ -5,11 +5,9 @@ defmodule TesslaServer.Node.Timing.Timestamps do
   the Event Stream which timestamps should be emitted.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
-  alias TesslaServer.Node.{History, State}
+  alias TesslaServer.{Node, Event}
 
   use Node
-  use Timex
 
   def perform_computation(timestamp, event_map, state) do
     new_event = event_map[hd(state.operands)]

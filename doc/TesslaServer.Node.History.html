@@ -173,7 +173,7 @@ will be added to the <code class="inline">history</code></p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_output/2">update_output(history, new_event)</a>
+    <a href="#update_output/3">update_output(history, new_event, progress \\ true)</a>
   </div>
   
     <div class="summary-synopsis"><p>Updates the given <code class="inline">history</code> to prepend the given <code class="inline">new_event</code> to the output stream.
@@ -454,12 +454,12 @@ iex&gt; History.replace_input_stream(history, new_stream)
 
   </section>
 </div>
-<div class="detail" id="update_output/2">
+<div class="detail" id="update_output/3">
   <div class="detail-header">
-    <a href="#update_output/2" class="detail-link" title="Link to this function">
+    <a href="#update_output/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">update_output(history, new_event)</span>
+    <span class="signature">update_output(history, new_event, progress \\ true)</span>
       
   </div>
   
@@ -467,7 +467,7 @@ iex&gt; History.replace_input_stream(history, new_stream)
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) ::
+          <pre><code class="elixir">update_output(<a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, boolean) ::
   {:ok, <a href="TesslaServer.Node.History.html#t:t/0">TesslaServer.Node.History.t</a>} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         

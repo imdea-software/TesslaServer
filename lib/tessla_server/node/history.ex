@@ -91,9 +91,9 @@ defmodule TesslaServer.Node.History do
       iex> History.update_output(history, new_event)
       {:error, "Event has different stream_id than stream"}
   """
-  @spec update_output(History.t, Event.t) :: {:ok, History.t} | {:error, String.t}
-  def update_output(history, new_event) do
-    case  EventStream.add_event(history.output, new_event) do
+  @spec update_output(History.t, Event.t, boolean) :: {:ok, History.t} | {:error, String.t}
+  def update_output(history, new_event, progress \\ true) do
+    case  EventStream.add_event(history.output, new_event, progress) do
       {:ok, updated_output} -> {:ok, %{history | output: updated_output}}
       {:error, reason} -> {:error, reason}
     end

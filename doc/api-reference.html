@@ -243,13 +243,6 @@ received</p>
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Abs.html">TesslaServer.Node.Lifted.Abs</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Add.html">TesslaServer.Node.Lifted.Add</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that adds two event streams</p>
@@ -275,6 +268,13 @@ received</p>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true 
 if both are the same and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.EventAbs.html">TesslaServer.Node.Lifted.EventAbs</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
 </div>
   
 </div>
@@ -360,6 +360,13 @@ smaller than the second and false otherwise</p>
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.SignalAbs.html">TesslaServer.Node.Lifted.SignalAbs</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Sub.html">TesslaServer.Node.Lifted.Sub</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that substracts two event streams</p>
@@ -384,7 +391,18 @@ smaller than the second and false otherwise</p>
   <div class="summary-signature"><a href="TesslaServer.Node.Timing.Delay.html">TesslaServer.Node.Timing.Delay</a></div>
   
     <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that delays the values of an <code class="inline">EventStream</code> by the amount specified in
-<code class="inline">options</code> under the key <code class="inline">delay</code></p>
+<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Node.Timing.InPast.html">TesslaServer.Node.Timing.InPast</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the value true whenever an event happened on the input in a specified
+amount of time in the past.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which should be monitored and <code class="inline">state.options</code> has to hold the key <code class="inline">amount</code> specifying the timeslot
+where an event should have happened in past in microseconds</p>
 </div>
   
 </div>

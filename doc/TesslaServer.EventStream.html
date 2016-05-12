@@ -114,7 +114,7 @@ the <code class="inline">Stream</code> will be progressed to <code class="inline
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#add_event/2">add_event(stream, event)</a>
+    <a href="#add_event/3">add_event(event_stream, event, progress \\ true)</a>
   </div>
   
     <div class="summary-synopsis"><p>Adds the <code class="inline">Event</code> to the <code class="inline">EventStream</code></p>
@@ -192,12 +192,12 @@ be always</p>
             </a>
             Functions
           </h1>
-          <div class="detail" id="add_event/2">
+          <div class="detail" id="add_event/3">
   <div class="detail-header">
-    <a href="#add_event/2" class="detail-link" title="Link to this function">
+    <a href="#add_event/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">add_event(stream, event)</span>
+    <span class="signature">add_event(event_stream, event, progress \\ true)</span>
       
   </div>
   
@@ -205,7 +205,7 @@ be always</p>
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_event(nil | EventStream.t, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) ::
+          <pre><code class="elixir">add_event(nil | EventStream.t, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>, boolean) ::
   {:ok, EventStream.t} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         

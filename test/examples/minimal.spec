@@ -20,8 +20,8 @@ define variable_values_int:           Signal<Int>         := variable_values("mi
 define variable_values_boolean:       Signal<Boolean>     := variable_values("minimal.c:boolean")
 
 -- Lifted
-define abs_signal:          Signal<Int>         := abs(int_signal)
-define abs_events:          Events<Int>         := abs(int_events)
+define abs_signal:          Signal<Int>         := signal_abs(int_signal)
+define abs_events:          Events<Int>         := event_abs(int_events)
 define add_signal:          Signal<Int>         := add(int_signal, int_signal)
 define and_signal:          Signal<Boolean>     := and(boolean_signal, boolean_signal)
 define div_signal:          Signal<Int>         := div(int_signal, int_signal)
@@ -87,9 +87,9 @@ define sma_events:            Events<Int>         := sma(int_events, 3)
 define timestamps_events:     Events<Int>         := timestamps(unit_events)
 define delay_int_events:      Events<Int>         := delay(int_events, 2)
 define delay_string_events:   Events<String>      := delay(string_events, 2)
-define within_signal:         Signal<Boolean>     := within(2, 3, int_events)
+-- define within_signal:         Signal<Boolean>     := within(2, 3, int_events)
 define inPast_signal:         Signal<Boolean>     := inPast(2, int_events)
-define inFuture_signal:       Signal<Boolean>     := inFuture(2, int_events)
+-- define inFuture_signal:       Signal<Boolean>     := inFuture(2, int_events)
 
 
 -- out error

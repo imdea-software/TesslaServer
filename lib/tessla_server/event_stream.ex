@@ -81,15 +81,22 @@ defmodule TesslaServer.EventStream do
 
   This method will advance the `progressed_to` field to the `timestamp` of the `Event`.
   """
-  @spec add_event(nil | EventStream.t, Event.t) ::  {:ok, EventStream.t} | {:error, String.t}
-  def add_event(nil, event) do
+  @spec add_event(nil | EventStream.t, Event.t, boolean) ::  {:ok, EventStream.t} | {:error, String.t}
+  def add_event(event_stream, event, progress \\ true)
+  def add_event(nil, event, true) do
     {:ok, %__MODULE__{id: event.stream_id, progressed_to: event.timestamp, events: [event]}}
   end
-  def add_event(%{id: id}, %{stream_id: stream_id})
+  def add_event(nil, event, false) do
+    {:ok, %__MODULE__{id: event.stream_id, events: [event]}}
+  end
+  def add_event(%{id: id}, %{stream_id: stream_id}, _)
   when id != stream_id, do: {:error, "Event has different stream_id than stream"}
-  def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp})
+  def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp}, _)
   when progressed_to > timestamp, do: {:error, "Event's timestamp smaller than stream progress"}
-  def add_event(stream, event) do
+  def add_event(stream, event, false) do
+    {:ok, %{stream | events: [event | stream.events]}}
+  end
+  def add_event(stream, event, true) do
     {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
   end
 

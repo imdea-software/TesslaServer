@@ -24,7 +24,7 @@ defmodule TesslaServer.Node.Aggregation.Sum do
     default_value = 0
     default_event = %Event{stream_id: state.stream_id, value: default_value}
 
-    {:ok, history} = History.update_output(state.history, default_event)
-    history.output
+    {:ok, stream} = EventStream.add_event(state.history.output, default_event)
+    stream
   end
 end
