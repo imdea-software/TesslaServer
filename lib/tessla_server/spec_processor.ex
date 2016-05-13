@@ -5,7 +5,7 @@ defmodule TesslaServer.SpecProcessor do
 
   alias TesslaServer.SpecProcessor.GraphBuilder
 
-  @spec process(String.t) :: any
+  @spec process(String.t) :: :ok
   def process(spec) do
     json = Poison.decode! spec, keys: :atoms
     GraphBuilder.build json[:"items"]

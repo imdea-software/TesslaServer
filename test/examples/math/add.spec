@@ -1,1 +1,1 @@
-define added: Events<Int> := add(3, 5)
+define added: Signal<Int> := add(literal(3), literal(5))

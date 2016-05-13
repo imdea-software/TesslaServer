@@ -1,1 +1,20 @@
-Definitions(Map(added -> StreamDef(added,SourceLoc((1,1 - 1,39)),ExprTree(TypeAscrFn(GenericType(Events,List(SimpleType(Int))),SourceLoc((1,15 - 1,26))),Map(Pos(0) -> ExprTree(NamedFn(add,SourceLoc((1,30 - 1,33))),Map(Pos(0) -> ExprTree(LiteralFn(IntLiteral(3),SourceLoc((1,34 - 1,35))),Map(),SourceLoc((1,34 - 1,35))), Pos(1) -> ExprTree(LiteralFn(IntLiteral(5),SourceLoc((1,37 - 1,38))),Map(),SourceLoc((1,37 - 1,38)))),SourceLoc((1,1 - 1,39)))),SourceLoc((1,1 - 1,39))))),Map())
+{
+  "type":"java.util.Collections$UnmodifiableSet",
+  "items":[{
+    "id":1,
+    "nodetype":"TesslaServer.Node.Lifted.Add",
+    "operands":[3,2]
+  },{
+    "id":2,
+    "nodetype":"TesslaServer.Node.Literal",
+    "options":{
+      "value":5
+    }
+  },{
+    "id":3,
+    "nodetype":"TesslaServer.Node.Literal",
+    "options":{
+      "value":3
+    }
+  }]
+}
