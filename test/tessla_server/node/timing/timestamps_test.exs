@@ -23,7 +23,7 @@ defmodule TesslaServer.Node.Timing.TimestampsTest do
 
   test "should emit timestamp of every received event" do
     Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: []}}})
+    assert_receive({_, {:update_input_stream, %{type: :events, events: []}}})
 
     timestamp1 = DateTime.now
     timestamp2 = shift(timestamp1, seconds: 2)

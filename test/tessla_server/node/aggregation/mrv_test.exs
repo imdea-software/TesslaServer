@@ -24,7 +24,7 @@ defmodule TesslaServer.Node.Aggregation.MrvTest do
 
   test "Should change value of signal on every event with new value" do
     Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: [out0]}}})
+    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
     assert(out0.value == @default)
 
     timestamp = DateTime.now

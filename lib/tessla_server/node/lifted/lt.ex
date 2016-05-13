@@ -26,4 +26,6 @@ defmodule TesslaServer.Node.Lifted.Lt do
       :wait
     end
   end
+
+  def output_stream_type, do: :signal
 end

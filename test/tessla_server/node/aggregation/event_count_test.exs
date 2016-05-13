@@ -23,7 +23,7 @@ defmodule TesslaServer.Node.Aggregation.EventCountTest do
 
   test "Should increment eventcount on every new event" do
     Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: [out0]}}})
+    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
     assert(out0.value == 0)
 
     timestamp = DateTime.now

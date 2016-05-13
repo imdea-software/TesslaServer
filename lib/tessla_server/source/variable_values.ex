@@ -25,4 +25,6 @@ defmodule TesslaServer.Source.VariableValues do
     processed_event = %Event{timestamp: timestamp, value: value, stream_id: state.stream_id}
     {:ok, processed_event}
   end
+
+  def output_stream_type, do: :signal
 end

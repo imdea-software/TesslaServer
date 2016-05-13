@@ -24,7 +24,7 @@ defmodule TesslaServer.Node.Aggregation.SmaTest do
 
   test "should emit sma on every new event" do
     Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: []}}})
+    assert_receive({_, {:update_input_stream, %{type: :events, events: []}}})
 
     timestamp = DateTime.now
     event1 = %Event{value: 1, timestamp: to_timestamp(timestamp), stream_id: @op1}

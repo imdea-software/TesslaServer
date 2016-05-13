@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Lifted.Not do
+defmodule TesslaServer.Node.Lifted.SignalNot do
   @moduledoc """
   Implements a `Node` that computes the boolean not of a boolean stream.
 
@@ -19,4 +19,6 @@ defmodule TesslaServer.Node.Lifted.Not do
       stream_id: state.stream_id, timestamp: timestamp, value: !event.value
     }}
   end
+
+  def output_stream_type, do: :signal
 end

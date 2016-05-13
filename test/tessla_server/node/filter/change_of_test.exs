@@ -27,6 +27,7 @@ defmodule TesslaServer.Node.Filter.ChangeOfTest do
     assert_receive({_, {:update_input_stream, initial_output}})
     assert(initial_output.progressed_to == Time.zero)
     assert(initial_output.events == [])
+    assert initial_output.type == :events
 
     timestamp = DateTime.now
 

@@ -29,6 +29,8 @@ defmodule TesslaServer.Node.Aggregation.Mrv do
     default_event = %Event{stream_id: state.stream_id, value: default_value}
 
     {:ok, history} = History.update_output(state.history, default_event)
-    history.output
+    %{history.output | type: output_stream_type}
   end
+
+  def output_stream_type, do: :signal
 end

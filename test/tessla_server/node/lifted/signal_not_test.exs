@@ -1,8 +1,8 @@
-defmodule TesslaServer.Node.Lifted.NotTest do
+defmodule TesslaServer.Node.Lifted.SignalNotTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Lifted.Not
+  alias TesslaServer.Node.Lifted.SignalNot
   alias TesslaServer.{Event, Node}
 
   import TesslaServer.Registry
@@ -13,11 +13,11 @@ defmodule TesslaServer.Node.Lifted.NotTest do
   @test unique_integer
   @processor unique_integer
 
-  doctest Not
+  doctest SignalNot
 
   setup do
     :gproc.reg(gproc_tuple(@test))
-    Not.start @processor, [@op]
+    SignalNot.start @processor, [@op]
     :ok
   end
 
@@ -26,6 +26,7 @@ defmodule TesslaServer.Node.Lifted.NotTest do
     assert_receive({_, {:update_input_stream, initial_output}})
     assert(initial_output.progressed_to == Time.zero)
     assert(initial_output.events == [])
+    assert initial_output.type == :signal
 
     timestamp = DateTime.now
     event1 = %Event{timestamp: to_timestamp(timestamp), value: false, stream_id: @op}

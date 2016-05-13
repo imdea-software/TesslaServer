@@ -25,4 +25,6 @@ defmodule TesslaServer.Node.Lifted.Max do
       :wait
     end
   end
+
+  def output_stream_type, do: :signal
 end

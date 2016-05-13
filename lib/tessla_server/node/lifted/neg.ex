@@ -17,4 +17,6 @@ defmodule TesslaServer.Node.Lifted.Neg do
     new_event = %Event{stream_id: state.stream_id, timestamp: timestamp, value:  -event.value}
     {:ok, new_event}
   end
+
+  def output_stream_type, do: :signal
 end

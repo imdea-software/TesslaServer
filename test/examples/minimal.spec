@@ -20,8 +20,8 @@ define variable_values_int:           Signal<Int>         := variable_values("mi
 define variable_values_boolean:       Signal<Boolean>     := variable_values("minimal.c:boolean")
 
 -- Lifted
-define abs_signal:          Signal<Int>         := signal_abs(int_signal)
-define abs_events:          Events<Int>         := event_abs(int_events)
+define abs_signal:          Signal<Int>         := signalAbs(int_signal)
+define abs_events:          Events<Int>         := eventAbs(int_events)
 define add_signal:          Signal<Int>         := add(int_signal, int_signal)
 define and_signal:          Signal<Boolean>     := and(boolean_signal, boolean_signal)
 define div_signal:          Signal<Int>         := div(int_signal, int_signal)
@@ -37,8 +37,8 @@ define max_signal:          Signal<Int>         := max(int_signal, int_signal)
 define min_signal:          Signal<Int>         := min(int_signal, int_signal)
 define mul_signal:          Signal<Int>         := mul(int_signal, int_signal)
 define neg_signal:          Signal<Int>         := neg(int_signal)
-define not_signal:          Signal<Boolean>     := not(boolean_signal)
-define not_events:          Events<Boolean>     := not(boolean_events)
+define not_signal:          Signal<Boolean>     := signalNot(boolean_signal)
+define not_events:          Events<Boolean>     := eventNot(boolean_events)
 define or_signal:           Signal<Boolean>     := or(boolean_signal, boolean_signal)
 define sub_signal:          Signal<Int>         := sub(int_signal, int_signal)
 
@@ -71,10 +71,10 @@ define occurAll_events:       Events<Unit>        := occurAll(unit_events, int_e
 define occurAny_events:       Events<Unit>        := occurAll(unit_events, int_events)
 
 -- Aggregation
-define maximum_from_events:   Signal<Int>         := maximum(int_events, 0)
--- define maximum_from_signal:   Signal<Int>         := maximum(int_signal)
-define minimum_from_events:   Signal<Int>         := minimum(int_events, 0)
--- define minimum_from_signal:   Signal<Int>         := minimum(int_signal)
+define maximum_from_events:   Signal<Int>         := eventMaximum(int_events, 0)
+define maximum_from_signal:   Signal<Int>         := signalMaximum(int_signal)
+define minimum_from_events:   Signal<Int>         := eventMinimum(int_events, 0)
+define minimum_from_signal:   Signal<Int>         := signalMinimum(int_signal)
 
 define sum_signal:            Signal<Int>         := sum(int_events)
 define eventCount_signal:     Signal<Int>         := eventCount(unit_events)
@@ -84,11 +84,12 @@ define mrv_int_signal:        Signal<Int>         := mrv(int_events, 0)
 define sma_events:            Events<Int>         := sma(int_events, 3)
 
 -- Timing
-define timestamps_events:     Events<Int>         := timestamps(unit_events)
-define delay_int_events:      Events<Int>         := delay(int_events, 2)
-define delay_string_events:   Events<String>      := delay(string_events, 2)
+define timestamps_events:         Events<Int>         := timestamps(unit_events)
+define delay_int_events_by_time:  Events<Int>         := delayEventByTime(int_events, 2000)
+define delay_int_events_by_count: Events<Int>         := delayEventByCount(int_events, 2)
+define delay_int_signal_by_time:  Signal<Int>         := delaySignalByTime(int_signal, 2000, 0)
 -- define within_signal:         Signal<Boolean>     := within(2, 3, int_events)
-define inPast_signal:         Signal<Boolean>     := inPast(2, int_events)
+define inPast_signal:             Signal<Boolean>     := inPast(2, int_events)
 -- define inFuture_signal:       Signal<Boolean>     := inFuture(2, int_events)
 
 

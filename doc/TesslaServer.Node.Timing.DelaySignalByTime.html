@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.5">
-    <title>TesslaServer.Node.Aggregation.Maximum – tessla_server v0.0.1</title>
+    <title>TesslaServer.Node.Timing.DelaySignalByTime – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -61,18 +61,18 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Node.Aggregation.Maximum
+        TesslaServer.Node.Timing.DelaySignalByTime
         
         
       </h1>
 
       
         <section id="moduledoc" class="docstring">
-          <p>Implements a <code class="inline">Node</code> that emits the maximum value ever occured on an Event Stream
-or a default value if it’s bigger than all values occured to that point.</p>
-<p>To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the stream that should be aggregated over and the <code class="inline">options</code> map has to have a key <code class="inline">default</code>
-which should hold the default value.</p>
+          <p>Implements a <code class="inline">Node</code> that delays the values of a signal Stream by the amount specified in
+<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds.
+Only tested for positive values of amount.
+The output signal will hold the value specified under the key <code class="inline">default</code> in <code class="inline">state.options</code> as long as the first value
+is delayed.</p>
 
         </section>
       
@@ -112,7 +112,16 @@ which should hold the default value.</p>
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#perform_computation/3">perform_computation(timestamp, event_map, state)</a>
+    <a href="#output_stream_type/0">output_stream_type()</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:output_stream_type/0"><code class="inline">TesslaServer.Node.output_stream_type/0</code></a></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#perform_computation/3">perform_computation(timestamp, , state)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.Node.html#c:perform_computation/3"><code class="inline">TesslaServer.Node.perform_computation/3</code></a></p>
@@ -201,12 +210,26 @@ which should hold the default value.</p>
 
   </section>
 </div>
+<div class="detail" id="output_stream_type/0">
+  <div class="detail-header">
+    <a href="#output_stream_type/0" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">output_stream_type()</span>
+      
+  </div>
+  
+  <section class="docstring">
+    <p>Callback implementation for <a href="TesslaServer.Node.html#c:output_stream_type/0"><code class="inline">TesslaServer.Node.output_stream_type/0</code></a>.</p>
+
+  </section>
+</div>
 <div class="detail" id="perform_computation/3">
   <div class="detail-header">
     <a href="#perform_computation/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">perform_computation(timestamp, event_map, state)</span>
+    <span class="signature">perform_computation(timestamp, , state)</span>
       
   </div>
   

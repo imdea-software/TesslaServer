@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Timing.Delay do
+defmodule TesslaServer.Node.Timing.DelayEventByTime do
   @moduledoc """
   Implements a `Node` that delays the values of an `EventStream` by the amount specified in
   `options` under the key `amount` in microseconds.

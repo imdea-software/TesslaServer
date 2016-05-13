@@ -24,9 +24,8 @@ defmodule TesslaServer.Node.Lifted.AndTest do
 
   test "Should compute and of latest Events and notify children" do
     Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, initial_output}})
-    assert(initial_output.progressed_to == Time.zero)
-    assert(initial_output.events == [])
+    assert_receive({_, {:update_input_stream, %{events: [], type: :signal, progressed_to: progressed_to}}})
+    assert(progressed_to == Time.zero)
 
     timestamp = DateTime.now
     event1 = %Event{timestamp: to_timestamp(timestamp), value: true, stream_id: @op1}

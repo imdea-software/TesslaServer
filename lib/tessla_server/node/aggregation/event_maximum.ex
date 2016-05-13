@@ -1,4 +1,4 @@
-defmodule TesslaServer.Node.Aggregation.Maximum do
+defmodule TesslaServer.Node.Aggregation.EventMaximum do
   @moduledoc """
   Implements a `Node` that emits the maximum value ever occured on an Event Stream
   or a default value if it's bigger than all values occured to that point.
@@ -32,6 +32,8 @@ defmodule TesslaServer.Node.Aggregation.Maximum do
     default_event = %Event{stream_id: state.stream_id, value: default_value}
 
     {:ok, history} = History.update_output(state.history, default_event)
-    history.output
+    %{history.output | type: output_stream_type}
   end
+
+  def output_stream_type, do: :signal
 end

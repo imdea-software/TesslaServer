@@ -25,7 +25,7 @@ defmodule TesslaServer.Node.Timing.InPastTest do
   test "should emit if an event happened in specified time in past" do
     Node.add_child(@processor, @test)
 
-    assert_receive({_, {:update_input_stream, %{events: [out0]}}})
+    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
     refute out0.value
 
     timestamp1 = DateTime.now

@@ -12,7 +12,7 @@ defmodule TesslaServer.Node.Aggregation.EventCount do
   use Node
   use Timex
 
-  def perform_computation(timestamp, event_map, state) do
+  def perform_computation(timestamp, _, state) do
     last_event = History.latest_output state.history
     {:ok, %Event{
       stream_id: state.stream_id, timestamp: timestamp, value: last_event.value + 1
@@ -24,6 +24,8 @@ defmodule TesslaServer.Node.Aggregation.EventCount do
     default_event = %Event{stream_id: state.stream_id, value: default_value}
 
     {:ok, history} = History.update_output(state.history, default_event)
-    history.output
+    %{history.output | type: output_stream_type}
   end
+
+  def output_stream_type, do: :signal
 end

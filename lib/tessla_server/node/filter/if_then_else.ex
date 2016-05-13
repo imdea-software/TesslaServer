@@ -43,4 +43,6 @@ defmodule TesslaServer.Node.Filter.IfThenElse do
       true -> :wait
     end
   end
+
+  def output_stream_type, do: :signal
 end

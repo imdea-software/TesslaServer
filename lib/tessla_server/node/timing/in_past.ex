@@ -38,7 +38,7 @@ defmodule TesslaServer.Node.Timing.InPast do
     default_event = %Event{stream_id: state.stream_id, value: default_value}
 
     {:ok, stream} = EventStream.add_event(state.history.output, default_event)
-    stream
+    %{stream | type: :signal}
   end
 
   defp insert_false(history, timestamp, id) do

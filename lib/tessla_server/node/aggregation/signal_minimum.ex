@@ -1,6 +1,6 @@
-defmodule TesslaServer.Node.Aggregation.Minimum do
+defmodule TesslaServer.Node.Aggregation.SignalMinimum do
   @moduledoc """
-  Implements a `Node` that emits the minimum value ever occured on an Event Stream
+  Implements a `Node` that emits the minimum value ever occured on an Signal Stream
   or a default value if it's smaller than all values occured to that point.
 
   To do so the `state.operands` list has to be initialized with one integer representing the id of
@@ -18,20 +18,19 @@ defmodule TesslaServer.Node.Aggregation.Minimum do
     op1 = hd(state.operands)
     new_event = event_map[op1]
     current_event = EventStream.event_at(state.history.output, timestamp)
-    if new_event.value < current_event.value do
-      {:ok, %Event{
-        stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-      }}
-    else
-      :wait
+    cond do
+      is_nil(current_event) ->
+        {:ok, %Event{
+          stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
+        }}
+      new_event.value < current_event.value ->
+        {:ok, %Event{
+          stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
+        }}
+      true ->
+        :wait
     end
   end
 
-  def init_output(state) do
-    default_value = state.options[:default]
-    default_event = %Event{stream_id: state.stream_id, value: default_value}
-
-    {:ok, history} = History.update_output(state.history, default_event)
-    history.output
-  end
+  def output_stream_type, do: :signal
 end

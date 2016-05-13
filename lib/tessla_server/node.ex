@@ -26,6 +26,7 @@ defmodule TesslaServer.Node do
   @callback start(id, [id], %{}) :: id
   @callback init_inputs([id]) :: %{id => EventStream.t}
   @callback init_output(State.t) :: EventStream.t
+  @callback output_stream_type :: EventStream.stream_type
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `id` to process it
@@ -135,7 +136,7 @@ defmodule TesslaServer.Node do
       @spec handle_call(:subscribe_to_operands, GenServer.from, State.t) :: {:reply, :ok, State.t}
       def handle_call(:subscribe_to_operands, _, state) do
         Enum.each state.operands, fn id ->
-          Node.add_child(id, state.id)
+          Node.add_child(id, state.stream_id)
         end
         {:reply, :ok, state}
       end
@@ -218,12 +219,14 @@ defmodule TesslaServer.Node do
       end
 
       def init_output(state) do
-        %EventStream{id: state.stream_id}
+        %EventStream{id: state.stream_id, type: output_stream_type}
       end
+
+      def output_stream_type, do: :events
 
       defoverridable [start: 3, prepare_events: 2, process_events: 3,
        perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1,
-       init_output: 1
+       init_output: 1, output_stream_type: 0
       ]
 
     end
