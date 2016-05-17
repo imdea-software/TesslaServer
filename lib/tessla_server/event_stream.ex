@@ -12,16 +12,16 @@ defmodule TesslaServer.EventStream do
   use Timex
   alias TesslaServer.Event
 
+  @type timestamp :: Timex.Types.timestamp
   @type stream_type :: :events | :signal
   @type t :: %__MODULE__{
-    progressed_to: Timex.Types.timestamp,
+    progressed_to: timestamp | :literal,
     id: integer | nil,
     events: [Event.t],
     type: stream_type
   }
   defstruct progressed_to: Time.zero, id: nil, events: [], type: :events
 
-  @type timestamp :: Timex.Types.timestamp
 
   @doc """
   Progresses the `EventStream` to the given `timestamp`.
@@ -99,13 +99,26 @@ defmodule TesslaServer.EventStream do
   end
   def add_event(%{id: id}, %{stream_id: stream_id}, _)
   when id != stream_id, do: {:error, "Event has different stream_id than stream"}
+  def add_event(stream, event = %{timestamp: :literal}, _) do
+    {:ok, %{stream | events: [event], progressed_to: :literal}}
+  end
   def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp}, _)
   when progressed_to > timestamp, do: {:error, "Event's timestamp smaller than stream progress"}
   def add_event(stream, event, false) do
     {:ok, %{stream | events: [event | stream.events]}}
   end
-  def add_event(stream, event, true) do
+  def add_event(stream = %{events: []}, event, true) do
     {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
+  end
+  def add_event(stream = %{type: :events}, event, true) do
+    {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
+  end
+  def add_event(stream = %{type: :signal}, event, true) do
+    if event.value == hd(stream.events).value do
+      {:ok, %{stream | progressed_to: event.timestamp}}
+    else
+      {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
+    end
   end
 
   @doc """
@@ -130,6 +143,7 @@ defmodule TesslaServer.EventStream do
   """
   @spec events_in_timeslot(EventStream.t | nil, timestamp, timestamp) :: [Event.t]
   def events_in_timeslot(nil, _, _), do: []
+  def events_in_timeslot(%{progressed_to: :literal}, _, _), do: []
   def events_in_timeslot(stream, from, to) do
     stream.events
     |> Enum.drop_while(&(&1.timestamp > to))
@@ -156,6 +170,8 @@ defmodule TesslaServer.EventStream do
       nil
   """
   @spec event_at(EventStream.t, timestamp) :: Event.t | nil
+  def event_at(stream, at)
+  def event_at(%{progressed_to: :literal, events: [event]}, _), do: event
   def event_at(stream, at) do
     stream.events
     |> Enum.drop_while(&(&1.timestamp > at))

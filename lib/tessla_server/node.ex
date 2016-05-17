@@ -147,7 +147,20 @@ defmodule TesslaServer.Node do
         {:noreply, %{state | children: [new_child | state.children]}}
       end
 
-      # TODO doc
+      @spec update_input_stream(EventStream.t, State.t) :: State.t
+      defp update_input_stream(stream, state) do
+        {:ok, new_history} = History.replace_input_stream(state.history, stream)
+        new_state = %{state | history: new_history}
+        all_inputs_ready = Enum.all?(new_state.history.inputs, fn {_, stream} ->
+          stream.progressed_to != {0, 0, 0}
+        end)
+        if all_inputs_ready do
+          progress new_state
+        else
+          new_state
+        end
+      end
+
       @spec progress(State.t) :: State.t
       def progress(state) do
         change_timestamps =
@@ -157,6 +170,7 @@ defmodule TesslaServer.Node do
           |> Enum.sort
           |> Enum.uniq
         # All timestamps of events between progressed_to and min time of all inputs
+        # IO.puts "id: #{inspect state.stream_id}, change_timestamps: #{inspect change_timestamps}"
         new_state = do_progress(state, change_timestamps)
 
         old_progress = state.history.output.progressed_to
@@ -168,9 +182,11 @@ defmodule TesslaServer.Node do
           |> EventStream.events_in_timeslot(old_progress, new_progress)
           |> Enum.sort_by(&(&1.timestamp))
 
-        Node.log_new_outputs(state.stream_id, new_outputs)
+        # IO.puts "id: #{inspect state.stream_id}, progressed_to: #{inspect new_progress}"
 
         if new_progress > old_progress do
+          Node.log_new_progress(state.stream_id, new_progress)
+          Node.log_new_outputs(state.stream_id, new_outputs)
           Enum.each(new_state.children, &Node.update_input_stream(&1, new_state.history.output))
         end
 
@@ -179,18 +195,12 @@ defmodule TesslaServer.Node do
 
       @spec do_progress(State.t, [Timex.Types.timestamp]) :: State.t
       defp do_progress(state, []), do: state
-      defp do_progress(state, [at | next]) do
+      defp do_progress(state, [:literal | tail]), do: do_progress(state, [{0, 0, 1} | tail])
+      defp do_progress(state, [at | next]) when is_tuple(at) do
         events = prepare_events(at, state)
         updated_state  = process_events(at, events, state)
 
         do_progress(updated_state, next)
-      end
-
-      @spec update_input_stream(EventStream.t, State.t) :: State.t
-      defp update_input_stream(stream, state) do
-        {:ok, new_history} = History.replace_input_stream(state.history, stream)
-        new_state = %{state | history: new_history}
-        updated_state = progress new_state
       end
 
       def prepare_events(at, state) do
@@ -232,11 +242,15 @@ defmodule TesslaServer.Node do
     end
   end
 
-  @spec log_new_outputs(String.t, [Event.t]) :: nil
+  @spec log_new_progress(id, timestamp) :: nil
+  def log_new_progress(id, new_progress) do
+    Logger.debug "Stream #{id} progressed to #{inspect new_progress}"
+  end
+
+  @spec log_new_outputs(id, [Event.t]) :: nil
   def log_new_outputs(_, []), do: nil
-  def log_new_outputs(id, events) do
-    message = "New outputs of #{id}: \n" <> format(events)
-    Logger.debug message
+  def log_new_outputs(id, events) when is_number(id) do
+    Logger.debug ("New outputs of #{id}: \n" <> format(events))
   end
 
   defp format(events) do

@@ -4,5 +4,5 @@ defmodule TesslaServer.Event do
   """
   use Timex
   defstruct timestamp: {0, 0, 1}, stream_id: nil, value: :nothing
-  @type t :: %__MODULE__{timestamp: Timex.Types.timestamp, value: any, stream_id: integer | nil}
+  @type t :: %__MODULE__{timestamp: Timex.Types.timestamp | :literal, value: any, stream_id: integer | nil}
 end

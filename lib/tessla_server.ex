@@ -11,8 +11,8 @@ defmodule TesslaServer do
 
   def main(args) do
     args
-      |> parse_args
-      |> process
+    |> parse_args
+    |> process
   end
 
   defp process({options, file}) do
@@ -28,15 +28,17 @@ defmodule TesslaServer do
   defp read do
     case IO.read(:stdio, :line) do
       :eof -> :ok
-      {:error, reason} -> Logger.debug "Error: {reason}"
+      {:error, reason} -> Logger.debug "Error: #{reason}"
       data ->
         data = String.rstrip data, ?\n
-        [stream_id | values] = String.split(data, " ")
-        stream_id = String.to_atom stream_id
-        Logger.debug "values: #{inspect values}"
-        timestamp = Time.now
+        [channel, seconds, microseconds | values] = String.split(data, " ")
+        {seconds, _} = Integer.parse(seconds)
+        seconds = Time.from(seconds, :seconds)
+        {microseconds, _} = Integer.parse(microseconds)
+        microseconds = Time.from(microseconds, :microseconds)
+        timestamp = Time.add(seconds, microseconds)
         event = %Event{value: values, timestamp: timestamp}
-        EventQueue.process_external event
+        EventQueue.process_external channel, event
         read()
     end
 
@@ -44,9 +46,9 @@ defmodule TesslaServer do
 
   defp parse_args(argv) do
     {options, [file],  _} = OptionParser.parse(argv,
-      switches: [debug: :boolean]
-    )
-    Logger.debug inspect options
-    {options, file}
+     switches: [debug: :boolean]
+   )
+   Logger.debug inspect options
+   {options, file}
   end
 end

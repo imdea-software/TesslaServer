@@ -4,30 +4,38 @@ defmodule TesslaServer.EventQueue do
   """
 
   use Timex
-  alias TesslaServer.Source
+  alias TesslaServer.{Source, EventStream}
   alias __MODULE__
 
-  defstruct events: [], last_processed_time: Time.zero
+  @type t :: %__MODULE__{channels: %{String.t => EventStream.t}}
+  defstruct channels: %{}
 
   def start do
     Agent.start_link(fn -> %EventQueue{} end, name: __MODULE__)
   end
 
-  def process_external(event) do
-    add_event event
-    Source.distribute event
+  def process_external(channel, event) do
+    add_event channel, event
+    Source.distribute channel, event
   end
 
-  defp add_event(event) do
-    last_processed_time = Agent.get(__MODULE__, &(&1.last_processed_time))
-    if (last_processed_time > event.timestamp) do
-      raise "External Event received with smaller timestamp than a previous."
+  defp add_event(channel, event) do
+
+    stream = Agent.get(__MODULE__, fn queue ->
+      Map.get(queue.channels, channel, %EventStream{})
+    end)
+
+    IO.puts inspect event
+    IO.puts inspect stream
+    updated_stream = case EventStream.add_event stream, event do
+      {:ok, updated_stream} -> updated_stream
+      {:error, _} -> raise "External Event received out of order"
     end
 
-    Agent.update(__MODULE__, fn event_queue ->
-      %{event_queue |
-       events: [event | event_queue.events],
-       last_processed_time: event.timestamp}
+    IO.puts inspect updated_stream
+    Agent.update(__MODULE__, fn queue ->
+      updated_channels = Map.put(queue.channels, channel, updated_stream)
+      %{queue | channels: updated_channels}
     end)
   end
 end

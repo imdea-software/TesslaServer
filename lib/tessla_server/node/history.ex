@@ -17,14 +17,23 @@ defmodule TesslaServer.Node.History do
   """
   @spec processable_events(History.t) :: [Event.t]
   def processable_events(history) do
-    upto =
+    progresses =
       history.inputs
       |> Map.values
       |> Enum.map(&(&1.progressed_to))
-      |> Enum.min
-    from = history.output.progressed_to
-    Enum.flat_map history.inputs, fn {_, stream} ->
-      EventStream.events_in_timeslot(stream, from, upto)
+    all_literals = Enum.all? progresses, &(&1 == :literal)
+    cond do
+      all_literals && (history.output.progressed_to == {0, 0, 0}) ->
+        Enum.map(history.inputs, fn {_, stream} -> hd(stream.events) end)
+      !all_literals ->
+        upto = progresses
+                |> Enum.reject(&(&1 == :literal))
+                |> Enum.min
+        from = history.output.progressed_to
+        Enum.flat_map(history.inputs, fn {_, stream} ->
+          EventStream.events_in_timeslot(stream, from, upto)
+        end)
+      true -> []
     end
   end
 
