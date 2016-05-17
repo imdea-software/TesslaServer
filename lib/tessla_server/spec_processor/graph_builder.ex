@@ -7,7 +7,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
 
   alias TesslaServer.Node
 
-  @spec build([%{atom => any}]) :: :ok
+  @spec build([%{atom => any}]) :: [integer]
   def build(spec) when is_list(spec) do
     ids = Enum.map spec, &(&1[:"id"])
 
@@ -16,7 +16,7 @@ defmodule TesslaServer.SpecProcessor.GraphBuilder do
     end
 
     Enum.each ids, &Node.subscribe_to_operands(&1)
-    :ok
+    ids
   end
 
   defp build_node(json = %{nodetype: nodetype, id: id}) do

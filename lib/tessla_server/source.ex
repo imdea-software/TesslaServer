@@ -5,11 +5,11 @@ defmodule TesslaServer.Source do
   Distributes Events to subscribers via `gproc`
   """
 
-  def distribute(event) do
-    GenServer.cast(subscribe_tuple(event.stream_id), {:process, event})
+  def distribute(channel, event) when is_binary(channel) do
+    GenServer.cast(subscribe_tuple(channel), {:process, event})
   end
 
-  defp subscribe_tuple(name) do
-    {:via, :gproc, {:p, :l, name}}
+  defp subscribe_tuple(channel) when is_binary(channel) do
+    {:via, :gproc, {:p, :l, channel}}
   end
 end

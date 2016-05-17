@@ -1,0 +1,34 @@
+{
+  "type":"java.util.Collections$UnmodifiableSet",
+  "items":[{
+    "id":3,
+    "nodetype":"TesslaServer.Source.FunctionReturns",
+    "options":{
+      "function":"counter.c:inc"
+    }
+  },{
+    "id":6,
+    "nodetype":"TesslaServer.Source.VariableValues",
+    "options":{
+      "variable":"counter.c:count"
+    }
+  },{
+    "id":5,
+    "nodetype":"TesslaServer.Node.Timing.InPast",
+    "operands":[0],
+    "options":{
+      "amount":1000
+    }
+  },{
+    "id":0,
+    "nodetype":"TesslaServer.Source.FunctionCalls",
+    "options":{
+      "function":"counter.c:inc"
+    }
+  },{
+    "id":1,
+    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "operands":[3,5]
+  }]
+}
+

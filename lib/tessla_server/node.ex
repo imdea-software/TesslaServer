@@ -98,7 +98,7 @@ defmodule TesslaServer.Node do
 
       def start(id, operands, options \\ %{}) do
         state = %State{stream_id: id, operands: operands, options: options}
-        GenServer.start(__MODULE__, state, name: via_tuple(id))
+        {:ok, pid} = GenServer.start(__MODULE__, state, name: via_tuple(id))
         id
       end
 
