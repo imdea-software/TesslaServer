@@ -501,7 +501,7 @@ iex&gt; output = %EventStream{id: 1, progressed_to: {1, 2, 3}}
 iex&gt; history = %History{output: output}
 iex&gt; new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
 iex&gt; History.update_output(history, new_event)
-{:error, &quot;Event&#39;s timestamp smaller than stream progress&quot;}
+{:error, &quot;Event&#39;s timestamp smaller or equal to stream progress&quot;}
 
 iex&gt; output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
 iex&gt; history = %History{output: output}

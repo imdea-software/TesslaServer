@@ -242,13 +242,13 @@ iex&gt; updated_stream
   id: :test,
   progressed_to: {1000, 123456, 123456}
 }</code></pre>
-<p>The <code class="inline">timestamp</code> of the <code class="inline">Event</code> has to be greater or equal to the <code class="inline">progressed_to</code> value
+<p>The <code class="inline">timestamp</code> of the <code class="inline">Event</code> has to be greater  than the <code class="inline">progressed_to</code> value
 of the <code class="inline">EventStream</code>.</p>
 <pre><code class="iex elixir">iex&gt; event = %Event{stream_id: :test, timestamp: {0, 1, 2}, value: 1}
 iex&gt; stream = %EventStream{id: :test, progressed_to: {1, 2, 3}}
 iex&gt; {:error, reason} = EventStream.add_event(stream, event)
 iex&gt; reason
-&quot;Event&#39;s timestamp smaller than stream progress&quot;</code></pre>
+&quot;Event&#39;s timestamp smaller or equal to stream progress&quot;</code></pre>
 <p>The <code class="inline">stream_id</code> of the <code class="inline">Event</code> has to be the same as the <code class="inline">id</code> of the EventStream or else an
 error will be returned.</p>
 <pre><code class="iex elixir">iex&gt; event = %Event{stream_id: :wrong_id, timestamp: {1000, 123456, 123456}, value: 1}

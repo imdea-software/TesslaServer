@@ -68,14 +68,14 @@ defmodule TesslaServer.EventStream do
         progressed_to: {1000, 123456, 123456}
       }
 
-  The `timestamp` of the `Event` has to be greater or equal to the `progressed_to` value
+  The `timestamp` of the `Event` has to be greater  than the `progressed_to` value
   of the `EventStream`.
 
       iex> event = %Event{stream_id: :test, timestamp: {0, 1, 2}, value: 1}
       iex> stream = %EventStream{id: :test, progressed_to: {1, 2, 3}}
       iex> {:error, reason} = EventStream.add_event(stream, event)
       iex> reason
-      "Event's timestamp smaller than stream progress"
+      "Event's timestamp smaller or equal to stream progress"
 
   The `stream_id` of the `Event` has to be the same as the `id` of the EventStream or else an
   error will be returned.
@@ -103,7 +103,7 @@ defmodule TesslaServer.EventStream do
     {:ok, %{stream | events: [event], progressed_to: :literal}}
   end
   def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp}, _)
-  when progressed_to > timestamp, do: {:error, "Event's timestamp smaller than stream progress"}
+  when progressed_to >= timestamp, do: {:error, "Event's timestamp smaller or equal to stream progress"}
   def add_event(stream, event, false) do
     {:ok, %{stream | events: [event | stream.events]}}
   end

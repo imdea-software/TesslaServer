@@ -92,7 +92,7 @@ defmodule TesslaServer.Node.History do
       iex> history = %History{output: output}
       iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
       iex> History.update_output(history, new_event)
-      {:error, "Event's timestamp smaller than stream progress"}
+      {:error, "Event's timestamp smaller or equal to stream progress"}
 
       iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
       iex> history = %History{output: output}

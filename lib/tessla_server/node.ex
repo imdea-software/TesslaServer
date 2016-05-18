@@ -5,6 +5,8 @@ defmodule TesslaServer.Node do
   When you want to implement a new Node you should call `use TesslaServer.Node`
   Furthermore you'd have to implement the `prepare_values` and `process_values` functions.
   """
+  @output_names %{12 => "error", 10 => "bufferLevel", 4 => "writes", 5 => "processed"}
+  @outputs Map.keys(@output_names) # Nodes that should be logged
 
   require Logger
 
@@ -243,15 +245,17 @@ defmodule TesslaServer.Node do
   end
 
   @spec log_new_progress(id, timestamp) :: nil
-  def log_new_progress(id, new_progress) do
-    Logger.debug "Stream #{id} progressed to #{inspect new_progress}"
+  def log_new_progress(id, new_progress) when id in @outputs do
+    Logger.debug "Stream #{@output_names[id]} progressed to #{inspect new_progress}"
   end
+  def log_new_progress(_, _), do: nil
 
   @spec log_new_outputs(id, [Event.t]) :: nil
   def log_new_outputs(_, []), do: nil
-  def log_new_outputs(id, events) when is_number(id) do
-    Logger.debug ("New outputs of #{id}: \n" <> format(events))
+  def log_new_outputs(id, events) when id in @outputs do
+    Logger.debug ("New outputs of #{@output_names[id]}: \n" <> format(events))
   end
+  def log_new_outputs(_, _), do: nil
 
   defp format(events) do
     rows = Enum.map events, fn event ->

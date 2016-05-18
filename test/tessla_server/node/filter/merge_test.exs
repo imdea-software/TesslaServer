@@ -22,7 +22,7 @@ defmodule TesslaServer.Node.Filter.MergeTest do
     :ok
   end
 
-  test "Should event latest Event of either stream and notify children" do
+  test "Should compute latest Event of either stream and notify children" do
 
     Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, initial_output}})
@@ -35,7 +35,7 @@ defmodule TesslaServer.Node.Filter.MergeTest do
     event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 2, stream_id: @op2}
     event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 3, stream_id: @op1}
     event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 4, stream_id: @op1}
-    event5 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 4, stream_id: @op2}
+    event5 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 5, stream_id: @op2}
 
     Node.send_event(@processor, event1)
 
@@ -43,26 +43,23 @@ defmodule TesslaServer.Node.Filter.MergeTest do
 
     Node.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [first_event]}}})
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out1]}}})
     assert(progressed_to == event1.timestamp)
-    assert(first_event.value == event1.value)
+    assert(out1.value == event1.value)
 
     Node.send_event(@processor, event3)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out2, ^out1]}}})
     assert(progressed_to == event2.timestamp)
-    assert(hd(events).value == event2.value)
+    assert(out2.value == event2.value)
 
     Node.send_event(@processor, event4)
     refute_receive(_)
 
     Node.send_event(@processor, event5)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out4, out3, ^out2, ^out1]}}})
     assert(progressed_to == event4.timestamp)
-    assert(hd(events).value == event4.value)
-    assert(hd(tl(events)).value == event3.value)
-    assert(Enum.count(events) == 4)
-
-    Node.send_event(@processor, event5)
+    assert(out3.value == event3.value)
+    assert(out4.value == event4.value)
 
     :ok = Node.stop @processor
   end

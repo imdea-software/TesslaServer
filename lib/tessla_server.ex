@@ -21,34 +21,51 @@ defmodule TesslaServer do
     SpecProcessor.process(spec)
 
     EventQueue.start
-    read
 
+    case Keyword.get(options, :trace) do
+      nil -> read_io
+      trace -> read_trace_file trace
+    end
   end
 
-  defp read do
+  defp read_io do
     case IO.read(:stdio, :line) do
       :eof -> :ok
       {:error, reason} -> Logger.debug "Error: #{reason}"
       data ->
-        data = String.rstrip data, ?\n
-        [channel, seconds, microseconds | values] = String.split(data, " ")
-        {seconds, _} = Integer.parse(seconds)
-        seconds = Time.from(seconds, :seconds)
-        {microseconds, _} = Integer.parse(microseconds)
-        microseconds = Time.from(microseconds, :microseconds)
-        timestamp = Time.add(seconds, microseconds)
-        event = %Event{value: values, timestamp: timestamp}
-        EventQueue.process_external channel, event
-        read()
+        distribute_trace data
+        read_io
     end
+  end
 
+  @spec generate_event(String.t) :: {String.t, Event.t}
+  defp generate_event(line) do
+    line = String.rstrip line, ?\n
+    [channel, seconds, microseconds | values] = String.split(line, " ")
+    {seconds, _} = Integer.parse(seconds)
+    seconds = Time.from(seconds, :seconds)
+    {microseconds, _} = Integer.parse(microseconds)
+    microseconds = Time.from(microseconds, :microseconds)
+    timestamp = Time.add(seconds, microseconds)
+    {channel, %Event{value: values, timestamp: timestamp}}
+  end
+
+  defp read_trace_file(trace_file) do
+    traces = File.open!(trace_file)
+    traces_by_line = IO.stream(traces, :line)
+    Enum.each traces_by_line, &distribute_trace(&1)
+  end
+
+  defp distribute_trace(trace) do
+    {channel, event} = generate_event trace
+    EventQueue.process_external channel, event
   end
 
   defp parse_args(argv) do
-    {options, [file],  _} = OptionParser.parse(argv,
-     switches: [debug: :boolean]
+    {options, [spec],  _} = OptionParser.parse(argv,
+     strict: [debug: :boolean, trace: :string],
+     aliases: [d: :debug, t: :trace]
    )
-   Logger.debug inspect options
-   {options, file}
+   {options, spec}
   end
 end

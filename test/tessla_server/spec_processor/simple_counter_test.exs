@@ -5,7 +5,7 @@ defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
   import System, only: [unique_integer: 0]
   import TesslaServer.Registry
 
-  @overOneSecond 1
+  @over_one_second 1
   @call_id unique_integer
   @return_id unique_integer
   @test unique_integer
@@ -25,7 +25,7 @@ defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
     call_channel = "function_calls:counter.c:inc"
     return_channel = "function_returns:counter.c:inc"
 
-    Node.add_child(@overOneSecond, @test)
+    Node.add_child(@over_one_second, @test)
     assert_receive {_, {:update_input_stream, %{type: :events, events: []}}}
 
     call1 = %Event{timestamp: {0, 1, 0}, stream_id: @call_id}

@@ -25,14 +25,11 @@ defmodule TesslaServer.EventQueue do
       Map.get(queue.channels, channel, %EventStream{})
     end)
 
-    IO.puts inspect event
-    IO.puts inspect stream
     updated_stream = case EventStream.add_event stream, event do
       {:ok, updated_stream} -> updated_stream
-      {:error, _} -> raise "External Event received out of order"
+      {:error, _} -> raise "External Event received out of order #{inspect event}"
     end
 
-    IO.puts inspect updated_stream
     Agent.update(__MODULE__, fn queue ->
       updated_channels = Map.put(queue.channels, channel, updated_stream)
       %{queue | channels: updated_channels}
