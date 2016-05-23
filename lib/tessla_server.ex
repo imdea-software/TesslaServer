@@ -41,7 +41,7 @@ defmodule TesslaServer do
   @spec generate_event(String.t) :: {String.t, Event.t}
   defp generate_event(line) do
     line = String.rstrip line, ?\n
-    [channel, seconds, microseconds | values] = String.split(line, " ")
+    [channel, values, seconds, microseconds] = String.split(line, " ")
     {seconds, _} = Integer.parse(seconds)
     seconds = Time.from(seconds, :seconds)
     {microseconds, _} = Integer.parse(microseconds)

@@ -5,7 +5,7 @@ defmodule TesslaServer.Node do
   When you want to implement a new Node you should call `use TesslaServer.Node`
   Furthermore you'd have to implement the `prepare_values` and `process_values` functions.
   """
-  @output_names %{12 => "error", 10 => "bufferLevel", 4 => "writes", 5 => "processed"}
+  @output_names %{10 => "bufferLevel"}
   @outputs Map.keys(@output_names) # Nodes that should be logged
 
   require Logger

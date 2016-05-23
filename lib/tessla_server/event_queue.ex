@@ -1,6 +1,6 @@
 defmodule TesslaServer.EventQueue do
   @moduledoc """
-  Implements the central Event Queue to process all asynchronous Events in a strictly ordered way
+  Implements a central EventQueue to process all external Events in a strictly ordered way.
   """
 
   use Timex
