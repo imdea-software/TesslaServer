@@ -6,7 +6,7 @@ defmodule TesslaServer do
 
   use Timex
 
-  alias TesslaServer.{SpecProcessor, Event, EventQueue}
+  alias TesslaServer.{SpecProcessor, Event, EventQueue, Output}
   alias TesslaServer.EventQueue
 
   def main(args) do
@@ -17,6 +17,13 @@ defmodule TesslaServer do
 
   defp process({options, file}) do
     {:ok, spec} = File.read(file)
+
+    options
+    |> Keyword.get_values(:outputs)
+    |> Enum.map(&String.split(&1, ":"))
+    |> make_tuple_list
+    |> Enum.into(%{})
+    |> Output.start
 
     SpecProcessor.process(spec)
 
@@ -41,13 +48,13 @@ defmodule TesslaServer do
   @spec generate_event(String.t) :: {String.t, Event.t}
   defp generate_event(line) do
     line = String.rstrip line, ?\n
-    [channel, values, seconds, microseconds] = String.split(line, " ")
+    [channel, value, seconds, microseconds] = String.split(line, " ")
     {seconds, _} = Integer.parse(seconds)
     seconds = Time.from(seconds, :seconds)
     {microseconds, _} = Integer.parse(microseconds)
     microseconds = Time.from(microseconds, :microseconds)
     timestamp = Time.add(seconds, microseconds)
-    {channel, %Event{value: values, timestamp: timestamp}}
+    {channel, %Event{value: value, timestamp: timestamp}}
   end
 
   defp read_trace_file(trace_file) do
@@ -63,9 +70,16 @@ defmodule TesslaServer do
 
   defp parse_args(argv) do
     {options, [spec],  _} = OptionParser.parse(argv,
-     strict: [debug: :boolean, trace: :string],
-     aliases: [d: :debug, t: :trace]
+     strict: [debug: :boolean, trace: :string, outputs: :keep],
+     aliases: [d: :debug, t: :trace, o: :outputs]
    )
    {options, spec}
+  end
+
+  defp make_tuple_list(list) do
+    for [key, val] <- list do
+      {id, ""} = Integer.parse(key)
+      {id, val}
+    end
   end
 end

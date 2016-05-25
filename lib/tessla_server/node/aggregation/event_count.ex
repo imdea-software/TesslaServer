@@ -6,10 +6,10 @@ defmodule TesslaServer.Node.Aggregation.EventCount do
   the Event Stream which events should be counted.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def perform_computation(timestamp, _, state) do

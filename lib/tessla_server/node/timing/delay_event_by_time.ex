@@ -4,10 +4,10 @@ defmodule TesslaServer.Node.Timing.DelayEventByTime do
   `options` under the key `amount` in microseconds.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def process_events(_, event_map, state) do

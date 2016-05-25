@@ -6,10 +6,10 @@ defmodule TesslaServer.Node.Aggregation.Sum do
   the Event Stream which events' values should be summed.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{SimpleNode, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def perform_computation(timestamp, event_map, state) do

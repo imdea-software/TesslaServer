@@ -7,10 +7,10 @@ defmodule TesslaServer.Node.Lifted.Implies do
   The first stream will be used as the left side of the implies formula.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands

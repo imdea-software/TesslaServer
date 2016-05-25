@@ -7,10 +7,10 @@ defmodule TesslaServer.Node.Timing.DelaySignalByTime do
   is delayed.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{SimpleNode, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def process_events(timestamp, event_map, state) do

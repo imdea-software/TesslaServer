@@ -5,10 +5,10 @@ defmodule TesslaServer.Node.Aggregation.Mrv do
   the EventStream which values should be converted into a Signal.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def perform_computation(timestamp, event_map, state) do

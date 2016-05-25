@@ -5,10 +5,10 @@ defmodule TesslaServer.Node.Lifted.Mul do
   To do so the `state.operands` list has to be initialized with two integers representing the ids of
   the event streams that should be multiplied.
   """
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands

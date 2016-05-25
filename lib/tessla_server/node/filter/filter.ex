@@ -6,10 +6,10 @@ defmodule TesslaServer.Node.Filter.Filter do
   the EventStream to be filtered and the second the boolean Signal that is the filter.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands

@@ -70,9 +70,8 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Base Module to build new Nodes</p>
-<p>When you want to implement a new Node you should call <code class="inline">use TesslaServer.Node</code>
-Furthermore you’d have to implement the <code class="inline">prepare_values</code> and <code class="inline">process_values</code> functions.</p>
+          <p>Base Module to work with Modules implementing the Node behaviour.</p>
+<p>The <a href="TesslaServer.SimpleNode.html"><code class="inline">TesslaServer.SimpleNode</code></a> Module can be used as a base for building new Nodes.</p>
 
         </section>
       
@@ -93,12 +92,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
     <div class="summary-row">
   <div class="summary-signature">
     <a href="#t:id/0">id()</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#t:on_process/0">on_process()</a>
   </div>
   
 </div>
@@ -136,18 +129,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
   
     <div class="summary-synopsis"><p>Returns the latest output of the specified Node</p>
 </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#log_new_outputs/2">log_new_outputs(id, events)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#log_new_progress/2">log_new_progress(id, new_progress)</a>
-  </div>
   
 </div>
 <div class="summary-row">
@@ -217,24 +198,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#c:perform_computation/3">perform_computation(timestamp, event_map, arg2)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:prepare_events/2">prepare_events(timestamp, arg1)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#c:process_events/3">process_events(timestamp, event_map, arg2)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
     <a href="#c:start/3">start(id, list, %{})</a>
   </div>
   
@@ -257,12 +220,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
           <div class="types-list">
             <div id="t:id/0" class="type-detail">
   <pre><code class="elixir"><a href="#t:id/0">id</a> :: integer</code></pre>
-  
-</div>
-<div id="t:on_process/0" class="type-detail">
-  <pre><code class="elixir"><a href="#t:on_process/0">on_process</a> ::
-  {:ok, :wait} |
-  {:ok, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>}</code></pre>
   
 </div>
 
@@ -291,7 +248,7 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_child(<a href="#t:id/0">id</a>, <a href="#t:id/0">id</a>) :: :ok</code></pre>
+          <pre><code class="elixir">add_child(<a href="#t:id/0">id</a> | nil, <a href="#t:id/0">id</a>) :: :ok</code></pre>
         
       </div>
     </div>
@@ -345,50 +302,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
   <section class="docstring">
     <p>Returns the latest output of the specified Node</p>
 
-  </section>
-</div>
-<div class="detail" id="log_new_outputs/2">
-  <div class="detail-header">
-    <a href="#log_new_outputs/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">log_new_outputs(id, events)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">log_new_outputs(<a href="#t:id/0">id</a>, [<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>]) :: nil</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="log_new_progress/2">
-  <div class="detail-header">
-    <a href="#log_new_progress/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">log_new_progress(id, new_progress)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">log_new_progress(<a href="#t:id/0">id</a>, timestamp) :: nil</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
   </section>
 </div>
 <div class="detail" id="send_event/2">
@@ -555,72 +468,6 @@ Furthermore you’d have to implement the <code class="inline">prepare_values</c
       <div class="specs-list">
         
           <pre><code class="elixir">output_stream_type :: <a href="TesslaServer.EventStream.html#t:stream_type/0">TesslaServer.EventStream.stream_type</a></code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="c:perform_computation/3">
-  <div class="detail-header">
-    <a href="#c:perform_computation/3" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">perform_computation(timestamp, event_map, arg2)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">perform_computation(timestamp, event_map, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: computed_event</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="c:prepare_events/2">
-  <div class="detail-header">
-    <a href="#c:prepare_events/2" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">prepare_events(timestamp, arg1)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">prepare_events(timestamp, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: event_map</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="c:process_events/3">
-  <div class="detail-header">
-    <a href="#c:process_events/3" class="detail-link" title="Link to this callback">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">process_events(timestamp, event_map, arg2)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">process_events(timestamp, event_map, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
         
       </div>
     </div>

@@ -6,16 +6,17 @@ defmodule TesslaServer.Source.FunctionCalls do
 
   """
 
-  alias TesslaServer.Node
+  alias TesslaServer.SimpleNode
 
-  use Node
+  use SimpleNode
 
   alias TesslaServer.Event
 
   def init(state) do
     channel = "function_calls:" <> state.options[:function]
     :gproc.reg({:p, :l, channel})
-    super state
+    :gproc.reg({:p, :l, :tick})
+    super %{state | operands: [nil]}
   end
 
   def perform_computation(timestamp, _, state) do

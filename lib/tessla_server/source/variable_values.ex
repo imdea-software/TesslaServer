@@ -4,22 +4,22 @@ defmodule TesslaServer.Source.VariableValues do
   The variable has to be specified as a `String.t` in `options` under the key `variable`.
   """
 
-  alias TesslaServer.Node
+  alias TesslaServer.SimpleNode
 
-  use Node
+  use SimpleNode
 
   alias TesslaServer.Event
 
   def init(state) do
     channel = "variable_values:" <> state.options[:variable]
     :gproc.reg({:p, :l, channel})
-    super state
+    :gproc.reg({:p, :l, :tick})
+    super %{state | operands: [nil]}
   end
 
   def perform_computation(timestamp, event_map, state) do
     event = hd(Map.values(event_map))
     {value, _} =  event.value
-                  |> hd
                   |> Integer.parse # TODO somehow process based on needed type
 
     processed_event = %Event{timestamp: timestamp, value: value, stream_id: state.stream_id}

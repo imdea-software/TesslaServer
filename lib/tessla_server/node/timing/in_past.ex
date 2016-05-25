@@ -7,9 +7,9 @@ defmodule TesslaServer.Node.Timing.InPast do
   where an event should have happened in past in microseconds.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{SimpleNode, Event, EventStream}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def process_events(timestamp, event_map, state) do

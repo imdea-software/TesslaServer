@@ -7,10 +7,10 @@ defmodule TesslaServer.Node.Lifted.Div do
   The first Stream will be divided by the second.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands

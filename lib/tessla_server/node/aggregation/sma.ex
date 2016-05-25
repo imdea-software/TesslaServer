@@ -7,10 +7,10 @@ defmodule TesslaServer.Node.Aggregation.Sma do
   `count` specifying the amount of Events which the average should be formed over.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def perform_computation(timestamp, _, state) do

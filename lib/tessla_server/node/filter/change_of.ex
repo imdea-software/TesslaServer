@@ -6,10 +6,10 @@ defmodule TesslaServer.Node.Filter.ChangeOf do
   the Signal of which the changes should be emitted.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1] = state.operands

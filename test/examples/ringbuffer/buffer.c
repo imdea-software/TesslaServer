@@ -18,9 +18,6 @@ char* ring_buffer;
 char* _Atomic read_ptr;
 char* write_ptr;
 
-void log_function_call() {
-  zlog_info(function_calls_cat, "");
-}
 void log_variable_change(const char* variable, int value) {
   zlog_info(variable_values_cat, "%s %d", variable, value);
 }
@@ -29,7 +26,7 @@ void init_ring_buffer() {
 
   ring_buffer = malloc(BUF_SIZE);
   read_ptr = ring_buffer;
-  log_variable_change("write_ptr", (int) ring_buffer);
+  /* Don't log, doesn't count as write obiously */
   write_ptr = ring_buffer;
 
 }
@@ -41,10 +38,10 @@ char* buffer_next(char* ptr) {
 
 
 void process(char* data){
-  log_function_call();
+  zlog_info(function_calls_cat, "");
   struct timespec ts;
   ts.tv_sec = 0;
-  ts.tv_nsec = 100000;
+  ts.tv_nsec = 1000000;
   nanosleep(&ts, NULL); //produces warning
   //thrd_sleep(&(struct timespec){.tv_usec=1}, NULL); // sleep 1 usec
 }
@@ -61,6 +58,11 @@ void producer_main() {
       /* printf("Value %d written to buffer.\n", *write_ptr); */
       log_variable_change("write_ptr", (int) next_write_ptr);
       write_ptr = next_write_ptr;
+
+      struct timespec ts;
+      ts.tv_sec = 0;
+      ts.tv_nsec = 100000000ULL * rand() / RAND_MAX ;
+      nanosleep(&ts, NULL); // shpuld generate better traces
     }
   }
 }
@@ -85,6 +87,10 @@ void* consumer_main(void* thread_id) {
         process(&data);
         /* printf("Process %d processed data: %d\n", tid, data); */
       }
+      struct timespec ts;
+      ts.tv_sec = 0;
+      ts.tv_nsec = 100000000ULL * rand() / RAND_MAX ;
+      nanosleep(&ts, NULL); // shpuld generate better traces
     }
   }
 }

@@ -5,10 +5,10 @@ defmodule TesslaServer.Node.Timing.DelayEventByCount do
   The Stream that should be delayed should be specified in `state.operands` as the only id in the list.
   """
 
-  alias TesslaServer.{Node, Event, EventStream}
+  alias TesslaServer.{SimpleNode, Event, EventStream}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
   use Timex
 
   def prepare_events(at, state) do

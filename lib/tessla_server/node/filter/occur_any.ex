@@ -5,10 +5,10 @@ defmodule TesslaServer.Node.Filter.OccurAny do
   The `state.operands` list has to hold two integers specifying the ids of the two streams.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, _, state) do
     {:ok, %Event{

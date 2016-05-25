@@ -7,10 +7,10 @@ defmodule TesslaServer.Node.Lifted.Eq do
   of the streams that should be the base of the computation.
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands

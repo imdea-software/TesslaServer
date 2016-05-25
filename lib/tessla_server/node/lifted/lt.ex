@@ -8,10 +8,10 @@ defmodule TesslaServer.Node.Lifted.Lt do
   The first stream has to be smaller than the second to yield `true`
   """
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{SimpleNode, Event}
   alias TesslaServer.Node.{History, State}
 
-  use Node
+  use SimpleNode
 
   def perform_computation(timestamp, event_map, state) do
     [op1, op2] = state.operands
