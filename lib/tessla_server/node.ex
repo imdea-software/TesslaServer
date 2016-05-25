@@ -1,6 +1,9 @@
 defmodule TesslaServer.Node do
   @moduledoc """
   Base Module to work with Modules implementing the Node behaviour.
+  Note that nodes should implement specific GenServer calls, this cant be expressed right now by
+  callbacks because the callbacks are allready defined in GenServer.
+  Look at the methods below to see which messages are sent to a Node.
 
   The `TesslaServer.SimpleNode` Module can be used as a base for building new Nodes.
   """
@@ -12,10 +15,18 @@ defmodule TesslaServer.Node do
 
   @type id :: integer
 
+  @typep timestamp :: Timex.Types.timestamp
+  @typep event_map :: %{id => Event.t}
+  @typep computed_event :: {:ok, Event.t} | :wait
+
   @callback start(id, [id], %{}) :: id
   @callback init_inputs([id]) :: %{id => EventStream.t}
   @callback init_output(State.t) :: EventStream.t
   @callback output_stream_type :: EventStream.stream_type
+
+  @callback prepare_events(timestamp, State.t) :: event_map
+  @callback process_events(timestamp, event_map, State.t) :: State.t
+  @callback perform_computation(timestamp, event_map, State.t) :: computed_event
 
   @doc """
   Sends a new `Event` to the `Node` that is registered with `id` to process it

@@ -3,15 +3,6 @@ defmodule TesslaServer.SimpleNode do
   Basic implementation of the Node behaviour that can be used by concrete Nodes to bootstrap.
   """
 
-  @type id :: integer
-  @typep timestamp :: Timex.Types.timestamp
-  @type on_process :: {:ok, :wait} | {:ok, Event.t}
-  @typep event_map :: %{id => Event.t}
-  @typep computed_event :: {:ok, Event.t} | :wait
-
-  @callback prepare_events(timestamp, State.t) :: event_map
-  @callback process_events(timestamp, event_map, State.t) :: State.t
-  @callback perform_computation(timestamp, event_map, State.t) :: computed_event
 
   defmacro __using__(_) do
     quote location: :keep do
@@ -20,6 +11,7 @@ defmodule TesslaServer.SimpleNode do
 
       import TesslaServer.Registry
 
+      @typep timestamp :: Timex.Types.timestamp
 
       use GenServer
       @behaviour Node
@@ -42,7 +34,7 @@ defmodule TesslaServer.SimpleNode do
         {:reply, state.history, state}
       end
 
-      @spec handle_call(:get_latest_output, pid,State.t) :: {:reply, any, State.t}
+      @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, any, State.t}
       def handle_call(:get_latest_output, _,state) do
         {:reply, History.latest_output(state.history), state}
       end
@@ -53,14 +45,14 @@ defmodule TesslaServer.SimpleNode do
         {:noreply, updated_state}
       end
 
-      @spec handle_cast({:progress_stream, Node.id | nil, Node.timestamp}, State.t) :: {:noreply, State.t}
+      @spec handle_cast({:progress_stream, Node.id | nil, timestamp}, State.t) :: {:noreply, State.t}
       def handle_cast({:progress_stream, stream_id, timestamp}, state) do
         input = Map.get(state.history.inputs, stream_id)
         updated_history = case EventStream.progress(input, timestamp) do
           {:ok, stream} ->
             {:ok, updated_history} = History.replace_input_stream(state.history, stream)
             updated_history
-          {:error, _} -> state.history
+            {:error, _} -> state.history
         end
         {:noreply, %{state | history: updated_history}}
       end
@@ -94,11 +86,11 @@ defmodule TesslaServer.SimpleNode do
         all_inputs_ready = Enum.all?(new_state.history.inputs, fn {_, stream} ->
           stream.progressed_to != {0, 0, 0}
         end)
-        if all_inputs_ready do
-          progress new_state
-        else
-          new_state
-        end
+      if all_inputs_ready do
+        progress new_state
+      else
+        new_state
+      end
       end
 
       @spec progress(State.t) :: State.t
@@ -133,7 +125,7 @@ defmodule TesslaServer.SimpleNode do
         new_state
       end
 
-      @spec do_progress(State.t, [Timex.Types.timestamp]) :: State.t
+      @spec do_progress(State.t, [timestamp]) :: State.t
       defp do_progress(state, []), do: state
       defp do_progress(state, [:literal | tail]), do: do_progress(state, [{0, 0, 1} | tail])
       defp do_progress(state, [at | next]) when is_tuple(at) do

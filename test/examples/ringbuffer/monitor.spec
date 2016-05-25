@@ -1,7 +1,7 @@
 --
 -- Macros
 --
-define prop(e1,e2): Signal<Boolean> := mrv(merge(ifThen(e1, literal(true)), ifThen(e2, literal(false))), false)
+define prop(e1,e2): Signal<Boolean> := eq(mrv(merge(ifThen(e1, literal(1)), ifThen(e2, literal(0))), 0), literal(1))
 
 --
 -- Input
