@@ -70,7 +70,10 @@
 
       
         <section id="moduledoc" class="docstring">
-          <p>Base Module to work with Modules implementing the Node behaviour.</p>
+          <p>Base Module to work with Modules implementing the Node behaviour.
+Note that nodes should implement specific GenServer calls, this cant be expressed right now by
+callbacks because the callbacks are allready defined in GenServer.
+Look at the methods below to see which messages are sent to a Node.</p>
 <p>The <a href="TesslaServer.SimpleNode.html"><code class="inline">TesslaServer.SimpleNode</code></a> Module can be used as a base for building new Nodes.</p>
 
         </section>
@@ -193,6 +196,24 @@
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#c:output_stream_type/0">output_stream_type()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:perform_computation/3">perform_computation(timestamp, event_map, arg2)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:prepare_events/2">prepare_events(timestamp, arg1)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:process_events/3">process_events(timestamp, event_map, arg2)</a>
   </div>
   
 </div>
@@ -468,6 +489,72 @@
       <div class="specs-list">
         
           <pre><code class="elixir">output_stream_type :: <a href="TesslaServer.EventStream.html#t:stream_type/0">TesslaServer.EventStream.stream_type</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:perform_computation/3">
+  <div class="detail-header">
+    <a href="#c:perform_computation/3" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">perform_computation(timestamp, event_map, arg2)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">perform_computation(timestamp, event_map, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: computed_event</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:prepare_events/2">
+  <div class="detail-header">
+    <a href="#c:prepare_events/2" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">prepare_events(timestamp, arg1)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">prepare_events(timestamp, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: event_map</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:process_events/3">
+  <div class="detail-header">
+    <a href="#c:process_events/3" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">process_events(timestamp, event_map, arg2)</span>
+      
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">process_events(timestamp, event_map, <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a>) :: <a href="TesslaServer.Node.State.html#t:t/0">TesslaServer.Node.State.t</a></code></pre>
         
       </div>
     </div>

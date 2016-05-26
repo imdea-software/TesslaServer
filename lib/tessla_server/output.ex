@@ -12,7 +12,6 @@ defmodule TesslaServer.Output do
 
   @spec start(%{Node.id => String.t}) :: {:ok, pid}
   def start(map \\ %{}) do
-    IO.puts inspect map
     Agent.start_link(fn -> map end, name: __MODULE__)
   end
 

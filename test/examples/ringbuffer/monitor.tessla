@@ -1,272 +1,154 @@
 {
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
-    "id":22,
-    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
-    "operands":[5],
-    "options":{
-      "default":0
-    }
-  },{
-    "id":18,
-    "nodetype":"TesslaServer.Source.FunctionCalls",
-    "options":{
-      "function":"main.c:stopConsumers"
-    }
-  },{
-    "id":19,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
-    "operands":[17,2]
-  },{
-    "id":3,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":0
-    }
-  },{
-    "id":36,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":1
-    }
-  },{
-    "id":32,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[14,33]
-  },{
-    "id":7,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
-    "operands":[42,6]
-  },{
-    "id":37,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":1
-    }
-  },{
-    "id":20,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":1
-    }
-  },{
-    "id":10,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
-    "operands":[22,36]
-  },{
-    "id":43,
-    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
-    "operands":[23],
-    "options":{
-      "default":0
-    }
-  },{
-    "id":34,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[31,25]
-  },{
-    "id":6,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":1
-    }
-  },{
-    "id":21,
-    "nodetype":"TesslaServer.Node.Filter.OccurAny",
-    "operands":[18,8]
+    "id":13,
+    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "operands":[15]
   },{
     "id":29,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":1
-    }
-  },{
-    "id":8,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
-    "operands":[28]
-  },{
-    "id":2,
     "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[14,41]
+    "operands":[13,18]
   },{
-    "id":24,
+    "id":21,
     "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[18,29]
+    "operands":[12,24]
   },{
-    "id":14,
-    "nodetype":"TesslaServer.Node.Filter.OccurAny",
-    "operands":[21,31]
-  },{
-    "id":33,
-    "nodetype":"TesslaServer.Node.Literal",
-    "options":{
-      "value":0
-    }
+    "id":20,
+    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "operands":[14,2]
   },{
     "id":25,
+    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "operands":[29,6]
+  },{
+    "id":23,
     "nodetype":"TesslaServer.Node.Literal",
     "options":{
       "value":1
     }
   },{
-    "id":26,
-    "nodetype":"TesslaServer.Node.Monitors.Monitor",
-    "operands":[10,7,16,14],
+    "id":5,
+    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "operands":[30,23]
+  },{
+    "id":2,
+    "nodetype":"TesslaServer.Node.Literal",
     "options":{
-      "clock":14,
-      "states":[{
-        "name":"q2",
-        "output":"?"
-      },{
-        "name":"q0",
-        "output":"false"
-      },{
-        "name":"q1",
-        "output":"?"
-      }],
-      "transitions":[{
-        "current":"q0",
-        "active":[10],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[10,16],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[7,16],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[16],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[10,7,16],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[7],
-        "next":"q0"
-      },{
-        "current":"q0",
-        "active":[10,7],
-        "next":"q0"
-      },{
-        "current":"q2",
-        "active":[7,16],
-        "next":"q2"
-      },{
-        "current":"q1",
-        "active":[16],
-        "next":"q2"
-      },{
-        "current":"q2",
-        "active":[10,16],
-        "next":"q2"
-      },{
-        "current":"q1",
-        "active":[10],
-        "next":"q1"
-      },{
-        "current":"q1",
-        "active":[10,7,16],
-        "next":"q2"
-      },{
-        "current":"q1",
-        "active":[7],
-        "next":"q0"
-      },{
-        "current":"q1",
-        "active":[7,16],
-        "next":"q2"
-      },{
-        "current":"q2",
-        "active":[10],
-        "next":"q1"
-      },{
-        "current":"q2",
-        "active":[16],
-        "next":"q2"
-      },{
-        "current":"q2",
-        "active":[7],
-        "next":"q2"
-      },{
-        "current":"q2",
-        "active":[10,7,16],
-        "next":"q2"
-      },{
-        "current":"q1",
-        "active":[],
-        "next":"q1"
-      },{
-        "current":"q2",
-        "active":[],
-        "next":"q2"
-      },{
-        "current":"q2",
-        "active":[10,7],
-        "next":"q0"
-      },{
-        "current":"q1",
-        "active":[10,7],
-        "next":"q0"
-      },{
-        "current":"q1",
-        "active":[10,16],
-        "next":"q2"
-      }]
+      "value":1
     }
   },{
     "id":16,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
-    "operands":[43,20]
-  },{
-    "id":5,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
-    "operands":[24,32]
-  },{
-    "id":23,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
-    "operands":[34,11]
-  },{
-    "id":41,
     "nodetype":"TesslaServer.Node.Literal",
     "options":{
       "value":0
     }
   },{
     "id":11,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[14,3]
-  },{
-    "id":28,
-    "nodetype":"TesslaServer.Source.VariableValues",
+    "nodetype":"TesslaServer.Node.Monitors.Monitor",
+    "operands":[5,20,12],
     "options":{
-      "variable":"main.c:read_idx"
+      "clock":12,
+      "current_state":"q1",
+      "states":[{
+        "name":"q1",
+        "output":"?"
+      },{
+        "name":"q0",
+        "output":"false"
+      }],
+      "transitions":[{
+        "current":"q0",
+        "active":[],
+        "next":"q0"
+      },{
+        "current":"q0",
+        "active":[5],
+        "next":"q0"
+      },{
+        "current":"q0",
+        "active":[20],
+        "next":"q0"
+      },{
+        "current":"q0",
+        "active":[5,20],
+        "next":"q0"
+      },{
+        "current":"q1",
+        "active":[20],
+        "next":"q1"
+      },{
+        "current":"q1",
+        "active":[5],
+        "next":"q0"
+      },{
+        "current":"q1",
+        "active":[5,20],
+        "next":"q1"
+      },{
+        "current":"q1",
+        "active":[],
+        "next":"q1"
+      }]
     }
   },{
-    "id":17,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
-    "operands":[8,37]
-  },{
-    "id":31,
-    "nodetype":"TesslaServer.Source.FunctionCalls",
+    "id":24,
+    "nodetype":"TesslaServer.Node.Literal",
     "options":{
-      "function":"main.c:startConsumers"
+      "value":0
     }
   },{
-    "id":42,
+    "id":6,
+    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "operands":[12,16]
+  },{
+    "id":12,
+    "nodetype":"TesslaServer.Node.Filter.OccurAny",
+    "operands":[26,13]
+  },{
+    "id":30,
     "nodetype":"TesslaServer.Node.Aggregation.Mrv",
-    "operands":[19],
+    "operands":[25],
     "options":{
       "default":0
     }
+  },{
+    "id":15,
+    "nodetype":"TesslaServer.Source.VariableValues",
+    "options":{
+      "variable":"buffer.c:write_ptr"
+    }
+  },{
+    "id":22,
+    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "operands":[26,0]
+  },{
+    "id":26,
+    "nodetype":"TesslaServer.Source.FunctionCalls",
+    "options":{
+      "function":"buffer.c:process"
+    }
+  },{
+    "id":10,
+    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "operands":[22,21]
+  },{
+    "id":18,
+    "nodetype":"TesslaServer.Node.Literal",
+    "options":{
+      "value":1
+    }
+  },{
+    "id":14,
+    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
+    "operands":[10],
+    "options":{
+      "default":0
+    }
+  },{
+    "id":0,
+    "nodetype":"TesslaServer.Node.Literal",
+    "options":{
+      "value":1
+    }
   }]
 }
-

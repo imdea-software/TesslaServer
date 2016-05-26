@@ -46,7 +46,8 @@ defmodule TesslaServer.Mixfile do
       {:credo, "~> 0.3", only: [:dev, :test]},
       {:table_rex, "~> 0.8.0"},
       {:poison, "~> 2.0"},
-      {:excoveralls, "~> 0.5", only: :test}
+      {:excoveralls, "~> 0.5", only: :test},
+      {:dialyxir, "~> 0.3", only: [:dev]}
     ]
   end
 

@@ -26,28 +26,42 @@ defmodule TesslaServer.Node.Timing.DelayEventByTimeTest do
     Node.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{events: []}}})
 
-    event1 = %Event{timestamp: {0, 1, 0}, stream_id: @op1}
-    event2 = %Event{
-      timestamp: {0, 1, 5}, stream_id: @op1
-    }
-    event3 = %Event{
-      timestamp: {0, 5, 0}, stream_id: @op1
-    }
+    event0 = %Event{timestamp: {0, 1, 0}, stream_id: @op1, value: 0}
+    event1 = %Event{timestamp: {0, 1, 10}, stream_id: @op1, value: 1}
+    event2 = %Event{timestamp: {0, 1, 20}, stream_id: @op1, value: 2}
+    event3 = %Event{timestamp: {0, 1, 1010}, stream_id: @op1, value: 3}
+    event4 = %Event{timestamp: {0, 5, 0}, stream_id: @op1, value: 4}
+
+    Node.send_event(@processor, event0)
+
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
+    assert progressed_to == event0.timestamp
 
     Node.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: [out0]}}})
-    assert is_delayed(out0.timestamp, event1.timestamp)
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
+    assert progressed_to == event1.timestamp
 
     Node.send_event(@processor, event2)
-
-    assert_receive({_, {:update_input_stream, %{events: [out1, ^out0]}}})
-    assert is_delayed(out1.timestamp, event2.timestamp)
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
+    assert progressed_to == event2.timestamp
 
     Node.send_event(@processor, event3)
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out1, out0]}}})
+    assert is_delayed(out0.timestamp, event0.timestamp)
+    assert out0.value == event0.value
+    assert is_delayed(out1.timestamp, event1.timestamp)
+    assert out1.value == event1.value
+    assert progressed_to == event3.timestamp
 
-    assert_receive({_, {:update_input_stream, %{events: [out2, ^out1, ^out0]}}})
-    assert is_delayed(out2.timestamp, event3.timestamp)
+    Node.send_event(@processor, event4)
+
+    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out3, out2, ^out1, ^out0]}}})
+    assert is_delayed(out2.timestamp, event2.timestamp)
+    assert out2.value == event2.value
+    assert is_delayed(out3.timestamp, event3.timestamp)
+    assert out3.value == event3.value
+    assert progressed_to == event4.timestamp
 
     :ok = Node.stop(@processor)
   end

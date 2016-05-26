@@ -29,12 +29,12 @@ defmodule TesslaServer.SimpleNode do
         {:ok, %{state | history: history}}
       end
 
-      @spec handle_call(:get_history, pid, State.t) :: {:reply}
+      @spec handle_call(:get_history, pid, State.t) :: {:reply, History.t, State.t}
       def handle_call(:get_history, _,state) do
         {:reply, state.history, state}
       end
 
-      @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, any, State.t}
+      @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, Event.t, State.t}
       def handle_call(:get_latest_output, _,state) do
         {:reply, History.latest_output(state.history), state}
       end
