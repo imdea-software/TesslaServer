@@ -10,16 +10,23 @@ defmodule TesslaServer.Node.Monitors.Monitor do
   use SimpleNode
 
   def process_events(timestamp, event_map, state = %{options: options}) do
-    tick = event_map[options[:clock]]
+    clock_id = options[:clock]
+    tick = event_map[clock_id]
     if !tick || tick.timestamp != timestamp do
       {:ok, updated_history} = History.progress_output(state.history, timestamp)
       %{state | history: updated_history}
     else
       transitions = transitions_from_state(options[:transitions], options[:current_state])
-      values = values_from_inputs(event_map)
-      transition = active_transition(transitions, values)
-      # transition = active_transition(transitions, event_map)
-      state
+      values = event_map |> Map.delete(clock_id) |> values_from_inputs
+      transition = transitions |> active_transition(values)
+      new_monitor_state = transition[:next]
+      IO.puts inspect new_monitor_state
+      updated_options = %{options | current_state: new_monitor_state}
+      output_value = state_label(options[:states], new_monitor_state)
+      output_event = %Event{stream_id: state.stream_id, value: output_value, timestamp: timestamp}
+      {:ok, updated_history} = History.update_output(state.history, output_event)
+
+      %{state | history: updated_history, options: updated_options}
     end
   end
 
@@ -32,12 +39,24 @@ defmodule TesslaServer.Node.Monitors.Monitor do
   end
 
   defp values_from_inputs(streams) do
-    Enum.map streams, fn {id, event} ->
-      {id, event.value}
-    end
+    streams
+    |> Enum.map(fn {id, event} -> {id, event.value} end)
+    |> Enum.into(%{})
   end
 
   defp active_transition(transitions, values) do
-    
+    Enum.find transitions, fn transition ->
+      {truthy, falsy} = Map.split(values, transition[:active])
+      true_list = Map.values(truthy)
+      false_list = Map.values(falsy)
+      Enum.all?(true_list) && !Enum.any?(false_list)
+    end
+  end
+
+  defp state_label(labelings, state) do
+    %{output: output} = Enum.find labelings, fn labeling ->
+      labeling[:name] == state
+    end
+    output
   end
 end

@@ -1,6 +1,6 @@
 defmodule TesslaServer.Node.Lifted.Eq do
   @moduledoc """
-  Implements a `Node` that compares two integer Streams and returns true 
+  Implements a `Node` that compares two integer Streams and returns true
   if both are the same and false otherwise
 
   To do so the `state.operands` list has to be initialized with two integers representing the ids

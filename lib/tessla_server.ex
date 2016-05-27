@@ -13,6 +13,7 @@ defmodule TesslaServer do
     args
     |> parse_args
     |> process
+    :timer.sleep(:infinity)
   end
 
   defp process({options, file}) do

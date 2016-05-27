@@ -20,7 +20,7 @@ define process := prop(processCall, clk)
 define write := prop(writePointerChanged, clk)
 
 define monitor_output := monitor("
-  always(p1 implies (not(p1) until p2))",
+  always(p1 implies next((not(p1) until p2)))",
   p1 := write,
   p2 := process,
   clock := clk
