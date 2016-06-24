@@ -25,15 +25,14 @@ defmodule TesslaServer.Output do
   def log_new_outputs(_, []), do: nil
   def log_new_outputs(id, events) do
     name = Agent.get(__MODULE__, &Map.get(&1, id))
-    if name, do: Logger.debug ("New outputs of #{name}: \n" <> format(events))
+    if name, do: Logger.debug ("New outputs of #{name}: \n" <> format(events)) <> "\n-------------\n"
   end
 
   defp format(events) do
     rows = Enum.map events, fn event ->
-      [inspect(event.timestamp), inspect(event.value)]
+      "time: #{inspect event.timestamp}, value: #{inspect event.value}"
     end
-    header = ~w(time value)
-    TableRex.quick_render!(rows, header)
+    Enum.join rows, "\n"
   end
 
 end

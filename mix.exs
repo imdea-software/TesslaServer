@@ -21,7 +21,6 @@ defmodule TesslaServer.Mixfile do
         :logger,
         :timex,
         :gproc,
-        :table_rex
       ]
   ]
   end
@@ -44,7 +43,6 @@ defmodule TesslaServer.Mixfile do
       {:gproc, "~> 0.5"},
       {:dogma, "~> 0.1", only: :dev},
       {:credo, "~> 0.3", only: [:dev, :test]},
-      {:table_rex, "~> 0.8.0"},
       {:poison, "~> 2.0"},
       {:excoveralls, "~> 0.5", only: :test},
       {:dialyxir, "~> 0.3", only: [:dev]}

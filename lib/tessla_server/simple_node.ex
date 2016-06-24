@@ -52,7 +52,7 @@ defmodule TesslaServer.SimpleNode do
           {:ok, stream} ->
             {:ok, updated_history} = History.replace_input_stream(state.history, stream)
             updated_history
-            {:error, _} -> state.history
+          {:error, _} -> state.history
         end
         {:noreply, %{state | history: updated_history}}
       end

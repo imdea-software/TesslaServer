@@ -15,7 +15,7 @@ defmodule TesslaServer.Node.Filter.ChangeOf do
     [op1] = state.operands
     signal = event_map[op1]
     latest_output = History.latest_output state.history
-    if (latest_output && latest_output.value == signal.value) do
+    if latest_output && latest_output.value == signal.value do
       :wait
     else
       {:ok, %Event{timestamp: timestamp, value: signal.value, stream_id: state.stream_id}}
