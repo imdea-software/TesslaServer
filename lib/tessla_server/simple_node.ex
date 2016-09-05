@@ -86,11 +86,11 @@ defmodule TesslaServer.SimpleNode do
         all_inputs_ready = Enum.all?(new_state.history.inputs, fn {_, stream} ->
           stream.progressed_to != {0, 0, 0}
         end)
-      if all_inputs_ready do
-        progress new_state
-      else
-        new_state
-      end
+        if all_inputs_ready do
+          progress new_state
+        else
+          new_state
+        end
       end
 
       @spec progress(State.t) :: State.t
