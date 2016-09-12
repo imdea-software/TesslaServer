@@ -2,6 +2,8 @@ defmodule TesslaServer.Output do
   @moduledoc """
   Used to log outputs.
   Has to be initialized at startup to hold the ids and names of nodes that should be logged.
+
+  TODO: Make async in V2
   """
 
   @typep timestamp :: Timex.Types.timestamp
@@ -25,14 +27,23 @@ defmodule TesslaServer.Output do
   def log_new_outputs(_, []), do: nil
   def log_new_outputs(id, events) do
     name = Agent.get(__MODULE__, &Map.get(&1, id))
-    if name, do: Logger.debug ("New outputs of #{name}: \n" <> format(events)) <> "\n-------------\n"
+    if name do
+      {finished, formatted} = format events
+      Logger.info("New outputs of #{name}: \n" <> formatted <> "\n-------------\n")
+      if finished do
+        :timer.sleep(1000)
+        System.halt
+      end
+    end
   end
 
   defp format(events) do
     rows = Enum.map events, fn event ->
       "time: #{inspect event.timestamp}, value: #{inspect event.value}"
     end
-    Enum.join rows, "\n"
+    finished = Enum.any? events, &(&1.value == true)
+    desc = Enum.join rows, "\n"
+    {finished, desc}
   end
 
 end
