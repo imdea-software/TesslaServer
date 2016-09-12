@@ -103,22 +103,19 @@ defmodule TesslaServer.EventStream do
   def add_event(%{progressed_to: progressed_to}, %{timestamp: timestamp}, _)
   when progressed_to >= timestamp, do: {:error, "Event's timestamp smaller or equal to stream progress"}
   def add_event(stream, event, false) do
-    trimmed_events = Enum.take stream.events, 20
-    {:ok, %{stream | events: [event | trimmed_events]}}
+    {:ok, %{stream | events: [event | stream.events]}}
   end
   def add_event(stream = %{events: []}, event, true) do
-    {:ok, %{stream | events: [event], progressed_to: event.timestamp}}
+    {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
   end
   def add_event(stream = %{type: :events}, event, true) do
-    trimmed_events = Enum.take stream.events, 20
-    {:ok, %{stream | events: [event | trimmed_events], progressed_to: event.timestamp}}
+    {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
   end
   def add_event(stream = %{type: :signal}, event, true) do
     if event.value == hd(stream.events).value do
       {:ok, %{stream | progressed_to: event.timestamp}}
     else
-      trimmed_events = Enum.take stream.events, 20
-      {:ok, %{stream | events: [event | trimmed_events], progressed_to: event.timestamp}}
+      {:ok, %{stream | events: [event | stream.events], progressed_to: event.timestamp}}
     end
   end
 
