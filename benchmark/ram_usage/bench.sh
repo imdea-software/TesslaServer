@@ -37,7 +37,7 @@ fi
 
 # detect operating system and prepare measurement
 case $(uname) in
-    Darwin|*BSD) sizes() { /bin/ps -o vsz= -g $1; } ;;
+    Darwin|*BSD) sizes() { /bin/ps -o rss= -g $1; } ;;
     Linux) sizes() { /bin/ps -o rss= -$1; } ;;
     *) echo "$(uname): unsupported operating system" >&2; exit 2 ;;
 esac
