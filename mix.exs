@@ -38,7 +38,7 @@ defmodule TesslaServer.Mixfile do
     [
       {:timex, "~> 2.0"},
       {:tzdata, "~> 0.1.8", override: true},
-      {:earmark, "~> 0.1", only: :dev},
+      {:earmark, "~> 1.0", only: :dev},
       {:ex_doc, "~> 0.11", only: :dev},
       {:gproc, "~> 0.5"},
       {:dogma, "~> 0.1", only: :dev},
