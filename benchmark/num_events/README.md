@@ -1,5 +1,8 @@
 # Benchmark Execution Time
 
+To benchmar TesslaServer V1 with 500 input events as the target:
+
+    dumbbench --table=V1/time_500.dat -p 0.0001 -m 20 -- ./tessla_server_v1 target_500.tessla --trace traces_500 -o 4:finished
 
 
 # Execute Ram Benchmark:
