@@ -31,7 +31,7 @@ defmodule TesslaServer.Output do
       {finished, formatted} = format events
       Logger.info("New outputs of #{name}: \n" <> formatted <> "\n-------------\n")
       if finished do
-        :timer.sleep(1000)
+        Logger.flush
         System.halt
       end
     end
