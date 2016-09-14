@@ -126,7 +126,10 @@ defmodule TesslaServer.SimpleNode do
       end
 
       @spec do_progress(State.t, [timestamp]) :: State.t
-      defp do_progress(state, []), do: state
+      defp do_progress(state, []) do
+        {:ok, progressed_history} = History.progress_output(state.history)
+        %{state | history: progressed_history}
+      end
       defp do_progress(state, [:literal | tail]), do: do_progress(state, [{0, 0, 1} | tail])
       defp do_progress(state, [at | next]) when is_tuple(at) do
         events = prepare_events(at, state)
@@ -173,6 +176,4 @@ defmodule TesslaServer.SimpleNode do
 
     end
   end
-
-
 end
