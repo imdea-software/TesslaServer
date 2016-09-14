@@ -12,7 +12,7 @@ defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
 
   setup do
     :gproc.reg(gproc_tuple(@test))
-    {:ok, spec} = File.read("test/examples/simple_counter.tessla")
+    {:ok, spec} = File.read("test/examples/simple_counter/simple_counter.tessla")
     ids = SpecProcessor.process spec
     on_exit fn ->
       Enum.each ids, fn id ->

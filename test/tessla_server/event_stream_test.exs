@@ -66,6 +66,8 @@ defmodule TesslaServer.EventStreamTest do
     {:error, _} = EventStream.add_event(stream, event)
   end
 
+  @tag :skip
   test "event_at"
+  @tag :skip
   test "events_in_timeslot:"
 end

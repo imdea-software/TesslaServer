@@ -27,13 +27,13 @@ defmodule TesslaServer.Node.History do
         Enum.map(history.inputs, fn {_, stream} -> hd(stream.events) end)
       !all_literals ->
         upto = progresses
-                |> Enum.reject(&(&1 == :literal))
-                |> Enum.min
-        from = history.output.progressed_to
-        Enum.flat_map(history.inputs, fn {_, stream} ->
-          EventStream.events_in_timeslot(stream, from, upto)
-        end)
-      true -> []
+               |> Enum.reject(&(&1 == :literal))
+               |> Enum.min
+               from = history.output.progressed_to
+      Enum.flat_map(history.inputs, fn {_, stream} ->
+        EventStream.events_in_timeslot(stream, from, upto)
+      end)
+                true -> []
     end
   end
 
@@ -45,16 +45,16 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> stream = %EventStream{id: 1, progressed_to: {1, 2, 3}}
-      iex> history = %History{inputs: %{1 => stream}}
-      iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
-      iex> History.replace_input_stream(history, new_stream)
-      {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
+  iex> stream = %EventStream{id: 1, progressed_to: {1, 2, 3}}
+  iex> history = %History{inputs: %{1 => stream}}
+  iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
+  iex> History.replace_input_stream(history, new_stream)
+  {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
 
-      iex> history = %History{}
-      iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
-      iex> History.replace_input_stream(history, new_stream)
-      {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
+  iex> history = %History{}
+  iex> new_stream = %EventStream{id: 1, progressed_to: {2, 3, 4}}
+  iex> History.replace_input_stream(history, new_stream)
+  {:ok, %History{inputs: %{1 => %EventStream{id: 1, progressed_to: {2, 3, 4}}}}}
   """
   @spec replace_input_stream(History.t, EventStream.t) :: {:ok, History.t}
   def replace_input_stream(history, stream) do
@@ -74,31 +74,31 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
-      iex> history = %History{output: output}
-      iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
-      iex> History.update_output(history, new_event)
-      {:ok,
-        %History{
-          output: %EventStream{
-            id: 1,
-            progressed_to: {1, 0, 0},
-            events: [%Event{stream_id: 1, timestamp: {1, 0, 0}}]
-          }
-        }
-      }
+  iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
+  iex> history = %History{output: output}
+  iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
+  iex> History.update_output(history, new_event)
+  {:ok,
+  %History{
+  output: %EventStream{
+  id: 1,
+  progressed_to: {1, 0, 0},
+  events: [%Event{stream_id: 1, timestamp: {1, 0, 0}}]
+  }
+  }
+  }
 
-      iex> output = %EventStream{id: 1, progressed_to: {1, 2, 3}}
-      iex> history = %History{output: output}
-      iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
-      iex> History.update_output(history, new_event)
-      {:error, "Event's timestamp smaller or equal to stream progress"}
+  iex> output = %EventStream{id: 1, progressed_to: {1, 2, 3}}
+  iex> history = %History{output: output}
+  iex> new_event = %Event{stream_id: 1, timestamp: {1, 0, 0}}
+  iex> History.update_output(history, new_event)
+  {:error, "Event's timestamp smaller or equal to stream progress"}
 
-      iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
-      iex> history = %History{output: output}
-      iex> new_event = %Event{stream_id: 2, timestamp: {1, 0, 0}}
-      iex> History.update_output(history, new_event)
-      {:error, "Event has different stream_id than stream"}
+  iex> output = %EventStream{id: 1, progressed_to: {0, 2, 3}}
+  iex> history = %History{output: output}
+  iex> new_event = %Event{stream_id: 2, timestamp: {1, 0, 0}}
+  iex> History.update_output(history, new_event)
+  {:error, "Event has different stream_id than stream"}
   """
   @spec update_output(History.t, Event.t, boolean) :: {:ok, History.t} | {:error, String.t}
   def update_output(history, new_event, progress \\ true) do
@@ -115,13 +115,13 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
-      iex> History.progress_output history, {4, 0, 0}
-      {:ok, %History{output: %EventStream{progressed_to: {4, 0, 0}}}}
+  iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+  iex> History.progress_output history, {4, 0, 0}
+  {:ok, %History{output: %EventStream{progressed_to: {4, 0, 0}}}}
 
-      iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
-      iex> History.progress_output history, {2, 0, 0}
-      {:error, "Timestamp smaller than progress of EventStream"}
+  iex> history = %History{output: %EventStream{progressed_to: {3, 0, 0}}}
+  iex> History.progress_output history, {2, 0, 0}
+  {:error, "Timestamp smaller than progress of EventStream"}
   """
   @spec progress_output(History.t, timestamp) :: {:ok, History.t} | {:error, String.t}
   def progress_output(history, timestamp) do
@@ -132,6 +132,35 @@ defmodule TesslaServer.Node.History do
   end
 
   @doc """
+  Progresses the output to the minimal timestamp of all inputs if that is bigger
+  than the current progress
+  """
+  @spec progress_output(History.t) :: {:ok, History.t} | {:error, String.t}
+  def progress_output(history) do
+    progresses =
+      history.inputs
+      |> Map.values
+      |> Enum.map(&(&1.progressed_to))
+      |> Enum.reject(&(&1 == :literal))
+
+    if Enum.empty? progresses do
+      {:ok, history}
+    else
+      min_progress = Enum.min progresses
+      if min_progress > history.output.progressed_to do
+        case EventStream.progress(history.output, min_progress) do
+          {:ok, updated_output} -> {:ok, %{history | output: updated_output}}
+          {:error, reason} -> {:error, reason}
+        end
+      else
+        {:ok, history}
+      end
+    end
+  end
+
+
+
+  @doc """
   Returns the latest `Event.t` of the input stream specified by `id` in `history`
   that has a `timestamp` smaller than `at`.
 
@@ -140,22 +169,22 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
-      iex> event3 = %Event{stream_id: 1, timestamp: {4, 0, 0}}
-      iex> events = [event3, event2, event1]
-      iex> input1 = %EventStream{id: 1, events: events, progressed_to: {4, 0, 0}}
-      iex> history = %History{inputs: %{1 => input1}}
-      iex> History.latest_event_of_input_at(history, 1, {1, 0, 0})
-      nil
-      iex> History.latest_event_of_input_at(history, 1, {3, 0, 0})
-      %Event{stream_id: 1, timestamp: {3, 0, 0}}
-      iex> History.latest_event_of_input_at(history, 1, {2, 5, 0})
-      %Event{stream_id: 1, timestamp: {2, 0, 0}}
+  iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+  iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+  iex> event3 = %Event{stream_id: 1, timestamp: {4, 0, 0}}
+  iex> events = [event3, event2, event1]
+  iex> input1 = %EventStream{id: 1, events: events, progressed_to: {4, 0, 0}}
+  iex> history = %History{inputs: %{1 => input1}}
+  iex> History.latest_event_of_input_at(history, 1, {1, 0, 0})
+  nil
+  iex> History.latest_event_of_input_at(history, 1, {3, 0, 0})
+  %Event{stream_id: 1, timestamp: {3, 0, 0}}
+  iex> History.latest_event_of_input_at(history, 1, {2, 5, 0})
+  %Event{stream_id: 1, timestamp: {2, 0, 0}}
 
-      iex> history = %History{}
-      iex> History.latest_event_of_input_at(history, :any, {1, 0, 0})
-      nil
+  iex> history = %History{}
+  iex> History.latest_event_of_input_at(history, :any, {1, 0, 0})
+  nil
   """
   @spec latest_event_of_input_at(History.t, integer, timestamp) :: Event.t | nil
   def latest_event_of_input_at(history, id, timestamp) do
@@ -174,28 +203,28 @@ defmodule TesslaServer.Node.History do
 
   ## Examples
 
-      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
-      iex> event3 = %Event{stream_id: 2, timestamp: {2, 5, 0}}
-      iex> event4 = %Event{stream_id: 2, timestamp: {4, 0, 0}}
-      iex> input1_events = [event2, event1]
-      iex> input2_events = [event4, event3]
-      iex> input1 = %EventStream{id: 1, events: input1_events, progressed_to: {3, 0, 0}}
-      iex> input2 = %EventStream{id: 1, events: input2_events, progressed_to: {4, 0, 0}}
-      iex> history = %History{inputs: %{input1: input1, input2: input2}}
-      iex> History.latest_input_event_at(history, {1, 0, 0})
-      nil
-      iex> History.latest_input_event_at(history, {3, 0, 0})
-      %Event{stream_id: 1, timestamp: {3, 0, 0}}
-      iex> History.latest_input_event_at(history, {2, 5, 0})
-      %Event{stream_id: 2, timestamp: {2, 5, 0}}
+  iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+  iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+  iex> event3 = %Event{stream_id: 2, timestamp: {2, 5, 0}}
+  iex> event4 = %Event{stream_id: 2, timestamp: {4, 0, 0}}
+  iex> input1_events = [event2, event1]
+  iex> input2_events = [event4, event3]
+  iex> input1 = %EventStream{id: 1, events: input1_events, progressed_to: {3, 0, 0}}
+  iex> input2 = %EventStream{id: 1, events: input2_events, progressed_to: {4, 0, 0}}
+  iex> history = %History{inputs: %{input1: input1, input2: input2}}
+  iex> History.latest_input_event_at(history, {1, 0, 0})
+  nil
+  iex> History.latest_input_event_at(history, {3, 0, 0})
+  %Event{stream_id: 1, timestamp: {3, 0, 0}}
+  iex> History.latest_input_event_at(history, {2, 5, 0})
+  %Event{stream_id: 2, timestamp: {2, 5, 0}}
   """
   @spec latest_input_event_at(History.t, timestamp) :: Event.t | nil
   def latest_input_event_at(history, timestamp) do
     events = history.inputs
-              |> Map.values
-              |> Enum.map(&EventStream.event_at(&1, timestamp))
-              |> Enum.filter(&(!is_nil &1))
+             |> Map.values
+             |> Enum.map(&EventStream.event_at(&1, timestamp))
+             |> Enum.filter(&(!is_nil &1))
     if Enum.empty? events do
       nil
     else
@@ -204,35 +233,35 @@ defmodule TesslaServer.Node.History do
   end
 
   @doc """
-  Returns the latest `Event` in the output of a History or `nil` if the output is empty or `nil`.
+Returns the latest `Event` in the output of a History or `nil` if the output is empty or `nil`.
 
-  ## Examples
+## Examples
 
-      iex> history = %History{}
-      iex> History.latest_output history
-      nil
+iex> history = %History{}
+iex> History.latest_output history
+nil
 
-      iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}}
-      iex> history = %History{output: output}
-      iex> History.latest_output history
-      nil
+iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}}
+iex> history = %History{output: output}
+iex> History.latest_output history
+nil
 
-      iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
-      iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
-      iex> events = [event2, event1]
-      iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}, events: events}
-      iex> history = %History{output: output}
-      iex> History.latest_output history
-      %Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex> event1 = %Event{stream_id: 1, timestamp: {2, 0, 0}}
+iex> event2 = %Event{stream_id: 1, timestamp: {3, 0, 0}}
+iex> events = [event2, event1]
+iex> output = %EventStream{id: 1, progressed_to: {3, 0, 0}, events: events}
+iex> history = %History{output: output}
+iex> History.latest_output history
+%Event{stream_id: 1, timestamp: {3, 0, 0}}
 
-  """
-  @spec latest_output(History.t) :: Event.t | nil
-  def latest_output(%{output: nil}), do: nil
-  def latest_output(history) do
-    if Enum.empty? history.output.events do
-      nil
-    else
-      hd history.output.events
-    end
+"""
+@spec latest_output(History.t) :: Event.t | nil
+def latest_output(%{output: nil}), do: nil
+def latest_output(history) do
+  if Enum.empty? history.output.events do
+    nil
+  else
+    hd history.output.events
   end
+end
 end

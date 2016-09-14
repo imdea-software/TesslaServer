@@ -26,5 +26,5 @@ defmodule TesslaServer.Source.VariableValues do
     {:ok, processed_event}
   end
 
-  def output_stream_type, do: :signal
+  def output_stream_type, do: :events
 end

@@ -8,7 +8,6 @@ define prop(e1,e2): Signal<Boolean> := eq(mrv(merge(ifThen(e1, literal(1)), ifTh
 --
 define writePointerAddr := variable_values("buffer.c:write_ptr")
 define processCall := function_calls("buffer.c:process")
---define startConsumer := function_calls("main.c:startConsumers")
 
 
 --

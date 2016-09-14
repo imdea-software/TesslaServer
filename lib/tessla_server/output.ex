@@ -45,5 +45,4 @@ defmodule TesslaServer.Output do
     desc = Enum.join rows, "\n"
     {finished, desc}
   end
-
 end
