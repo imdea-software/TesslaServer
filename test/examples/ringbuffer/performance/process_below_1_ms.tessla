@@ -1,0 +1,43 @@
+{
+  "type":"java.util.Collections$UnmodifiableSet",
+  "items":[{
+    "id":8,
+    "nodetype":"TesslaServer.Node.Timing.InPast",
+    "operands":[1],
+    "options":{
+      "amount":1000000
+    }
+  },{
+    "id":3,
+    "nodetype":"TesslaServer.Node.Filter.Sample",
+    "operands":[8,5]
+  },{
+    "id":9,
+    "nodetype":"TesslaServer.Source.VariableValues",
+    "options":{
+      "variable":"buffer.c:write_ptr"
+    }
+  },{
+    "id":6,
+    "nodetype":"TesslaServer.Node.Lifted.EventNot",
+    "operands":[3]
+  },{
+    "id":5,
+    "nodetype":"TesslaServer.Node.Timing.DelayEventByTime",
+    "operands":[2],
+    "options":{
+      "amount":1000000
+    }
+  },{
+    "id":1,
+    "nodetype":"TesslaServer.Source.FunctionCalls",
+    "options":{
+      "function":"buffer.c:process"
+    }
+  },{
+    "id":2,
+    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "operands":[9]
+  }]
+}
+

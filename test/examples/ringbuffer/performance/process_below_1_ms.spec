@@ -1,16 +1,11 @@
-define prop(e1,e2): Signal<Boolean> := eq(mrv(merge(ifThen(e1, literal(1)), ifThen(e2, literal(0))), 0), literal(1))
+define values: Signal<Int> := variable_values("buffer.c:write_ptr")
+define new_data: Events<Int> := changeOf(values)
+define data_processed: Events<Unit> := function_calls("buffer.c:process")
 
-define writePointerAddr: Signal<Int> := variable_values("buffer.c:write_ptr")
-define processCall: Events<Unit> := function_calls("buffer.c:process")
+define delayed_new_data: Events<Unit> := delayEventByTime(new_data, 1000000)
 
-define writePointerChanged := changeOf(writePointerAddr)
-define clk := occurAny(processCall, writePointerChanged)
-define process := prop(processCall, clk)
-define write := prop(writePointerChanged, clk)
+define data_consumed_in_past: Signal<Boolean> := inPast(1000000, data_processed)
 
-define monitor := monitor("
-    always (if p1 then next timed[<= 100] p2)",
-    p1 := write,
-    p2 := process,
-    clock := clk
-)
+define sampled: Events<Boolean> := sample(data_consumed_in_past, delayed_new_data)
+
+define error: Events<Boolean> := eventNot(sampled)
