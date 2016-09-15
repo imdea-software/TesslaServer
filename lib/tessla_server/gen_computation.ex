@@ -1,20 +1,84 @@
-defmodule TesslaServer.SimpleNode do
+defmodule TesslaServer.GenComputation do
   @moduledoc """
-  Basic implementation of the Node behaviour that can be used by concrete Nodes to bootstrap.
+  Base Module to work with Modules implementing the GenComputation behaviour.
+  Note that Computations should implement specific GenServer calls, this cant be expressed right now by
+  callbacks because the callbacks are allready defined in GenServer.
+  Look at the methods below to see which messages are sent to a Computation.
   """
+
+  alias TesslaServer.{Event, EventStream}
+  alias TesslaServer.Computation.State
+
+  import TesslaServer.Registry
+
+  @type id :: integer
+
+  @typep timestamp :: Timex.Duration.t
+  @typep event_map :: %{id => Event.t}
+  @typep computed_event :: {:ok, Event.t} | :wait
+
+  @callback start(id, [id], %{}) :: id
+  @callback init_inputs([id]) :: %{id => EventStream.t}
+  @callback init_output(State.t) :: EventStream.t
+  @callback output_stream_type :: EventStream.stream_type
+
+  @callback prepare_events(timestamp, State.t) :: event_map
+  @callback process_events(timestamp, event_map, State.t) :: State.t
+  @callback perform_computation(timestamp, event_map, State.t) :: computed_event
+
+  @doc """
+  Sends a new `Event` to the `Computation` that is registered with `id` to process it
+  """
+  @spec send_event(id, Event.t) :: :ok
+  def send_event(id, event) do
+    GenServer.cast(via_tuple(id), {:process, event})
+  end
+
+  @doc """
+  Stops a `Computation` and unregisters its id from `gproc`
+  """
+  @spec stop(id) :: :ok
+  def stop(id) do
+    GenServer.stop via_tuple id
+  end
+
+  @doc """
+  Returns the latest output of the specified Computation
+  """
+  @spec get_latest_output(id) :: any
+  def get_latest_output(id) do
+    GenServer.call(via_tuple(id), :get_latest_output)
+  end
+
+  @doc """
+  Adds a new child to the specified `Computation`
+  """
+  @spec add_child(id | nil, id) :: :ok
+  def add_child(nil, _), do: :ok
+  def add_child(parent, child) do
+    GenServer.cast(via_tuple(parent), {:add_child, child})
+  end
+
+  @doc """
+  Subscribes the `Computation` specified by `id` to all `Computation` it is a descendant of.
+  """
+  @spec subscribe_to_operands(id) :: :ok
+  def subscribe_to_operands(id) do
+    GenServer.call(via_tuple(id), :subscribe_to_operands)
+  end
 
 
   defmacro __using__(_) do
     quote location: :keep do
-      alias TesslaServer.{Node, Event, EventStream, Output}
-      alias TesslaServer.Node.{State, History}
+      alias TesslaServer.{GenComputation, Event, EventStream, Output}
+      alias TesslaServer.Computation.{State, History}
 
       import TesslaServer.Registry
 
-      @typep timestamp :: Timex.Types.timestamp
+      @typep timestamp :: Timex.Duration.t
 
       use GenServer
-      @behaviour Node
+      @behaviour GenComputation
 
       def start(id, operands, options \\ %{}) do
         state = %State{stream_id: id, operands: operands, options: options}
@@ -29,32 +93,9 @@ defmodule TesslaServer.SimpleNode do
         {:ok, %{state | history: history}}
       end
 
-      @spec handle_call(:get_history, pid, State.t) :: {:reply, History.t, State.t}
-      def handle_call(:get_history, _,state) do
-        {:reply, state.history, state}
-      end
-
       @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, Event.t, State.t}
       def handle_call(:get_latest_output, _,state) do
         {:reply, History.latest_output(state.history), state}
-      end
-
-      @spec handle_cast({:update_input_stream, EventStream.t}, State.t) :: {:noreply, State.t}
-      def handle_cast({:update_input_stream, stream}, state) do
-        updated_state = update_input_stream(stream, state)
-        {:noreply, updated_state}
-      end
-
-      @spec handle_cast({:progress_stream, Node.id | nil, timestamp}, State.t) :: {:noreply, State.t}
-      def handle_cast({:progress_stream, stream_id, timestamp}, state) do
-        input = Map.get(state.history.inputs, stream_id)
-        updated_history = case EventStream.progress(input, timestamp) do
-          {:ok, stream} ->
-            {:ok, updated_history} = History.replace_input_stream(state.history, stream)
-            updated_history
-          {:error, _} -> state.history
-        end
-        {:noreply, %{state | history: updated_history}}
       end
 
       @spec handle_cast({:process, Event.t}, State.t) :: {:noreply, State.t}
@@ -68,29 +109,15 @@ defmodule TesslaServer.SimpleNode do
       @spec handle_call(:subscribe_to_operands, GenServer.from, State.t) :: {:reply, :ok, State.t}
       def handle_call(:subscribe_to_operands, _, state) do
         Enum.each state.operands, fn id ->
-          Node.add_child(id, state.stream_id)
+          GenComputation.add_child(id, state.stream_id)
         end
         {:reply, :ok, state}
       end
 
       @spec handle_cast({:add_child, String.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:add_child, new_child}, state) do
-        Node.update_input_stream(new_child, state.history.output)
+        GenComputation.update_input_stream(new_child, state.history.output)
         {:noreply, %{state | children: [new_child | state.children]}}
-      end
-
-      @spec update_input_stream(EventStream.t, State.t) :: State.t
-      defp update_input_stream(stream, state) do
-        {:ok, new_history} = History.replace_input_stream(state.history, stream)
-        new_state = %{state | history: new_history}
-        all_inputs_ready = Enum.all?(new_state.history.inputs, fn {_, stream} ->
-          stream.progressed_to != {0, 0, 0}
-        end)
-        if all_inputs_ready do
-          progress new_state
-        else
-          new_state
-        end
       end
 
       @spec progress(State.t) :: State.t
@@ -102,7 +129,7 @@ defmodule TesslaServer.SimpleNode do
           |> Enum.sort
           |> Enum.uniq
         # All timestamps of events between progressed_to and min time of all inputs
-        # IO.puts "id: #{inspect state.stream_id}, change_timestamps: #{inspect change_timestamps}"
+
         new_state = do_progress(state, change_timestamps)
 
         old_progress = state.history.output.progressed_to
@@ -114,12 +141,10 @@ defmodule TesslaServer.SimpleNode do
           |> EventStream.events_in_timeslot(old_progress, new_progress)
           |> Enum.sort_by(&(&1.timestamp))
 
-        # IO.puts "id: #{inspect state.stream_id}, progressed_to: #{inspect new_progress}"
-
         if new_progress > old_progress do
           Output.log_new_progress(state.stream_id, new_progress)
           Output.log_new_outputs(state.stream_id, new_outputs)
-          Enum.each(new_state.children, &Node.update_input_stream(&1, new_state.history.output))
+          Enum.each(new_state.children, &GenComputation.update_input_stream(&1, new_state.history.output))
         end
 
         new_state
@@ -173,7 +198,6 @@ defmodule TesslaServer.SimpleNode do
        perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1,
        init_output: 1, output_stream_type: 0
      ]
-
     end
   end
 end

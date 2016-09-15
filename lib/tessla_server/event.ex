@@ -1,8 +1,12 @@
 defmodule TesslaServer.Event do
   @moduledoc """
-  Contains the struct to represents Events which are modified by `TesslaServer.Node` implementations
+  Represents an `Event` on a Stream.
+  Note that Event here is meant in a broader sense than the Tessla one,
+  as it can represent an event on an eventstream, a change of a signal or
+  the progress of a stream.
   """
-  use Timex
-  defstruct timestamp: {0, 0, 1}, stream_id: nil, value: :nothing
-  @type t :: %__MODULE__{timestamp: Timex.Types.timestamp | :literal, value: any, stream_id: integer | nil}
+
+  defstruct timestamp: ~T[00:00:00.001], stream_id: nil, value: :nothing, type: :event
+  @type t :: %__MODULE__{timestamp: Time.t | :literal, value: any, stream_id: integer | nil, type: event_type}
+  @type event_type :: :event | :change | :progress
 end

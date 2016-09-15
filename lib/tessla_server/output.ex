@@ -1,39 +1,41 @@
 defmodule TesslaServer.Output do
   @moduledoc """
   Used to log outputs.
-  Has to be initialized at startup to hold the ids and names of nodes that should be logged.
+  Has to be initialized at startup to hold the ids and names of streams that should be logged.
 
   TODO: Make async in V2
   """
 
-  @typep timestamp :: Timex.Types.timestamp
+  @typep timestamp :: Timex.Duration.t
 
   require Logger
 
-  alias TesslaServer.{Node, Event}
+  alias TesslaServer.{GenComputation, Event}
 
-  @spec start(%{Node.id => String.t}) :: {:ok, pid}
+  @spec start(%{GenComputation.id => String.t}) :: {:ok, pid}
   def start(map \\ %{}) do
     Agent.start_link(fn -> map end, name: __MODULE__)
   end
 
-  @spec log_new_progress(Node.id, timestamp) :: nil
+  @spec log_new_progress(GenComputation.id, timestamp) :: :ok
   def log_new_progress(id, new_progress) do
-    name = Agent.get(__MODULE__, &Map.get(&1, id))
-    if name, do: Logger.debug "Stream #{name} progressed to #{inspect new_progress}"
+    Agent.cast __MODULE__, fn state ->
+      if name = Map.get state, id do
+        Logger.debug "Stream #{name} progressed to #{inspect new_progress}"
+      end
+      state
+    end
   end
 
-  @spec log_new_outputs(Node.id, [Event.t]) :: nil
+  @spec log_new_outputs(GenComputation.id, [Event.t]) :: :ok
   def log_new_outputs(_, []), do: nil
   def log_new_outputs(id, events) do
-    name = Agent.get(__MODULE__, &Map.get(&1, id))
-    if name do
-      {finished, formatted} = format events
-      Logger.info("New outputs of #{name}: \n" <> formatted <> "\n-------------\n")
-      # if finished do
-      #   Logger.flush
-      #   System.halt
-      # end
+    Agent.cast __MODULE__, fn state ->
+      if name = Map.get(state, id) do
+        formatted = format events
+        Logger.info("New outputs of #{name}: \n" <> formatted <> "\n-------------\n")
+        state
+      end
     end
   end
 
@@ -41,8 +43,6 @@ defmodule TesslaServer.Output do
     rows = Enum.map events, fn event ->
       "time: #{inspect event.timestamp}, value: #{inspect event.value}"
     end
-    finished = Enum.any? events, &(&1.value == true)
-    desc = Enum.join rows, "\n"
-    {finished, desc}
+    Enum.join rows, "\n"
   end
 end

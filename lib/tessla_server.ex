@@ -51,10 +51,10 @@ defmodule TesslaServer do
     line = String.rstrip line, ?\n
     [channel, value, seconds, microseconds] = String.split(line, " ")
     {seconds, _} = Integer.parse(seconds)
-    seconds = Time.from(seconds, :seconds)
+    seconds = Duration.from_seconds seconds
     {microseconds, _} = Integer.parse(microseconds)
-    microseconds = Time.from(microseconds, :microseconds)
-    timestamp = Time.add(seconds, microseconds)
+    microseconds = Duration.from_microseconds
+    timestamp = Duration.add(seconds, microseconds)
     {channel, %Event{value: value, timestamp: timestamp}}
   end
 

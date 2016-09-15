@@ -1,6 +1,6 @@
 defmodule TesslaServer.Registry do
   @moduledoc """
-  Helper functions for node registration
+  Helper functions for process registration
   """
 
   def via_tuple(id), do: {:via, :gproc, gproc_tuple(id)}
