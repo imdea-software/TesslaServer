@@ -20,7 +20,8 @@ defmodule TesslaServer.Output do
   @spec log_new_progress(GenComputation.id, timestamp) :: :ok
   def log_new_progress(id, new_progress) do
     Agent.cast __MODULE__, fn state ->
-      if name = Map.get state, id do
+      name = Map.get state, id
+      if name do
         Logger.debug "Stream #{name} progressed to #{inspect new_progress}"
       end
       state
@@ -31,7 +32,8 @@ defmodule TesslaServer.Output do
   def log_new_outputs(_, []), do: nil
   def log_new_outputs(id, events) do
     Agent.cast __MODULE__, fn state ->
-      if name = Map.get(state, id) do
+      name = Map.get(state, id)
+      if name do
         formatted = format events
         Logger.info("New outputs of #{name}: \n" <> formatted <> "\n-------------\n")
         state

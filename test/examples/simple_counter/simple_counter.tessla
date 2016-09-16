@@ -14,7 +14,7 @@
     }
   },{
     "id":5,
-    "nodetype":"TesslaServer.Node.Timing.InPast",
+    "nodetype":"TesslaServer.Computation.Timing.InPast",
     "operands":[0],
     "options":{
       "amount":1000
@@ -27,7 +27,7 @@
     }
   },{
     "id":1,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[3,5]
   }]
 }

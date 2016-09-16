@@ -2,14 +2,14 @@
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
     "id":8,
-    "nodetype":"TesslaServer.Node.Timing.InPast",
+    "nodetype":"TesslaServer.Computation.Timing.InPast",
     "operands":[1],
     "options":{
       "amount":1000000
     }
   },{
     "id":3,
-    "nodetype":"TesslaServer.Node.Filter.Sample",
+    "nodetype":"TesslaServer.Computation.Filter.Sample",
     "operands":[8,5]
   },{
     "id":9,
@@ -19,11 +19,11 @@
     }
   },{
     "id":6,
-    "nodetype":"TesslaServer.Node.Lifted.EventNot",
+    "nodetype":"TesslaServer.Computation.Lifted.EventNot",
     "operands":[3]
   },{
     "id":5,
-    "nodetype":"TesslaServer.Node.Timing.DelayEventByTime",
+    "nodetype":"TesslaServer.Computation.Timing.DelayEventByTime",
     "operands":[2],
     "options":{
       "amount":1000000
@@ -36,7 +36,7 @@
     }
   },{
     "id":2,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[9]
   }]
 }

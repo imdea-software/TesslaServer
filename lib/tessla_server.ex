@@ -53,7 +53,7 @@ defmodule TesslaServer do
     {seconds, _} = Integer.parse(seconds)
     seconds = Duration.from_seconds seconds
     {microseconds, _} = Integer.parse(microseconds)
-    microseconds = Duration.from_microseconds
+    microseconds = Duration.from_microseconds microseconds
     timestamp = Duration.add(seconds, microseconds)
     {channel, %Event{value: value, timestamp: timestamp}}
   end

@@ -1,29 +1,29 @@
-defmodule TesslaServer.Node.Lifted.Sub do
+defmodule TesslaServer.Computation.Lifted.Sub do
   @moduledoc """
-  Implements a `Node` that substracts two event streams
+  Implements a `Computation` that substracts two event streams
 
   To do so the `state.operands` list has to be initialized with two atoms representing the ids
   of the two streams that are the base of the computation.
   """
 
-  alias TesslaServer.{SimpleNode, Event}
-  alias TesslaServer.Node.{History, State}
+  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.Computation.State
 
-  use SimpleNode
+  use GenComputation
 
-  def perform_computation(timestamp, event_map, state) do
-    [op1, op2] = state.operands
-    event1 = event_map[op1]
-    event2 = event_map[op2]
+  # def perform_computation(timestamp, event_map, state) do
+  #   [op1, op2] = state.operands
+  #   event1 = event_map[op1]
+  #   event2 = event_map[op2]
 
-    if event1 && event2 do
-      {:ok, %Event{
-        stream_id: state.stream_id, timestamp: timestamp, value: event1.value - event2.value
-      }}
-    else
-      :wait
-    end
-  end
+  #   if event1 && event2 do
+  #     {:ok, %Event{
+  #       stream_id: state.stream_id, timestamp: timestamp, value: event1.value - event2.value
+  #     }}
+  #   else
+  #     :wait
+  #   end
+  # end
 
-  def output_stream_type, do: :signal
+  # def output_stream_type, do: :signal
 end

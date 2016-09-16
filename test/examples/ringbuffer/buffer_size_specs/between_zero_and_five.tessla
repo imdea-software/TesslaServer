@@ -2,15 +2,15 @@
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
     "id":3,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[15]
   },{
     "id":5,
-    "nodetype":"TesslaServer.Node.Aggregation.EventCount",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventCount",
     "operands":[14]
   },{
     "id":8,
-    "nodetype":"TesslaServer.Node.Lifted.And",
+    "nodetype":"TesslaServer.Computation.Lifted.And",
     "operands":[11,1]
   },{
     "id":14,
@@ -20,31 +20,31 @@
     }
   },{
     "id":12,
-    "nodetype":"TesslaServer.Node.Lifted.SignalNot",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalNot",
     "operands":[8]
   },{
     "id":2,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.ComputatioComputation.Literal",
     "options":{
       "value":5
     }
   },{
     "id":11,
-    "nodetype":"TesslaServer.Node.Lifted.Leq",
+    "nodetype":"TesslaServer.Computation.Lifted.Leq",
     "operands":[9,10]
   },{
     "id":4,
-    "nodetype":"TesslaServer.Node.Aggregation.EventCount",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventCount",
     "operands":[3]
   },{
     "id":9,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":0
     }
   },{
     "id":10,
-    "nodetype":"TesslaServer.Node.Lifted.Sub",
+    "nodetype":"TesslaServer.Computation.Lifted.Sub",
     "operands":[4,5]
   },{
     "id":15,
@@ -54,7 +54,7 @@
     }
   },{
     "id":1,
-    "nodetype":"TesslaServer.Node.Lifted.Leq",
+    "nodetype":"TesslaServer.Computation.Lifted.Leq",
     "operands":[10,2]
   }]
 }

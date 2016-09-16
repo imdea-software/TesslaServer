@@ -2,55 +2,55 @@
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
     "id":13,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[15]
   },{
     "id":29,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[13,18]
   },{
     "id":21,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[12,24]
   },{
     "id":20,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[14,2]
   },{
     "id":25,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "nodetype":"TesslaServer.Computation.Filter.Merge",
     "operands":[29,6]
   },{
     "id":23,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1
     }
   },{
     "id":5,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[30,23]
   },{
     "id":2,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1
     }
   },{
     "id":16,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":0
     }
   },{
     "id":24,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":0
     }
   },{
     "id":11,
-    "nodetype":"TesslaServer.Node.Monitors.Monitor",
+    "nodetype":"TesslaServer.Computation.Monitors.Monitor",
     "operands":[5,20,12],
     "options":{
       "clock":12,
@@ -117,15 +117,15 @@
     }
   },{
     "id":6,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[12,16]
   },{
     "id":12,
-    "nodetype":"TesslaServer.Node.Filter.OccurAny",
+    "nodetype":"TesslaServer.Computation.Filter.OccurAny",
     "operands":[26,13]
   },{
     "id":30,
-    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
+    "nodetype":"TesslaServer.Computation.Aggregation.Mrv",
     "operands":[25],
     "options":{
       "default":0
@@ -138,7 +138,7 @@
     }
   },{
     "id":22,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[26,0]
   },{
     "id":26,
@@ -148,24 +148,24 @@
     }
   },{
     "id":10,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "nodetype":"TesslaServer.Computation.Filter.Merge",
     "operands":[22,21]
   },{
     "id":18,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1
     }
   },{
     "id":14,
-    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
+    "nodetype":"TesslaServer.Computation.Aggregation.Mrv",
     "operands":[10],
     "options":{
       "default":0
     }
   },{
     "id":0,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1
     }

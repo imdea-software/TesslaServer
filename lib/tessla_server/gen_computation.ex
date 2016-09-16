@@ -6,25 +6,23 @@ defmodule TesslaServer.GenComputation do
   Look at the methods below to see which messages are sent to a Computation.
   """
 
-  alias TesslaServer.{Event, EventStream}
+  alias TesslaServer.Event
   alias TesslaServer.Computation.State
 
   import TesslaServer.Registry
 
   @type id :: integer
+  @type input_queue :: %{id => [Event.t]}
+  @type event_map :: %{id => Event.t}
 
-  @typep timestamp :: Timex.Duration.t
-  @typep event_map :: %{id => Event.t}
-  @typep computed_event :: {:ok, Event.t} | :wait
+  # @callback start(id, [id], %{}) :: id
+  @callback init_inputs([id]) :: %{id => []}
+  # @callback init_output(State.t) :: EventStream.t
+  # @callback output_stream_type :: EventStream.stream_type
 
-  @callback start(id, [id], %{}) :: id
-  @callback init_inputs([id]) :: %{id => EventStream.t}
-  @callback init_output(State.t) :: EventStream.t
-  @callback output_stream_type :: EventStream.stream_type
-
-  @callback prepare_events(timestamp, State.t) :: event_map
-  @callback process_events(timestamp, event_map, State.t) :: State.t
-  @callback perform_computation(timestamp, event_map, State.t) :: computed_event
+  # @callback prepare_events(timestamp, State.t) :: event_map
+  # @callback process_events(timestamp, event_map, State.t) :: State.t
+  # @callback perform_computation(timestamp, event_map, State.t) :: Event.t
 
   @doc """
   Sends a new `Event` to the `Computation` that is registered with `id` to process it
@@ -45,7 +43,7 @@ defmodule TesslaServer.GenComputation do
   @doc """
   Returns the latest output of the specified Computation
   """
-  @spec get_latest_output(id) :: any
+  @spec get_latest_output(id) :: Event.t | nil
   def get_latest_output(id) do
     GenServer.call(via_tuple(id), :get_latest_output)
   end
@@ -70,12 +68,12 @@ defmodule TesslaServer.GenComputation do
 
   defmacro __using__(_) do
     quote location: :keep do
-      alias TesslaServer.{GenComputation, Event, EventStream, Output}
-      alias TesslaServer.Computation.{State, History}
+      use Timex
+
+      alias TesslaServer.{GenComputation, Event, Output}
+      alias TesslaServer.Computation.State
 
       import TesslaServer.Registry
-
-      @typep timestamp :: Timex.Duration.t
 
       use GenServer
       @behaviour GenComputation
@@ -88,21 +86,23 @@ defmodule TesslaServer.GenComputation do
 
       def init(state) do
         inputs = init_inputs(state.operands)
-        output = init_output state
-        history = %{state.history | output: output, inputs: inputs}
-        {:ok, %{state | history: history}}
+        initialized_state = %{state | inputs: inputs}
+        {:ok, initialized_state}
       end
 
-      @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, Event.t, State.t}
-      def handle_call(:get_latest_output, _,state) do
-        {:reply, History.latest_output(state.history), state}
+      @spec handle_call(:get_latest_output, pid, State.t) :: {:reply, nil | Event.t, State.t}
+      def handle_call(:get_latest_output, _, state = %{output: []}), do: {:reply, nil, state}
+      def handle_call(:get_latest_output, _, state = %{output: [event | _]}) do
+        {:reply, event, state}
       end
 
       @spec handle_cast({:process, Event.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:process, event}, state) do
-        input_stream = state.history.inputs[event.stream_id]
-        {:ok, updated_input_stream} = EventStream.add_event(input_stream, event)
-        updated_state = update_input_stream(updated_input_stream, state)
+        updated_inputs = Map.update! state.inputs, event.stream_id, fn queue ->
+          queue ++ [event]
+        end
+
+        updated_state = progress %{state | inputs: updated_inputs}
         {:noreply, updated_state}
       end
 
@@ -116,88 +116,49 @@ defmodule TesslaServer.GenComputation do
 
       @spec handle_cast({:add_child, String.t}, State.t) :: {:noreply, State.t}
       def handle_cast({:add_child, new_child}, state) do
-        GenComputation.update_input_stream(new_child, state.history.output)
         {:noreply, %{state | children: [new_child | state.children]}}
       end
 
       @spec progress(State.t) :: State.t
       def progress(state) do
-        change_timestamps =
-          state.history
-          |> History.processable_events
-          |> Enum.map(&(&1.timestamp))
-          |> Enum.sort
-          |> Enum.uniq
-        # All timestamps of events between progressed_to and min time of all inputs
+        IO.puts(inspect(state))
+        input_empty = state.inputs
+                      |> Map.values
+                      |> Enum.any?(&Enum.empty?(&1))
 
-        new_state = do_progress(state, change_timestamps)
-
-        old_progress = state.history.output.progressed_to
-        new_progress = new_state.history.output.progressed_to
-        output = new_state.history.output
-
-        new_outputs =
-          output
-          |> EventStream.events_in_timeslot(old_progress, new_progress)
-          |> Enum.sort_by(&(&1.timestamp))
-
-        if new_progress > old_progress do
-          Output.log_new_progress(state.stream_id, new_progress)
-          Output.log_new_outputs(state.stream_id, new_outputs)
-          Enum.each(new_state.children, &GenComputation.update_input_stream(&1, new_state.history.output))
-        end
-
-        new_state
-      end
-
-      @spec do_progress(State.t, [timestamp]) :: State.t
-      defp do_progress(state, []) do
-        {:ok, progressed_history} = History.progress_output(state.history)
-        %{state | history: progressed_history}
-      end
-      defp do_progress(state, [:literal | tail]), do: do_progress(state, [{0, 0, 1} | tail])
-      defp do_progress(state, [at | next]) when is_tuple(at) do
-        events = prepare_events(at, state)
-        updated_state  = process_events(at, events, state)
-
-        do_progress(updated_state, next)
-      end
-
-      def prepare_events(at, state) do
-        state.history.inputs
-        |> Enum.map(fn {id, stream} -> {id, EventStream.event_at(stream, at)} end)
-        |> Enum.into(%{})
-      end
-
-      def process_events(timestamp, event_map, state) do
-        case perform_computation(timestamp, event_map, state) do
-          {:ok, new_event} ->
-            {:ok, history} = History.update_output(state.history, new_event)
-            %{state | history: history}
-          :wait ->
-            {:ok, updated_history} = History.progress_output(state.history, timestamp)
-            %{state | history: updated_history}
+        if input_empty do
+          state
+        else
+          state.inputs
+          |> extract_event_map
+          state
         end
       end
 
-      def perform_computation(timestamp, _, state), do: :wait
+      @spec extract_event_map(GenComputation.input_queue) :: GenComputation.event_map
+      defp extract_event_map(queue) do
+        with events <- Map.values(queue),
+        heads <- Enum.map(events, &hd/1),
+        timestamps <- Enum.map(heads, &(&1.timestamp)),
+        minimal_time <- Enum.min(timestamps),
+        events_at_min <- Enum.filter(heads, &Timex.equal?(&1.timestamp, minimal_time)),
+        event_tuples <- Enum.map(events_at_min, &({&1.stream_id, &1})),
+        do: Map.new(event_tuples)
+      end
 
       def init_inputs(ids) do
         ids
-        |> Enum.map(&({&1, %EventStream{id: &1}}))
+        |> Enum.map(&({&1, []}))
         |> Map.new
-      end
-
-      def init_output(state) do
-        %EventStream{id: state.stream_id, type: output_stream_type}
       end
 
       def output_stream_type, do: :events
 
-      defoverridable [start: 3, prepare_events: 2, process_events: 3,
-       perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1,
-       init_output: 1, output_stream_type: 0
-     ]
+      defoverridable init: 1, init_inputs: 1, output_stream_type: 0
+      # defoverridable [start: 3, prepare_events: 2, process_events: 3,
+       #  perform_computation: 3, handle_cast: 2, handle_call: 3, init: 1, init_inputs: 1,
+       #  init_output: 1, output_stream_type: 0
+       # ]
     end
   end
 end

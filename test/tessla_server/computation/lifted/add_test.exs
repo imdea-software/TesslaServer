@@ -1,9 +1,9 @@
-defmodule TesslaServer.Node.Lifted.AddTest do
+defmodule TesslaServer.Computation.Lifted.AddTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Lifted.Add
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Lifted.Add
+  alias TesslaServer.{Event, GenComputation}
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
@@ -15,7 +15,6 @@ defmodule TesslaServer.Node.Lifted.AddTest do
   @processor unique_integer
 
   doctest Add
-
 
   setup do
     :gproc.reg(gproc_tuple(@test))

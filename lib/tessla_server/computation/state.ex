@@ -1,10 +1,12 @@
-defmodule TesslaServer.Node.State do
+defmodule TesslaServer.Computation.State do
   @moduledoc """
-  Struct to represent the state of a `Node`
+  Struct to represent the state of a `Computation`
   """
-  alias TesslaServer.Node.History
+  alias TesslaServer.GenComputation
 
-  defstruct children: [], history: %History{}, stream_id: nil, operands: [], options: %{}
-  @type t :: %__MODULE__{stream_id: integer | nil, history: History.t, children: [String.t],
-   operands: [integer], options: %{}}
+  defstruct children: [], inputs: %{}, stream_id: nil, operands: [], options: %{}, output: []
+  @type t :: %__MODULE__{
+    stream_id: integer | nil, inputs: GenComputation.input_queue,
+    children: [String.t], operands: [integer], options: %{}, output: [Event.t]
+  }
 end

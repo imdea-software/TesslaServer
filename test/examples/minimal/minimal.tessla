@@ -2,7 +2,7 @@
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
     "id":57,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[67]
   },{
     "id":10,
@@ -12,15 +12,15 @@
     }
   },{
     "id":43,
-    "nodetype":"TesslaServer.Node.Lifted.Or",
+    "nodetype":"TesslaServer.Computation.Lifted.Or",
     "operands":[30,30]
   },{
     "id":76,
-    "nodetype":"TesslaServer.Node.Filter.Filter",
+    "nodetype":"TesslaServer.Computation.Filter.Filter",
     "operands":[2,30]
   },{
     "id":0,
-    "nodetype":"TesslaServer.Node.Aggregation.SignalMaximum",
+    "nodetype":"TesslaServer.Computation.Aggregation.SignalMaximum",
     "operands":[67]
   },{
     "id":30,
@@ -30,61 +30,61 @@
     }
   },{
     "id":42,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[67,67]
   },{
     "id":34,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[10,30]
   },{
     "id":27,
-    "nodetype":"TesslaServer.Node.Filter.Sample",
+    "nodetype":"TesslaServer.Computation.Filter.Sample",
     "operands":[85,10]
   },{
     "id":73,
-    "nodetype":"TesslaServer.Node.Aggregation.EventMaximum",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventMaximum",
     "operands":[71],
     "options":{
       "default":0
     }
   },{
     "id":69,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[10,67]
   },{
     "id":64,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[85,85]
   },{
     "id":83,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "nodetype":"TesslaServer.Computation.Filter.Merge",
     "operands":[71,71]
   },{
     "id":28,
-    "nodetype":"TesslaServer.Node.Lifted.Lt",
+    "nodetype":"TesslaServer.Computation.Lifted.Lt",
     "operands":[67,67]
   },{
     "id":61,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "nodetype":"TesslaServer.Computation.Filter.Merge",
     "operands":[53,53]
   },{
     "id":26,
-    "nodetype":"TesslaServer.Node.Lifted.Sub",
+    "nodetype":"TesslaServer.Computation.Lifted.Sub",
     "operands":[67,67]
   },{
     "id":56,
-    "nodetype":"TesslaServer.Node.Aggregation.Mrv",
+    "nodetype":"TesslaServer.Computation.Aggregation.Mrv",
     "operands":[71],
     "options":{
       "default":0
     }
   },{
     "id":13,
-    "nodetype":"TesslaServer.Node.Lifted.SignalNot",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalNot",
     "operands":[30]
   },{
     "id":38,
-    "nodetype":"TesslaServer.Node.Filter.IfThenElse",
+    "nodetype":"TesslaServer.Computation.Filter.IfThenElse",
     "operands":[30,30,30]
   },{
     "id":5,
@@ -94,22 +94,22 @@
     }
   },{
     "id":24,
-    "nodetype":"TesslaServer.Node.Timing.InPast",
+    "nodetype":"TesslaServer.Computation.Timing.InPast",
     "operands":[71],
     "options":{
       "amount":2
     }
   },{
     "id":41,
-    "nodetype":"TesslaServer.Node.Lifted.Mul",
+    "nodetype":"TesslaServer.Computation.Lifted.Mul",
     "operands":[67,67]
   },{
     "id":3,
-    "nodetype":"TesslaServer.Node.Aggregation.Sum",
+    "nodetype":"TesslaServer.Computation.Aggregation.Sum",
     "operands":[71]
   },{
     "id":60,
-    "nodetype":"TesslaServer.Node.Lifted.Leq",
+    "nodetype":"TesslaServer.Computation.Lifted.Leq",
     "operands":[67,67]
   },{
     "id":18,
@@ -119,27 +119,27 @@
     }
   },{
     "id":81,
-    "nodetype":"TesslaServer.Node.Timing.Timestamps",
+    "nodetype":"TesslaServer.Computation.Timing.Timestamps",
     "operands":[10]
   },{
     "id":21,
-    "nodetype":"TesslaServer.Node.Lifted.EventNot",
+    "nodetype":"TesslaServer.Computation.Lifted.EventNot",
     "operands":[2]
   },{
     "id":66,
-    "nodetype":"TesslaServer.Node.Filter.Filter",
+    "nodetype":"TesslaServer.Computation.Filter.Filter",
     "operands":[71,30]
   },{
     "id":35,
-    "nodetype":"TesslaServer.Node.Lifted.Geq",
+    "nodetype":"TesslaServer.Computation.Lifted.Geq",
     "operands":[67,67]
   },{
     "id":68,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[30]
   },{
     "id":72,
-    "nodetype":"TesslaServer.Node.Filter.IfThen",
+    "nodetype":"TesslaServer.Computation.Filter.IfThen",
     "operands":[10,85]
   },{
     "id":63,
@@ -149,22 +149,22 @@
     }
   },{
     "id":20,
-    "nodetype":"TesslaServer.Node.Timing.DelayEventByTime",
+    "nodetype":"TesslaServer.Computation.Timing.DelayEventByTime",
     "operands":[71],
     "options":{
       "amount":2000
     }
   },{
     "id":54,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[30,30]
   },{
     "id":17,
-    "nodetype":"TesslaServer.Node.Lifted.Max",
+    "nodetype":"TesslaServer.Computation.Lifted.Max",
     "operands":[67,67]
   },{
     "id":50,
-    "nodetype":"TesslaServer.Node.Lifted.And",
+    "nodetype":"TesslaServer.Computation.Lifted.And",
     "operands":[30,30]
   },{
     "id":44,
@@ -174,7 +174,7 @@
     }
   },{
     "id":9,
-    "nodetype":"TesslaServer.Node.Lifted.Min",
+    "nodetype":"TesslaServer.Computation.Lifted.Min",
     "operands":[67,67]
   },{
     "id":22,
@@ -184,43 +184,43 @@
     }
   },{
     "id":75,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[67]
   },{
     "id":52,
-    "nodetype":"TesslaServer.Node.Filter.Sample",
+    "nodetype":"TesslaServer.Computation.Filter.Sample",
     "operands":[67,10]
   },{
     "id":48,
-    "nodetype":"TesslaServer.Node.Aggregation.EventMinimum",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventMinimum",
     "operands":[71],
     "options":{
       "default":0
     }
   },{
     "id":29,
-    "nodetype":"TesslaServer.Node.Aggregation.Sma",
+    "nodetype":"TesslaServer.Computation.Aggregation.Sma",
     "operands":[71],
     "options":{
       "count":3
     }
   },{
     "id":62,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1
     }
   },{
     "id":86,
-    "nodetype":"TesslaServer.Node.Filter.OccurAll",
+    "nodetype":"TesslaServer.Computation.Filter.OccurAll",
     "operands":[10,71]
   },{
     "id":46,
-    "nodetype":"TesslaServer.Node.Filter.Merge",
+    "nodetype":"TesslaServer.Computation.Filter.Merge",
     "operands":[2,2]
   },{
     "id":79,
-    "nodetype":"TesslaServer.Node.Filter.OccurAll",
+    "nodetype":"TesslaServer.Computation.Filter.OccurAll",
     "operands":[10,71]
   },{
     "id":67,
@@ -230,19 +230,19 @@
     }
   },{
     "id":87,
-    "nodetype":"TesslaServer.Node.Lifted.EventAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.EventAbs",
     "operands":[71]
   },{
     "id":2,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[30]
   },{
     "id":80,
-    "nodetype":"TesslaServer.Node.Lifted.Add",
+    "nodetype":"TesslaServer.Computation.Lifted.Add",
     "operands":[67,67]
   },{
     "id":59,
-    "nodetype":"TesslaServer.Node.Timing.DelaySignalByTime",
+    "nodetype":"TesslaServer.Computation.Timing.DelaySignalByTime",
     "operands":[67],
     "options":{
       "amount":2000,
@@ -250,18 +250,18 @@
     }
   },{
     "id":12,
-    "nodetype":"TesslaServer.Node.Timing.DelayEventByCount",
+    "nodetype":"TesslaServer.Computation.Timing.DelayEventByCount",
     "operands":[71],
     "options":{
       "count":2
     }
   },{
     "id":39,
-    "nodetype":"TesslaServer.Node.Filter.IfThenElse",
+    "nodetype":"TesslaServer.Computation.Filter.IfThenElse",
     "operands":[30,67,67]
   },{
     "id":71,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[67]
   },{
     "id":14,
@@ -271,23 +271,23 @@
     }
   },{
     "id":55,
-    "nodetype":"TesslaServer.Node.Aggregation.EventCount",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventCount",
     "operands":[10]
   },{
     "id":25,
-    "nodetype":"TesslaServer.Node.Aggregation.SignalMinimum",
+    "nodetype":"TesslaServer.Computation.Aggregation.SignalMinimum",
     "operands":[67]
   },{
     "id":78,
-    "nodetype":"TesslaServer.Node.Filter.Filter",
+    "nodetype":"TesslaServer.Computation.Filter.Filter",
     "operands":[53,30]
   },{
     "id":74,
-    "nodetype":"TesslaServer.Node.Filter.IfThenElse",
+    "nodetype":"TesslaServer.Computation.Filter.IfThenElse",
     "operands":[30,85,85]
   },{
     "id":53,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[85]
   },{
     "id":85,
@@ -297,27 +297,27 @@
     }
   },{
     "id":23,
-    "nodetype":"TesslaServer.Node.Lifted.Neg",
+    "nodetype":"TesslaServer.Computation.Lifted.Neg",
     "operands":[67]
   },{
     "id":8,
-    "nodetype":"TesslaServer.Node.Lifted.Gt",
+    "nodetype":"TesslaServer.Computation.Lifted.Gt",
     "operands":[67,67]
   },{
     "id":40,
-    "nodetype":"TesslaServer.Node.Lifted.Div",
+    "nodetype":"TesslaServer.Computation.Lifted.Div",
     "operands":[67,67]
   },{
     "id":36,
-    "nodetype":"TesslaServer.Node.Filter.Sample",
+    "nodetype":"TesslaServer.Computation.Filter.Sample",
     "operands":[30,10]
   },{
     "id":4,
-    "nodetype":"TesslaServer.Node.Lifted.Implies",
+    "nodetype":"TesslaServer.Computation.Lifted.Implies",
     "operands":[30,30]
   },{
     "id":11,
-    "nodetype":"TesslaServer.Node.Filter.ChangeOf",
+    "nodetype":"TesslaServer.Computation.Filter.ChangeOf",
     "operands":[85]
   }]
 }

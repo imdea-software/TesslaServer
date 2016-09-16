@@ -5,11 +5,9 @@ defmodule TesslaServer.Source.FunctionReturns do
 
   """
 
-  alias TesslaServer.SimpleNode
+  alias TesslaServer.GenComputation
 
-  use SimpleNode
-
-  alias TesslaServer.Event
+  use GenComputation
 
   def init(state) do
     channel = "function_returns:" <> state.options[:function]
@@ -18,8 +16,8 @@ defmodule TesslaServer.Source.FunctionReturns do
     super %{state | operands: [nil]}
   end
 
-  def perform_computation(timestamp, _, state) do
-    processed_event = %Event{timestamp: timestamp,  stream_id: state.stream_id}
-    {:ok, processed_event}
-  end
+  # def perform_computation(timestamp, _, state) do
+  #   processed_event = %Event{timestamp: timestamp,  stream_id: state.stream_id}
+  #   {:ok, processed_event}
+  # end
 end
