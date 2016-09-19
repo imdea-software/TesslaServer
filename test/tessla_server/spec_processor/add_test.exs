@@ -1,25 +1,28 @@
-defmodule TesslaServer.Node.SpecProcessor.AddTest do
+defmodule TesslaServer.Computation.SpecProcessor.AddTest do
   use ExUnit.Case, async: false
 
-  alias TesslaServer.{GenComputation, SpecProcessor}
+  require Logger
+
+  alias TesslaServer.{GenComputation, SpecProcessor, Output}
+
+  import ExUnit.CaptureLog
 
   @adder 1
 
-  setup do
+  test "Should Parse and Setup an adder" do
+    Output.stop
+    Output.start %{@adder => "adder"}
     {:ok, spec} = File.read("test/examples/math/add.tessla")
-    ids = SpecProcessor.process spec
-    on_exit fn ->
-      Enum.each ids, fn id ->
-        :ok = GenComputation.stop id
+    logged = capture_log fn ->
+      ids = SpecProcessor.process spec
+      :timer.sleep(1000)
+
+      on_exit fn ->
+        Enum.each ids, fn id ->
+          :ok = GenComputation.stop id
+        end
       end
     end
-  end
-
-  test "Should Parse and Setup an adder" do
-    :timer.sleep 1000
-    latest_output  = GenComputation.get_latest_output @adder
-
-    assert(latest_output.value == 8)
-    assert latest_output.timestamp == {0, 0, 1}
+    assert String.contains? logged, "time: :literal, value: :nothing"
   end
 end

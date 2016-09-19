@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :logger,
-  compile_time_purge_level: :warn,
+  compile_time_purge_level: :info,
   truncate: 4096
 
 config :ex_unit,
