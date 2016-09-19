@@ -11,8 +11,7 @@ defmodule TesslaServer.Source.VariableValues do
   def init(state) do
     channel = "variable_values:" <> state.options[:variable]
     :gproc.reg({:p, :l, channel})
-    :gproc.reg({:p, :l, :tick})
-    super %{state | operands: [nil]}
+    super state
   end
 
   # def perform_computation(timestamp, event_map, state) do

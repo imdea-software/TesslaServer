@@ -31,7 +31,7 @@ defmodule TesslaServer.Computation.InputBuffer do
   """
   @spec add_event(InputBuffer.t, Event.t) :: InputBuffer.t
   def add_event(buffer, event) do
-    updated_inputs = Map.update! buffer.input_queues, event.stream_id, fn queue ->
+    updated_inputs = Map.update buffer.input_queues, event.stream_id, [event], fn queue ->
       queue ++ [event]
     end
     %{buffer | input_queues: updated_inputs}
@@ -80,7 +80,7 @@ defmodule TesslaServer.Computation.InputBuffer do
 
   defp pop_event_at_timestamp({stream_id, queue = [head | tail]}, timestamp) do
     # TODO handle literals
-    if Timex.equal?(head.timestamp, timestamp) do
+    if head.timestamp == timestamp do
       {%{stream_id => head}, %{stream_id => tail}}
     else
       {%{}, %{stream_id => queue}}

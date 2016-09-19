@@ -6,7 +6,7 @@ defmodule TesslaServer.Computation.State do
   alias TesslaServer.Computation.InputBuffer
 
   defstruct children: [], input_buffer: nil, stream_id: nil, operands: [],
-    options: %{}, output: [], cache: %{}
+    options: %{}, cache: %{}
   @type t :: %__MODULE__{
     stream_id: GenComputation.id,
     input_buffer: InputBuffer.t,

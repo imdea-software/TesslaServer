@@ -25,9 +25,8 @@ defmodule TesslaServer.Output do
       if name do
         formatted = format event
         Logger.warn("New output of #{name}: \n" <> formatted <> "\n-------------\n")
-        Logger.flush
-        state
       end
+      state
     end
   end
 

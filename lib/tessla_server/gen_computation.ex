@@ -34,7 +34,7 @@ defmodule TesslaServer.GenComputation do
   @doc """
   Adds a new child to the specified `Computation`
   """
-  @spec add_child(id | nil, id) :: :ok
+  @spec add_child(id, id) :: :ok
   def add_child(nil, _), do: :ok
   def add_child(parent, child) do
     GenServer.cast(via_tuple(parent), {:add_child, child})
@@ -94,13 +94,14 @@ defmodule TesslaServer.GenComputation do
 
       @spec progress(State.t) :: State.t
       def progress(state) do
-          {to_process, timestamp, updated_buffer} = InputBuffer.pop_head state.input_buffer
-          process_event_map to_process, timestamp, state
-          %{state | input_buffer: updated_buffer}
+        {to_process, timestamp, updated_buffer} = InputBuffer.pop_head state.input_buffer
+        process_event_map to_process, timestamp, state
+        %{state | input_buffer: updated_buffer}
       end
 
       def process_event_map(nil, _, _), do: :wait
       def process_event_map(event_map, timestamp, state) do
+        IO.puts "#{state.stream_id}: #{inspect state}"
         propagate_output %Event{stream_id: state.stream_id, timestamp: timestamp}, state
       end
 

@@ -12,8 +12,7 @@ defmodule TesslaServer.Source.FunctionReturns do
   def init(state) do
     channel = "function_returns:" <> state.options[:function]
     :gproc.reg({:p, :l, channel})
-    :gproc.reg({:p, :l, :tick})
-    super %{state | operands: [nil]}
+    super state
   end
 
   # def perform_computation(timestamp, _, state) do
