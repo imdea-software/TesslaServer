@@ -1,21 +1,17 @@
-defmodule TesslaServer.Computation.SpecProcessor.AddTest do
+defmodule TesslaServer.SpecProcessor.AddTest do
   use ExUnit.Case, async: false
 
   require Logger
 
-  alias TesslaServer.{GenComputation, SpecProcessor, Output, Registry}
-  alias TesslaServer.Computation.Literal
+  alias TesslaServer.{GenComputation, SpecProcessor, Registry, Source}
   import System, only: [unique_integer: 0]
-  import TesslaServer.Registry, only: [gproc_tuple: 1]
 
 
   @adder 1
   @test unique_integer
 
   setup do
-    :gproc.reg(Registry.gproc_tuple(@test))
-    Output.stop
-    Output.start %{@adder => "adder"}
+    Registry.register @test
     {:ok, spec} = File.read("test/examples/math/add.tessla")
     ids = SpecProcessor.process spec
     on_exit fn ->
@@ -28,9 +24,10 @@ defmodule TesslaServer.Computation.SpecProcessor.AddTest do
   test "Should Parse and Setup an adder" do
     GenComputation.add_child @adder, @test
 
-    Literal.start_literals
+    Source.start_evaluation
 
     assert_receive {_, {:process, event}}
     assert event.timestamp == :literal
+    assert event.value == 8
   end
 end

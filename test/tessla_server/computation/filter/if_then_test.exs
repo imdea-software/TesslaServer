@@ -1,12 +1,10 @@
-defmodule TesslaServer.Node.Filter.IfThenTest do
+defmodule TesslaServer.Computation.Filter.IfThenTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Filter.IfThen
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Filter.IfThen
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer
@@ -17,77 +15,80 @@ defmodule TesslaServer.Node.Filter.IfThenTest do
   doctest IfThen
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     IfThen.start @processor, [@op1, @op2]
     :ok
   end
 
   test "Should emit event with value of second stream whenever the first stream emits an event" do
 
-    Node.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, initial_output}})
-    assert(initial_output.progressed_to == Time.zero)
-    assert(initial_output.events == [])
-    assert initial_output.type == :events
+    GenComputation.add_child(@processor, @test)
 
-    timestamp = DateTime.now
-    sample1 = %Event{timestamp: to_timestamp(timestamp), stream_id: @op1}
-    sample2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 1)), stream_id: @op1}
-    sample3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), stream_id: @op1}
-    sample4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 6)), stream_id: @op1}
+    timestamp0 = Duration.now
+    timestamp1 = Duration.add timestamp0, Duration.from_seconds 1
+    timestamp2 = Duration.add timestamp0, Duration.from_seconds 2
+    timestamp3 = Duration.add timestamp0, Duration.from_seconds 3
+    timestamp4 = Duration.add timestamp0, Duration.from_seconds 4
+    timestamp5 = Duration.add timestamp0, Duration.from_seconds 5
+    timestamp6 = Duration.add timestamp0, Duration.from_seconds 6
 
-    signal1 = %Event{value: 1, stream_id: @op2}
-    signal2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 2, stream_id: @op2}
-    signal3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_id: @op2}
-    signal4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 5)), value: 4, stream_id: @op2}
-    signal5 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 6)), value: 5, stream_id: @op2}
+    sample1 = %Event{timestamp: timestamp1, stream_id: @op1}
+    sample3 = %Event{timestamp: timestamp3, stream_id: @op1}
+    sample4 = %Event{timestamp: timestamp4, stream_id: @op1}
+    sample6 = %Event{timestamp: timestamp6, stream_id: @op1}
 
-    Node.send_event(@processor, signal1)
+    change0 = %Event{value: 1, stream_id: @op2, type: :change}
+    change2 = %Event{timestamp: timestamp2, value: 2, stream_id: @op2, type: :change}
+    change4 = %Event{timestamp: timestamp4, value: 4, stream_id: @op2, type: :change}
+    change5 = %Event{timestamp: timestamp5, value: 5, stream_id: @op2, type: :change}
+    change6 = %Event{timestamp: timestamp6, value: 6, stream_id: @op2, type: :change}
+
+    GenComputation.send_event(@processor, change0)
 
     refute_receive(_)
 
-    Node.send_event(@processor, sample1)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
-    assert(progressed_to == signal1.timestamp)
+    GenComputation.send_event(@processor, sample1)
+    GenComputation.send_event(@processor, sample3)
+    GenComputation.send_event(@processor, sample4)
+    GenComputation.send_event(@processor, sample6)
+    assert_receive({_, {:process, out0}})
+    assert out0.type == :progress
+    assert out0.timestamp == Duration.zero
 
-    Node.send_event(@processor, sample2)
-    refute_receive(_)
-    Node.send_event(@processor, sample3)
-    refute_receive(_)
-    Node.send_event(@processor, sample4)
-    refute_receive(_)
+    GenComputation.send_event(@processor, change2)
+    assert_receive({_, {:process, out1}})
+    assert out1.type == :event
+    assert out1.value == 1
+    assert out1.timestamp == timestamp1
 
+    assert_receive({_, {:process, progress2}})
+    assert progress2.type == :progress
+    assert progress2.timestamp == timestamp2
 
-    Node.send_event(@processor, signal2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [sampled2, sampled1]}}})
-    assert(progressed_to == signal2.timestamp)
-    assert(sampled1.value == signal1.value)
-    assert(sampled1.timestamp == sample1.timestamp)
-    assert(sampled2.value == signal1.value)
-    assert(sampled2.timestamp == sample2.timestamp)
+    GenComputation.send_event @processor, change4
+    assert_receive({_, {:process, out3}})
+    assert out3.type == :event
+    assert out3.value == change2.value
+    assert out3.timestamp == timestamp3
 
-    Node.send_event(@processor, signal3)
-    assert_receive {_,
-      {:update_input_stream, %{progressed_to: progressed_to, events: [sampled3, ^sampled2, ^sampled1]}}
-    }
-    assert(progressed_to == signal3.timestamp)
-    assert(sampled3.value == signal2.value)
-    assert(sampled3.timestamp == sample3.timestamp)
+    assert_receive({_, {:process, out4}})
+    assert out4.type == :event
+    assert out4.value == change4.value
+    assert out4.timestamp == timestamp4
 
-    Node.send_event(@processor, signal4)
-    assert_receive {_,
-     {:update_input_stream, %{progressed_to: progressed_to, events: [^sampled3, ^sampled2, ^sampled1]}}
-    }
-    assert(progressed_to == signal4.timestamp)
+    GenComputation.send_event(@processor, change5)
+    assert_receive({_, {:process, progress5}})
+    assert progress5.type == :progress
+    assert progress5.timestamp == timestamp5
 
-    Node.send_event(@processor, signal5)
-    assert_receive {_,
-     {:update_input_stream, %{progressed_to: progressed_to, events: [sampled4, ^sampled3, ^sampled2, ^sampled1]}}
-    }
-    assert(progressed_to == signal5.timestamp)
-    assert(sampled4.value == signal5.value)
-    assert(sampled4.timestamp == sample4.timestamp)
+    GenComputation.send_event(@processor, change6)
+    assert_receive({_, {:process, out6}})
+    assert out6.type == :event
+    assert out6.value == 6
+    assert out6.timestamp == timestamp6
 
-    :ok = Node.stop @processor
+    refute_receive _
+
+    :ok = GenComputation.stop @processor
   end
 end

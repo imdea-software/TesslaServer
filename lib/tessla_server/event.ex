@@ -7,9 +7,10 @@ defmodule TesslaServer.Event do
   """
 
   alias TesslaServer.GenComputation
+  use Timex
 
-  defstruct timestamp: ~T[00:00:00.001], stream_id: nil, value: :nothing, type: :event
-  @type t :: %__MODULE__{timestamp: Time.t | :literal, value: any,
+  defstruct timestamp: Duration.zero, stream_id: nil, value: :nothing, type: :event
+  @type t :: %__MODULE__{timestamp: Duration.t | :literal, value: any,
    stream_id: GenComputation.id, type: event_type}
   @type event_type :: :event | :change | :progress
 end

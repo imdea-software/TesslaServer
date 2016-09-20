@@ -3,9 +3,21 @@ defmodule TesslaServer.Registry do
   Helper functions for process registration
   """
 
-  def via_tuple(id), do: {:via, :gproc, gproc_tuple(id)}
+  def register(name) do
+    :gproc.reg register_tuple name
+  end
 
-  def get_pid(key), do: :gproc.lookup_pid gproc_tuple(key)
+  def subscribe_to(channel) do
+    :gproc.reg subscribe_tuple channel
+  end
 
-  def gproc_tuple(id) when is_integer(id), do: {:n, :l, id}
+  def get_pid(key), do: :gproc.lookup_pid register_tuple(key)
+
+  def via_tuple(name, property? \\ :name)
+  def via_tuple(name, :name), do: {:via, :gproc, register_tuple name}
+  def via_tuple(channel, :channel), do: {:via, :gproc, subscribe_tuple channel}
+
+  defp register_tuple(name), do: {:n, :l, name}
+
+  defp subscribe_tuple(channel), do: {:p, :l, channel}
 end

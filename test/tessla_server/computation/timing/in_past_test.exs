@@ -1,70 +1,73 @@
-defmodule TesslaServer.Node.Timing.InPastTest do
+defmodule TesslaServer.Computation.Timing.InPastTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Timing.InPast
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Timing.InPast
+  alias TesslaServer.{Event, GenComputation, Registry, Source}
 
-  import TesslaServer.Registry
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   doctest InPast
 
   @op1 unique_integer
-  @amount 50000
+  @amount 100000
   @test unique_integer
   @processor unique_integer
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     InPast.start @processor, [@op1], %{amount: @amount}
     :ok
   end
 
   test "should emit if an event happened in specified time in past" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
 
-    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
-    refute out0.value
+    Source.start_evaluation
 
-    timestamp1 = DateTime.now
-    timestamp2 = shift(timestamp1, milliseconds: 20)
-    timestamp3 = shift(timestamp1, seconds: 3)
-    event1 = %Event{timestamp: to_timestamp(timestamp1), stream_id: @op1}
+    assert_receive({_, {:process, change0}})
+
+    refute change0.value
+    assert change0.timestamp == Duration.zero
+    assert change0.type == :change
+
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_microseconds(100000))
+    timestamp3 = Duration.add(timestamp2, Duration.from_microseconds(100001))
+    event1 = %Event{timestamp: timestamp1, stream_id: @op1}
     event2 = %Event{
-      timestamp: to_timestamp(timestamp2), stream_id: @op1
+      timestamp: timestamp2, stream_id: @op1
     }
     event3 = %Event{
-      timestamp: to_timestamp(timestamp3), stream_id: @op1
+      timestamp: timestamp3, stream_id: @op1
     }
 
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out1, ^out0]}}})
-    assert out1.timestamp == event1.timestamp
-    assert out1.value
-    assert progressed_to == event1.timestamp
+    assert_receive({_, {:process, change1}})
+    assert change1.timestamp == timestamp1
+    assert change1.value
+    assert change1.type == :change
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
 
-    assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to, events: [
-         ^out1, ^out0
-       ]
-     }}}
-    assert progressed_to == event2.timestamp
+    assert_receive({_, {:process, change2}})
+    assert change2.timestamp == timestamp2
+    assert change2.value == :nothing
+    assert change2.type == :progress
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
 
-    assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to, events: [
-         out3, out2, ^out1, ^out0
-       ]
-     }}}
-    assert progressed_to == event3.timestamp
-    assert out2.timestamp == Time.add(event2.timestamp, Time.from(@amount, :microseconds))
-    refute out2.value
-    assert out3.timestamp == event3.timestamp
-    assert out3.value
-    :ok = Node.stop(@processor)
+    assert_receive({_, {:process, change3}})
+    assert_receive({_, {:process, change4}})
+    assert change3.timestamp == Duration.add(timestamp2, Duration.from_microseconds(@amount))
+    refute change3.value
+    assert change3.type == :change
+
+    assert change4.timestamp == timestamp3
+    assert change4.value
+    assert change4.type == :change
+
+    :ok = GenComputation.stop(@processor)
   end
 end

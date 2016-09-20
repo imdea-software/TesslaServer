@@ -3,20 +3,16 @@ defmodule TesslaServer.Computation.Literal do
   Represents a Literal.
   """
 
-  alias TesslaServer.{Event, GenComputation}
-  import TesslaServer.Registry, only: [via_tuple: 1]
+  alias TesslaServer.{Event, GenComputation, Registry}
+  import Registry, only: [via_tuple: 1]
 
   defstruct children: [], value: nil, id: nil
   @type t :: %__MODULE__{id: GenComputation.id, value: any, children: [GenComputation.id]}
 
   use GenServer
 
-  def start_literals do
-    GenServer.cast {:via, :gproc, {:p, :l, :literals}}, :start_evaluation
-  end
-
   def init(state) do
-    :gproc.reg({:p, :l, :literals})
+    Registry.subscribe_to :source
     {:ok, state}
   end
 
@@ -25,6 +21,7 @@ defmodule TesslaServer.Computation.Literal do
     new_state = %{state | children: [new_child | state.children]}
     {:noreply, new_state}
   end
+
   def handle_cast(:start_evaluation, state) do
     literal = %Event{value: state.value, stream_id: state.id, timestamp: :literal}
     Enum.each state.children, fn child ->

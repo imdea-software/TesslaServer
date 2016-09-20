@@ -1,11 +1,10 @@
-defmodule TesslaServer.Node.Timing.DelaySignalByTimeTest do
+defmodule TesslaServer.Computation.Timing.DelaySignalByTimeTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Timing.DelaySignalByTime
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Timing.DelaySignalByTime
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
@@ -18,13 +17,13 @@ defmodule TesslaServer.Node.Timing.DelaySignalByTimeTest do
   @processor unique_integer
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     DelaySignalByTime.start @processor, [@op1], %{amount: @amount, default: @default}
     :ok
   end
 
   test "Should delay events by specified amount" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
 
     assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
     assert out0.value == @default
@@ -36,21 +35,21 @@ defmodule TesslaServer.Node.Timing.DelaySignalByTimeTest do
     event5 = %Event{timestamp: {0, 5, 0}, stream_id: @op1, value: 5}
 
 
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [^out0]}}})
     assert progressed_to == event1.timestamp
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [^out0]}}})
     assert progressed_to == event2.timestamp
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [^out0]}}})
     assert progressed_to == event3.timestamp
 
-    Node.send_event(@processor, event4)
+    GenComputation.send_event(@processor, event4)
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [out2, out1, ^out0]}}})
     assert is_delayed(out1.timestamp, event1.timestamp)
     assert out1.value == event1.value
@@ -58,7 +57,7 @@ defmodule TesslaServer.Node.Timing.DelaySignalByTimeTest do
     assert out2.value == event2.value
     assert progressed_to == event4.timestamp
 
-    Node.send_event(@processor, event5)
+    GenComputation.send_event(@processor, event5)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to,
         events: [out4, out3, ^out2, ^out1, ^out0]}}})
@@ -68,7 +67,7 @@ defmodule TesslaServer.Node.Timing.DelaySignalByTimeTest do
     assert out4.value == event4.value
     assert progressed_to == event5.timestamp
 
-    :ok = Node.stop(@processor)
+    :ok = GenComputation.stop(@processor)
   end
 
   @spec is_delayed(Timex.Types.timestamp, Timex.Types.timestamp) :: boolean

@@ -11,19 +11,22 @@ defmodule TesslaServer.Computation.Lifted.Add do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   event1 = event_map[op1]
-  #   event2 = event_map[op2]
+  def process_event_map(event_map, timestamp, state) do
+    cache = Map.merge state.cache, event_map
+    [op1, op2] = state.operands
+    change1 = cache[op1]
+    change2 = cache[op2]
 
-  #   if event1 && event2 do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: timestamp, value: event1.value + event2.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
+    if change1 && change2 do
+      events = [%Event{
+        stream_id: state.stream_id, timestamp: timestamp,
+        value: change1.value + change2.value, type: output_event_type
+      }]
+      {:ok, events, cache}
+    else
+      {:progress, state.cache}
+    end
+  end
 
-  # def output_stream_type, do: :signal
+  def output_event_type, do: :change
 end

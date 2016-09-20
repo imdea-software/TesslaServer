@@ -1,11 +1,10 @@
-defmodule TesslaServer.Node.Aggregation.MrvTest do
+defmodule TesslaServer.Computation.Aggregation.MrvTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Aggregation.Mrv
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Aggregation.Mrv
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
@@ -17,13 +16,13 @@ defmodule TesslaServer.Node.Aggregation.MrvTest do
   @processor unique_integer
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     Mrv.start @processor, [@op1], %{default: @default}
     :ok
   end
 
   test "Should change value of signal on every event with new value" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
     assert(out0.value == @default)
 
@@ -36,7 +35,7 @@ defmodule TesslaServer.Node.Aggregation.MrvTest do
       value: 5, timestamp: to_timestamp(shift(timestamp, seconds: 3)), stream_id: @op1
     }
 
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
     assert_receive {_,
       {:update_input_stream, %{progressed_to: progressed_to, events: [out1, ^out0]}}
@@ -45,17 +44,17 @@ defmodule TesslaServer.Node.Aggregation.MrvTest do
     assert out1.timestamp == event1.timestamp
     assert out1.value == event1.value
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
     assert_receive {_,
       {:update_input_stream, %{progressed_to: progressed_to, events: [^out1, ^out0]}}
     }
     assert progressed_to == event2.timestamp
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
     assert_receive({_, {:update_input_stream, %{events: [out2, ^out1, ^out0]}}})
     assert out2.value == event3.value
     assert out2.timestamp == event3.timestamp
 
-    :ok = Node.stop(@processor)
+    :ok = GenComputation.stop(@processor)
   end
 end

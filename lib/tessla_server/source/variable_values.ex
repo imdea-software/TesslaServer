@@ -4,22 +4,20 @@ defmodule TesslaServer.Source.VariableValues do
   The variable has to be specified as a `String.t` in `options` under the key `variable`.
   """
 
-  alias TesslaServer.GenComputation
+  alias TesslaServer.{GenComputation, Registry}
 
   use GenComputation
 
   def init(state) do
     channel = "variable_values:" <> state.options[:variable]
-    :gproc.reg({:p, :l, channel})
+    Registry.subscribe_to channel
     super state
   end
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   event = hd(Map.values(event_map))
-  #   {value, _} =  event.value
-  #                 |> Integer.parse # somehow process based on needed type
-
-  #   processed_event = %Event{timestamp: timestamp, value: value, stream_id: state.stream_id}
-  #   {:ok, processed_event}
-  # end
+  def process_event_map(_, timestamp, state) do
+    event = %Event{
+      stream_id: state.stream_id, timestamp: timestamp
+    }
+    {:ok, event, state.cache}
+  end
 end

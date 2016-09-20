@@ -95,16 +95,48 @@ defmodule TesslaServer.GenComputation do
       @spec progress(State.t) :: State.t
       def progress(state) do
         {to_process, timestamp, updated_buffer} = InputBuffer.pop_head state.input_buffer
-        process_event_map to_process, timestamp, state
-        %{state | input_buffer: updated_buffer}
+        updated_state = %{state | input_buffer: updated_buffer}
+
+        do_progress to_process, timestamp, updated_state
+
       end
 
-      def process_event_map(nil, _, _), do: :wait
+      defp do_progress(nil, _, state), do: state
+      defp do_progress(to_process, timestamp, state) do
+        processed = process_event_map to_process, timestamp, state
+
+        updated_cache = case processed do
+          {:ok, new_events, cache} when is_list new_events ->
+            new_events
+            |> Enum.each(&propagate_output(&1, state))
+            cache
+          {:ok, new_event, cache} ->
+            propagate_output new_event, state
+            cache
+          {:progress, cache} ->
+            propagate_progress timestamp, state
+            cache
+          {:wait, cache} ->
+            cache
+        end
+
+        {to_process, timestamp, updated_buffer} = InputBuffer.pop_head state.input_buffer
+        updated_state = %{state | input_buffer: updated_buffer, cache: updated_cache}
+
+        do_progress to_process, timestamp, updated_state
+      end
+
+      @spec process_event_map(InputBuffer.event_map, Duration.t, State.t) ::
+        {:ok, [Event.t], %{}} | {:wait, %{}} | {:progress, %{}}
       def process_event_map(event_map, timestamp, state) do
-        IO.puts "#{state.stream_id}: #{inspect state}"
-        propagate_output %Event{stream_id: state.stream_id, timestamp: timestamp}, state
+        # event = %Event{
+        #   stream_id: state.stream_id, timestamp: timestamp, type: output_event_type
+        # }
+        # {:ok, event}
+        {:progress, state.cache}
       end
 
+      @spec propagate_output(Event.t, State.t) :: :ok
       def propagate_output(event, state) do
         Output.log_new_event state.stream_id, event
         Enum.each state.children, fn id ->
@@ -112,13 +144,24 @@ defmodule TesslaServer.GenComputation do
         end
       end
 
+      @spec propagate_progress(Duration.t, State.t) :: :ok
+      def propagate_progress(timestamp, state) do
+        progress_event = %Event{
+          type: :progress, stream_id: state.stream_id, timestamp: timestamp
+        }
+        propagate_output progress_event, state
+      end
+
+      @spec init_input_buffer([GenComputation.id]) :: InputBuffer.t
       def init_input_buffer(ids) do
         InputBuffer.new(ids)
       end
 
-      def output_stream_type, do: :events
+      @spec output_event_type :: Event.event_type
+      def output_event_type, do: :event
 
-      defoverridable init: 1, init_input_buffer: 1, output_stream_type: 0
+      defoverridable init: 1, init_input_buffer: 1, output_event_type: 0,
+      process_event_map: 3
     end
   end
 end

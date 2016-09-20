@@ -1,9 +1,9 @@
-defmodule TesslaServer.Node.Lifted.LtTest do
+defmodule TesslaServer.Computation.Lifted.LtTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Lifted.Lt
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Lifted.Lt
+  alias TesslaServer.{Event, GenComputation, Registry}
 
   import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
@@ -18,13 +18,13 @@ defmodule TesslaServer.Node.Lifted.LtTest do
 
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     Lt.start @processor, [@op1, @op2]
     :ok
   end
 
   test "Should compare latest Events and notify children" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, initial_output}})
     assert(initial_output.progressed_to == Time.zero)
     assert(initial_output.events == [])
@@ -36,27 +36,27 @@ defmodule TesslaServer.Node.Lifted.LtTest do
     event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_id: @op1}
     event4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_id: @op2}
 
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
     refute_receive(_)
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
     assert(progressed_to == event1.timestamp)
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(progressed_to == event2.timestamp)
     assert(hd(events).value == (event1.value < event2.value))
 
-    Node.send_event(@processor, event4)
+    GenComputation.send_event(@processor, event4)
 
     assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
     assert(progressed_to == event3.timestamp)
     assert(hd(events).value == ((event3.value < event4.value)))
 
-    :ok = Node.stop @processor
+    :ok = GenComputation.stop @processor
   end
 end

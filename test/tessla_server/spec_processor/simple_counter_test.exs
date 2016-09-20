@@ -1,9 +1,10 @@
-defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
+defmodule TesslaServer.SpecProcessor.SimpleCounterTest do
   use ExUnit.Case, async: false
 
-  alias TesslaServer.{GenComputation, Source, SpecProcessor, Event, Registry, Output}
+  alias TesslaServer.{GenComputation, Source, SpecProcessor, Event, Registry}
   import System, only: [unique_integer: 0]
-  require Logger
+
+  use Timex
 
   @over_one_second 1
   @call_id unique_integer
@@ -11,9 +12,7 @@ defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
   @test unique_integer
 
   setup do
-    Output.stop
-    Output.start %{@over_one_second => "i-t-e"}
-    :gproc.reg(Registry.gproc_tuple(@test))
+    Registry.register @test
     {:ok, spec} = File.read("test/examples/simple_counter/simple_counter.tessla")
     ids = SpecProcessor.process spec
 
@@ -30,14 +29,61 @@ defmodule TesslaServer.Node.SpecProcessor.SimpleCounterTest do
 
     GenComputation.add_child(@over_one_second, @test)
 
-    call1 = %Event{timestamp: {0, 1, 0}, stream_id: @call_id}
-    return1 = %Event{timestamp: {0, 1, 100}, stream_id: @return_id}
-    call2 = %Event{timestamp: {0, 1, 100}, stream_id: @call_id}
+    Source.start_evaluation
+
+    timestamp1 = Duration.from_milliseconds 1
+    timestamp2 = Duration.from_microseconds 1100
+
+    timestamp3 = Duration.from_milliseconds 3
+    timestamp4 = Duration.from_microseconds 4100
+
+    timestamp5 = Duration.from_milliseconds 6
+
+    call1 = %Event{timestamp: timestamp1, stream_id: @call_id}
+    return1 = %Event{timestamp: timestamp2, stream_id: @return_id}
+
+    call2 = %Event{timestamp: timestamp3, stream_id: @call_id}
+    return2 = %Event{timestamp: timestamp4, stream_id: @return_id}
+
+    call3 = %Event{timestamp: timestamp5, stream_id: @call_id}
 
     Source.distribute(call_channel, call1)
-    Source.distribute(call_channel, call2)
     Source.distribute(return_channel, return1)
+    assert_receive {_, {:process, progress0}}
+    assert progress0.timestamp == Duration.zero
+    assert progress0.type == :progress
 
-    assert_receive {_, {:process, event}}
+    assert_receive {_, {:process, progress1}}
+    assert progress1.timestamp == timestamp1
+    assert progress1.type == :progress
+
+    Source.distribute(call_channel, call2)
+
+    assert_receive {_, {:process, event1}}
+    assert event1.value
+    assert event1.type == :event
+    assert event1.timestamp == timestamp2
+
+    Source.distribute(return_channel, return2)
+
+    assert_receive {_, {:process, progress2}}
+    assert progress2.timestamp == Duration.add(timestamp1, Duration.from_milliseconds(1))
+    assert progress2.type == :progress
+
+    assert_receive {_, {:process, progress3}}
+    assert progress3.timestamp == timestamp3
+    assert progress3.type == :progress
+
+    Source.distribute(call_channel, call3)
+
+    assert_receive {_, {:process, progress4}}
+    assert progress4.type == :progress
+    assert progress4.timestamp == Duration.add(timestamp3, Duration.from_milliseconds(1))
+
+    assert_receive {_, {:process, event2}}
+    refute event2.value
+    assert event2.type == :event
+    assert event2.timestamp == timestamp4
+    refute_receive _
   end
 end

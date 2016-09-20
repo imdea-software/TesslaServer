@@ -7,12 +7,6 @@
       "function":"counter.c:inc"
     }
   },{
-    "id":6,
-    "nodetype":"TesslaServer.Source.VariableValues",
-    "options":{
-      "variable":"counter.c:count"
-    }
-  },{
     "id":5,
     "nodetype":"TesslaServer.Computation.Timing.InPast",
     "operands":[0],

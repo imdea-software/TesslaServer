@@ -6,8 +6,7 @@ defmodule TesslaServer do
 
   use Timex
 
-  alias TesslaServer.{SpecProcessor, Event, EventQueue, Output}
-  alias TesslaServer.Computation.Literal
+  alias TesslaServer.{SpecProcessor, Event, EventQueue, Output, Source}
 
   def main(args) do
     args
@@ -28,7 +27,7 @@ defmodule TesslaServer do
 
     SpecProcessor.process(spec)
 
-    Literal.start_literals
+    Source.start_evaluation
 
     EventQueue.start
 

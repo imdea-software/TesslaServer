@@ -1,11 +1,10 @@
-defmodule TesslaServer.Node.Lifted.SignalAbsTest do
+defmodule TesslaServer.Computation.Lifted.SignalAbsTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Lifted.SignalAbs
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Lifted.SignalAbs
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
@@ -16,13 +15,13 @@ defmodule TesslaServer.Node.Lifted.SignalAbsTest do
   doctest SignalAbs
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     SignalAbs.start @processor, [@op1]
     :ok
   end
 
   test "Should compute abs of latest Event and notify children" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{events: [], progressed_to: progressed_to, type: :signal}}})
     assert(progressed_to == Time.zero)
 
@@ -31,24 +30,24 @@ defmodule TesslaServer.Node.Lifted.SignalAbsTest do
     event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_id: @op1}
     event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_id: @op1}
 
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     assert(hd(events).value == abs event1.value)
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     assert(hd(events).value == abs event2.value)
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
 
     assert_receive({_, {:update_input_stream, %{events: events}}})
 
     assert(hd(events).value == abs event3.value)
 
-    :ok = Node.stop(@processor)
+    :ok = GenComputation.stop(@processor)
   end
 end

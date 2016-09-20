@@ -1,11 +1,10 @@
-defmodule TesslaServer.Node.Filter.OccurAnyTest do
+defmodule TesslaServer.Computation.Filter.OccurAnyTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Filter.OccurAny
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Filter.OccurAny
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
@@ -17,14 +16,14 @@ defmodule TesslaServer.Node.Filter.OccurAnyTest do
   doctest OccurAny
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     OccurAny.start @processor, [@op1, @op2]
     :ok
   end
 
   test "Should emit event whenever an event occurs on one input stream" do
 
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, initial_output}})
     assert(initial_output.progressed_to == Time.zero)
     assert(initial_output.events == [])
@@ -38,26 +37,26 @@ defmodule TesslaServer.Node.Filter.OccurAnyTest do
     event2_1 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 1)), stream_id: @op2}
     event2_2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), stream_id: @op2}
 
-    Node.send_event(@processor, event1_1)
+    GenComputation.send_event(@processor, event1_1)
     refute_receive _
 
-    Node.send_event(@processor, event1_2)
+    GenComputation.send_event(@processor, event1_2)
     refute_receive _
 
-    Node.send_event(@processor, event2_1)
+    GenComputation.send_event(@processor, event2_1)
     assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to1, events: [out2, out1]}}}
     assert out1.timestamp == event1_1.timestamp
     assert out2.timestamp == event2_1.timestamp
     assert progressed_to1 == event2_1.timestamp
 
-    Node.send_event(@processor, event2_2)
+    GenComputation.send_event(@processor, event2_2)
     refute_receive _
 
-    Node.send_event(@processor, event1_3)
+    GenComputation.send_event(@processor, event1_3)
     assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to2, events: [out3, ^out2, ^out1]}}}
     assert out3.timestamp == event2_2.timestamp
     assert progressed_to2 == event2_2.timestamp
 
-    :ok = Node.stop @processor
+    :ok = GenComputation.stop @processor
   end
 end

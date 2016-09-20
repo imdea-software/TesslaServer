@@ -94,6 +94,8 @@ defmodule TesslaServer.Computation.InputBuffer do
     |> Map.values
     |> Enum.map(&hd/1)
     |> Enum.map(&(&1.timestamp))
+    |> Enum.map(&Duration.to_erl/1)
     |> Enum.min
+    |> Duration.from_erl
   end
 end

@@ -5,18 +5,20 @@ defmodule TesslaServer.Source.FunctionReturns do
 
   """
 
-  alias TesslaServer.GenComputation
+  alias TesslaServer.{GenComputation, Registry}
 
   use GenComputation
 
   def init(state) do
     channel = "function_returns:" <> state.options[:function]
-    :gproc.reg({:p, :l, channel})
+    Registry.subscribe_to channel
     super state
   end
 
-  # def perform_computation(timestamp, _, state) do
-  #   processed_event = %Event{timestamp: timestamp,  stream_id: state.stream_id}
-  #   {:ok, processed_event}
-  # end
+  def process_event_map(_, timestamp, state) do
+    event = %Event{
+      stream_id: state.stream_id, timestamp: timestamp
+    }
+    {:ok, event, state.cache}
+  end
 end

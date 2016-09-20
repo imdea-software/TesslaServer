@@ -5,11 +5,15 @@ defmodule TesslaServer.Source do
   Distributes Events to subscribers via `gproc`
   """
 
+  alias TesslaServer.Registry
+
+  import Registry, only: [via_tuple: 2]
+
   def distribute(channel, event) when is_binary(channel) do
-    GenServer.cast(subscribe_tuple(channel), {:process, event})
+    GenServer.cast(via_tuple(channel, :channel), {:process, event})
   end
 
-  defp subscribe_tuple(channel) when is_binary(channel) do
-    {:via, :gproc, {:p, :l, channel}}
+  def start_evaluation do
+    GenServer.cast via_tuple(:source, :channel), :start_evaluation
   end
 end

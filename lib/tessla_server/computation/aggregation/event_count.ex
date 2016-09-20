@@ -10,10 +10,8 @@ defmodule TesslaServer.Computation.Aggregation.EventCount do
   alias TesslaServer.Computation.State
 
   use GenComputation
-  use Timex
 
   # def perform_computation(timestamp, _, state) do
-  #   last_event = History.latest_output state.history
   #   {:ok, %Event{
   #     stream_id: state.stream_id, timestamp: timestamp, value: last_event.value + 1
   #   }}

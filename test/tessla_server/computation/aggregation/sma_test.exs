@@ -1,11 +1,10 @@
-defmodule TesslaServer.Node.Aggregation.SmaTest do
+defmodule TesslaServer.Computation.Aggregation.SmaTest do
   use ExUnit.Case, async: true
   use Timex
 
-  alias TesslaServer.Node.Aggregation.Sma
-  alias TesslaServer.{Event, Node}
+  alias TesslaServer.Computation.Aggregation.Sma
+  alias TesslaServer.{Event, GenComputation, Registry}
 
-  import TesslaServer.Registry
   import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
@@ -17,13 +16,13 @@ defmodule TesslaServer.Node.Aggregation.SmaTest do
   @processor unique_integer
 
   setup do
-    :gproc.reg(gproc_tuple(@test))
+    Registry.register @test
     Sma.start @processor, [@op1], %{count: @count}
     :ok
   end
 
   test "should emit sma on every new event" do
-    Node.add_child(@processor, @test)
+    GenComputation.add_child(@processor, @test)
     assert_receive({_, {:update_input_stream, %{type: :events, events: []}}})
 
     timestamp = DateTime.now
@@ -37,30 +36,30 @@ defmodule TesslaServer.Node.Aggregation.SmaTest do
     event4 = %Event{
       value: 4, timestamp: to_timestamp(shift(timestamp, seconds: 4)), stream_id: @op1
     }
-    Node.send_event(@processor, event1)
+    GenComputation.send_event(@processor, event1)
 
     assert_receive({_, {:update_input_stream, %{events: [out0]}}})
     assert out0.timestamp == event1.timestamp
     assert out0.value == (event1.value / 1)
 
-    Node.send_event(@processor, event2)
+    GenComputation.send_event(@processor, event2)
 
     assert_receive({_, {:update_input_stream, %{events: [out1, ^out0]}}})
     assert out1.timestamp == event2.timestamp
     assert out1.value == ((event1.value + event2.value) / 2)
 
-    Node.send_event(@processor, event3)
+    GenComputation.send_event(@processor, event3)
 
     assert_receive({_, {:update_input_stream, %{events: [out2, ^out1, ^out0]}}})
     assert out2.timestamp == event3.timestamp
     assert out2.value == ((event1.value + event2.value + event3.value) / 3)
 
-    Node.send_event(@processor, event4)
+    GenComputation.send_event(@processor, event4)
 
     assert_receive({_, {:update_input_stream, %{events: [out3, ^out2, ^out1, ^out0]}}})
     assert out3.timestamp == event4.timestamp
     assert out3.value == ((event2.value + event3.value + event4.value) / 3)
 
-    :ok = Node.stop(@processor)
+    :ok = GenComputation.stop(@processor)
   end
 end

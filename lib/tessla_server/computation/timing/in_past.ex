@@ -7,53 +7,71 @@ defmodule TesslaServer.Computation.Timing.InPast do
   where an event should have happened in past in microseconds.
   """
 
-  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.{GenComputation, Event, Registry}
 
   use GenComputation
   use Timex
 
-  # def process_events(timestamp, event_map, state) do
-  #   new_input = event_map[hd(state.operands)]
-  #   last_input =
-  #     History.latest_event_of_input_at(state.history, hd(state.operands), Time.sub(new_input.timestamp, {0, 0, 1}))
-  #   last_input = last_input || new_input
-  #   last_output = History.latest_output(state.history)
+  def init(state) do
+    Registry.subscribe_to :source
+    super state
+  end
 
-  #   change_timestamp = Time.add(last_input.timestamp, Time.from(state.options[:amount], :microseconds))
+  def handle_cast(:start_evaluation, state) do
+    first_event = false_event(Duration.zero, state.stream_id)
 
-  #   {:ok, new_history} = cond do
-  #     last_output.value && change_timestamp < new_input.timestamp ->
-  #       history = insert_false(state.history, change_timestamp, state.stream_id)
-  #       History.update_output(history, true_event(timestamp, state.stream_id))
-  #     last_output.value && change_timestamp >= new_input.timestamp ->
-  #       History.progress_output(state.history, timestamp)
-  #     !last_output.value ->
-  #       History.update_output(state.history, true_event(timestamp, state.stream_id))
-  #   end
-  #   %{state | history: new_history}
-  # end
+    Enum.each state.children, fn child ->
+      GenComputation.send_event child, first_event
+    end
+    {:noreply, state}
+  end
 
-  # def init_output(state) do
-  #   default_value = false
-  #   default_event = %Event{stream_id: state.stream_id, value: default_value}
+  def process_event_map(event_map, timestamp, state) do
+    # TODO handle progress events
+    last_event = state.cache[:last_event]
+    new_event = event_map[hd(state.operands)]
+    updated_cache = %{last_event: new_event}
 
-  #   {:ok, stream} = EventStream.add_event(state.history.output, default_event)
-  #   %{stream | type: :signal}
-  # end
+    produced_changes = produce_changes last_event, new_event, state
 
-  # defp insert_false(history, timestamp, id) do
-  #   {:ok, history} = History.update_output(history, false_event(timestamp, id))
-  #   history
-  # end
+    if produced_changes do
+      {:ok, produced_changes, updated_cache}
+    else
+      {:progress, updated_cache}
+    end
+  end
 
-  # defp false_event(timestamp, id) do
-  #     %Event{
-  #       value: false, timestamp: timestamp, stream_id: id
-  #     }
-  # end
-  # defp true_event(timestamp, id) do
-  #     %Event{
-  #       value: true, timestamp: timestamp, stream_id: id
-  #     }
-  # end
+  @spec produce_changes(Event.t, Event.t, State.t) :: [Event.t]
+  def produce_changes(last_event, new_event, state)
+  def produce_changes(nil, new_event, state) do
+    [true_event(new_event.timestamp, state.stream_id)]
+  end
+  def produce_changes(last_event, new_event, state) do
+    false_timestamp =
+      Duration.add(last_event.timestamp, Duration.from_microseconds(state.options[:amount]))
+    changes_needed = Duration.to_erl(false_timestamp) < Duration.to_erl(new_event.timestamp)
+    if changes_needed do
+      [
+        false_event(false_timestamp, state.stream_id),
+        true_event(new_event.timestamp, state.stream_id)
+      ]
+    else
+      nil
+    end
+  end
+
+  def output_event_type, do: :change
+
+
+  defp false_event(timestamp, id) do
+    %Event{
+      value: false, timestamp: timestamp, stream_id: id, type: output_event_type
+    }
+  end
+
+  defp true_event(timestamp, id) do
+    %Event{
+      value: true, timestamp: timestamp, stream_id: id, type: output_event_type
+    }
+  end
 end
