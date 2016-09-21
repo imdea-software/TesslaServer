@@ -13,8 +13,8 @@ defmodule TesslaServer.Output do
     Agent.start(fn -> map end, name: __MODULE__)
   end
 
-  @spec stop() :: {:ok, pid}
-  def stop() do
+  @spec stop :: {:ok, pid}
+  def stop do
     Agent.stop __MODULE__
   end
 

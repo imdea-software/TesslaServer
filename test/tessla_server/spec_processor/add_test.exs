@@ -27,6 +27,7 @@ defmodule TesslaServer.SpecProcessor.AddTest do
     Source.start_evaluation
 
     assert_receive {_, {:process, event}}
+    assert event.type == :change
     assert event.timestamp == :literal
     assert event.value == 8
   end

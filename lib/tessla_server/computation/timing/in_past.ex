@@ -1,10 +1,11 @@
 defmodule TesslaServer.Computation.Timing.InPast do
   @moduledoc """
-  Implements a `Computation` that emits a Signal holding the value true whenever an event happened on the input in a specified
-  amount of time in the past.
-  To do so the `state.operands` list has to be initialized with one id representing the id of
-  the Event Stream which should be monitored and `state.options` has to hold the key `amount` specifying the timeslot
-  where an event should have happened in past in microseconds.
+  Implements a `Computation` that emits a Signal holding the value true whenever
+  an event happened on the input in a specified amount of time in the past.
+  To do so the `state.operands` list has to be initialized with one id representing
+  the id of the Event Stream which should be monitored and `state.options` has to
+  hold the key `amount` specifying the timeslot where an event should have happened
+  in past in microseconds.
   """
 
   alias TesslaServer.{GenComputation, Event, Registry}

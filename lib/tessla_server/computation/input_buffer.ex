@@ -10,7 +10,8 @@ defmodule TesslaServer.Computation.InputBuffer do
   alias __MODULE__
 
   defstruct input_queues: %{}
-  @type t :: %__MODULE__{input_queues: %{GenComputation.id => Event.t}}
+  @type t :: %__MODULE__{input_queues: queue}
+  @typep queue :: %{GenComputation.id => [Event.t]}
   @type event_map :: %{GenComputation.id => Event.t}
 
   @doc """
@@ -58,15 +59,15 @@ defmodule TesslaServer.Computation.InputBuffer do
   """
   @spec pop_head(InputBuffer.t) :: {event_map | nil, Duration.t | nil, InputBuffer.t}
   def pop_head(buffer) do
-    unless can_progress? buffer do
-      {nil, nil, buffer}
-    else
+    if can_progress? buffer do
       minimal_timestamp = minimal_timestamp buffer
       pop_head_at buffer, minimal_timestamp
+    else
+      {nil, nil, buffer}
     end
   end
 
-  @spec pop_head_at(InputBuffer.t, Duration.t) :: {event_map, InputBuffer.t}
+  @spec pop_head_at(InputBuffer.t, Duration.t | :literal) :: {event_map, InputBuffer.t}
   defp pop_head_at(buffer, timestamp) do
     partitioned = buffer.input_queues
                   |> Enum.map(&pop_event_at_timestamp(&1, timestamp))
@@ -78,24 +79,37 @@ defmodule TesslaServer.Computation.InputBuffer do
     {to_process, timestamp, updated_buffer}
   end
 
+  @spec pop_event_at_timestamp({GenComputation.id, [Event.t]}, Duration.t | :literal) ::
+  {event_map, queue}
+  defp pop_event_at_timestamp({stream_id, [head]}, :literal) do
+    {%{stream_id => head}, %{stream_id => []}}
+  end
   defp pop_event_at_timestamp({stream_id, queue = [head | tail]}, timestamp) do
-    # TODO handle literals
-    if head.timestamp == timestamp do
-      {%{stream_id => head}, %{stream_id => tail}}
-    else
-      {%{}, %{stream_id => queue}}
+    cond do
+      head.timestamp == :literal ->
+        {%{stream_id => head}, %{stream_id => queue}}
+      head.timestamp == timestamp ->
+        {%{stream_id => head}, %{stream_id => tail}}
+      true ->
+        {%{}, %{stream_id => queue}}
     end
   end
 
-  @spec minimal_timestamp(InputBuffer.t) :: Duration.t
+  @spec minimal_timestamp(InputBuffer.t) :: Duration.t | :literal
   defp minimal_timestamp(buffer) do
-    # TODO handle literals
-    buffer.input_queues
+    timestamps = buffer.input_queues
     |> Map.values
     |> Enum.map(&hd/1)
     |> Enum.map(&(&1.timestamp))
-    |> Enum.map(&Duration.to_erl/1)
-    |> Enum.min
-    |> Duration.from_erl
+    |> Enum.reject(&(&1 == :literal))
+
+    if Enum.empty? timestamps do
+      :literal
+    else
+      timestamps
+      |> Enum.map(&Duration.to_erl/1)
+      |> Enum.min
+      |> Duration.from_erl
+    end
   end
 end
