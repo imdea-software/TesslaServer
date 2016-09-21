@@ -13,23 +13,24 @@ defmodule TesslaServer.Computation.Aggregation.SignalMaximum do
   use GenComputation
   use Timex
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   op1 = hd(state.operands)
-  #   new_event = event_map[op1]
-  #   current_event = EventStream.event_at(state.history.output, timestamp)
-  #   cond do
-  #     is_nil(current_event) ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #       }}
-  #     new_event.value > current_event.value ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #       }}
-  #     true ->
-  #       :wait
-  #   end
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
 
-  # def output_stream_type, do: :signal
+    case new_event.type do
+      :change ->
+        old_max = Map.get state.cache, :maximum, (new_event.value - 1)
+        new_max = Enum.max [new_event.value, old_max]
+
+        if new_max > old_max do
+          {:ok, %Event{
+            stream_id: state.stream_id, timestamp: timestamp, value: new_max, type: output_event_type
+          }, %{maximum: new_max}}
+        else
+          {:progress, state.cache}
+        end
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def output_event_type, do: :change
 end

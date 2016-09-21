@@ -8,29 +8,31 @@ defmodule TesslaServer.Computation.Aggregation.SignalMinimum do
   which should hold the default value.
   """
 
+
   alias TesslaServer.{GenComputation, Event}
   alias TesslaServer.Computation.State
 
   use GenComputation
   use Timex
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   op1 = hd(state.operands)
-  #   new_event = event_map[op1]
-  #   current_event = EventStream.event_at(state.history.output, timestamp)
-  #   cond do
-  #     is_nil(current_event) ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #       }}
-  #     new_event.value < current_event.value ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #       }}
-  #     true ->
-  #       :wait
-  #   end
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
 
-  # def output_stream_type, do: :signal
+    case new_event.type do
+      :change ->
+        old_min = Map.get state.cache, :minimum, (new_event.value + 1)
+        new_min = Enum.min [new_event.value, old_min]
+
+        if new_min < old_min do
+          {:ok, %Event{
+            stream_id: state.stream_id, timestamp: timestamp, value: new_min, type: output_event_type
+          }, %{minimum: new_min}}
+        else
+          {:progress, state.cache}
+        end
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def output_event_type, do: :change
 end
