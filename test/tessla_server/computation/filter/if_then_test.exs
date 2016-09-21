@@ -33,7 +33,7 @@ defmodule TesslaServer.Computation.Filter.IfThenTest do
     timestamp6 = Duration.add timestamp0, Duration.from_seconds 6
 
     sample1 = %Event{timestamp: timestamp1, stream_id: @op1}
-    sample3 = %Event{timestamp: timestamp3, stream_id: @op1}
+    sample3 = %Event{timestamp: timestamp3, stream_id: @op1, type: :progress}
     sample4 = %Event{timestamp: timestamp4, stream_id: @op1}
     sample6 = %Event{timestamp: timestamp6, stream_id: @op1}
 
@@ -66,10 +66,9 @@ defmodule TesslaServer.Computation.Filter.IfThenTest do
     assert progress2.timestamp == timestamp2
 
     GenComputation.send_event @processor, change4
-    assert_receive({_, {:process, out3}})
-    assert out3.type == :event
-    assert out3.value == change2.value
-    assert out3.timestamp == timestamp3
+    assert_receive({_, {:process, progress3}})
+    assert progress3.type == :progress
+    assert progress3.timestamp == timestamp3
 
     assert_receive({_, {:process, out4}})
     assert out4.type == :event
