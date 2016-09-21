@@ -15,4 +15,5 @@ defmodule TesslaServer.Computation.State do
     options: %{},
     cache: %{}
   }
+  @type cache :: %{}
 end

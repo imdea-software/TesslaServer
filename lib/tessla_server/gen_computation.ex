@@ -9,11 +9,17 @@ defmodule TesslaServer.GenComputation do
   alias TesslaServer.Event
   alias TesslaServer.Computation.{State, InputBuffer}
 
-  import TesslaServer.Registry
+  import TesslaServer.Registry, only: [via_tuple: 1]
 
   @type id :: integer | nil
+  @typep events :: Event.t | [Event.t]
 
-  @callback init_input_buffer([id]) :: InputBuffer.t
+  @callback process_event_map(InputBuffer.event_map, Duration.t, State.t) ::
+        {:ok, events, State.cache} | {:wait, State.cache} | {:progress, State.cache}
+  @callback output_event_type :: Event.event_type
+  @callback init_input_buffer([GenComputation.id]) :: InputBuffer.t
+  @callback init_cache(State.t) :: State.cache
+  # @callback init(State.t) :: {:ok, State.t}
 
   @doc """
   Sends a new `Event` to the `Computation` that is registered with `id` to process it
@@ -67,7 +73,8 @@ defmodule TesslaServer.GenComputation do
 
       def init(state) do
         input_buffer = init_input_buffer(state.operands)
-        initialized_state = %{state | input_buffer: input_buffer}
+        cache = init_cache state
+        initialized_state = %{state | input_buffer: input_buffer, cache: cache}
         {:ok, initialized_state}
       end
 
@@ -126,8 +133,6 @@ defmodule TesslaServer.GenComputation do
         do_progress to_process, timestamp, updated_state
       end
 
-      @spec process_event_map(InputBuffer.event_map, Duration.t, State.t) ::
-        {:ok, [Event.t], %{}} | {:wait, %{}} | {:progress, %{}}
       def process_event_map(event_map, timestamp, state) do
         # event = %Event{
         #   stream_id: state.stream_id, timestamp: timestamp, type: output_event_type
@@ -152,16 +157,16 @@ defmodule TesslaServer.GenComputation do
         propagate_output progress_event, state
       end
 
-      @spec init_input_buffer([GenComputation.id]) :: InputBuffer.t
       def init_input_buffer(ids) do
         InputBuffer.new(ids)
       end
 
-      @spec output_event_type :: Event.event_type
+      def init_cache(state), do: %{}
+
       def output_event_type, do: :event
 
-      defoverridable init: 1, init_input_buffer: 1, output_event_type: 0,
-      process_event_map: 3
+      defoverridable init: 1, init_input_buffer: 1, init_cache: 1,
+      output_event_type: 0, process_event_map: 3
     end
   end
 end

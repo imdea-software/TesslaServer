@@ -28,37 +28,49 @@ defmodule TesslaServer.Computation.Timing.InPast do
   end
 
   def process_event_map(event_map, timestamp, state) do
-    # TODO handle progress events
-    last_event = state.cache[:last_event]
+    next_false = state.cache[:next_false]
     new_event = event_map[hd(state.operands)]
-    updated_cache = %{last_event: new_event}
 
-    produced_changes = produce_changes last_event, new_event, state
+    false_needed = !!next_false && Duration.to_erl(next_false) < Duration.to_erl(timestamp)
+    true_needed = new_event.type == :event && (!next_false || false_needed)
 
-    if produced_changes do
-      {:ok, produced_changes, updated_cache}
+    {produced_changes, cache} = produce_changes false_needed, true_needed, next_false, timestamp, state
+
+    updated_cache = if new_event.type == :event && !false_needed do
+      %{next_false: Duration.add(new_event.timestamp, Duration.from_microseconds(state.options[:amount]))}
     else
+      cache
+    end
+
+    if Enum.empty? produced_changes do
       {:progress, updated_cache}
+    else
+      {:ok, produced_changes, updated_cache}
     end
   end
 
-  @spec produce_changes(Event.t, Event.t, State.t) :: [Event.t]
-  def produce_changes(last_event, new_event, state)
-  def produce_changes(nil, new_event, state) do
-    [true_event(new_event.timestamp, state.stream_id)]
+  @spec produce_changes(boolean, boolean, Duration.t, Duration.t, State.t) :: {[Event.t], %{}}
+  def produce_changes(false_needed, true_needed, false_timestamp, true_timestamp, state)
+  def produce_changes(true, true, false_timestamp, true_timestamp, state = %{stream_id: id}) do
+    # new input event, old progress was within amount, generate false and true, set cache to next timestamp
+    {[
+      false_event(false_timestamp, id), true_event(true_timestamp, id)
+    ], %{next_false: Duration.add(true_timestamp, Duration.from_microseconds(state.options[:amount]))}}
   end
-  def produce_changes(last_event, new_event, state) do
-    false_timestamp =
-      Duration.add(last_event.timestamp, Duration.from_microseconds(state.options[:amount]))
-    changes_needed = Duration.to_erl(false_timestamp) < Duration.to_erl(new_event.timestamp)
-    if changes_needed do
-      [
-        false_event(false_timestamp, state.stream_id),
-        true_event(new_event.timestamp, state.stream_id)
-      ]
-    else
-      nil
-    end
+  def produce_changes(false, true, _, true_timestamp, state = %{stream_id: id}) do
+    # new input event, old progress was already out of amount, generate new true and set cache
+    {[
+      true_event(true_timestamp, id)
+    ], %{next_false: Duration.add(true_timestamp, Duration.from_microseconds(state.options[:amount]))}}
+  end
+  def produce_changes(true, false, false_timestamp, progress, %{stream_id: id}) do
+    # Triggered from progress, new progress is after last event plus amount, insert false, clear cache
+    {[
+      false_event(false_timestamp, id), progress_event(progress, id)
+    ], %{}}
+  end
+  def produce_changes(false, false, _, _, %{cache: cache}) do
+    {[], cache}
   end
 
   def output_event_type, do: :change
@@ -73,6 +85,12 @@ defmodule TesslaServer.Computation.Timing.InPast do
   defp true_event(timestamp, id) do
     %Event{
       value: true, timestamp: timestamp, stream_id: id, type: output_event_type
+    }
+  end
+
+  defp progress_event(timestamp, id) do
+    %Event{
+      timestamp: timestamp, stream_id: id, type: :progress
     }
   end
 end

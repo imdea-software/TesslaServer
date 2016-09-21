@@ -6,24 +6,43 @@ defmodule TesslaServer.Computation.Aggregation.EventCount do
   the Event Stream which events should be counted.
   """
 
-  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.{GenComputation, Event, Registry}
   alias TesslaServer.Computation.State
 
   use GenComputation
 
-  # def perform_computation(timestamp, _, state) do
-  #   {:ok, %Event{
-  #     stream_id: state.stream_id, timestamp: timestamp, value: last_event.value + 1
-  #   }}
-  # end
+  def init(state) do
+    Registry.subscribe_to :source
+    super state
+  end
 
-  # def init_output(state) do
-  #   default_value = 0
-  #   default_event = %Event{stream_id: state.stream_id, value: default_value}
+  def handle_cast(:start_evaluation, state) do
+    first_event = %Event{
+      stream_id: state.stream_id, value: 0, type: output_event_type
+    }
 
-  #   {:ok, history} = History.update_output(state.history, default_event)
-  #   %{history.output | type: output_stream_type}
-  # end
+    Enum.each state.children, fn child ->
+      GenComputation.send_event child, first_event
+    end
+    {:noreply, state}
+  end
 
-  # def output_stream_type, do: :signal
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
+
+    case new_event.type do
+      :event ->
+        count = Map.get state.cache, :count
+        {:ok, %Event{
+          stream_id: state.stream_id, timestamp: timestamp, value: count + 1, type: output_event_type
+        }, %{count: count + 1}}
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def init_cache(_) do
+    %{count: 0}
+  end
+
+  def output_event_type, do: :change
 end

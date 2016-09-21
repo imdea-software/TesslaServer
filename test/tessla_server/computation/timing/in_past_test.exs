@@ -32,14 +32,18 @@ defmodule TesslaServer.Computation.Timing.InPastTest do
     assert change0.type == :change
 
     timestamp1 = Duration.now
-    timestamp2 = Duration.add(timestamp1, Duration.from_microseconds(100000))
-    timestamp3 = Duration.add(timestamp2, Duration.from_microseconds(100001))
+    timestamp2 = Duration.add(timestamp1, Duration.from_microseconds(@amount))
+    timestamp3 = Duration.add(timestamp2, Duration.from_microseconds(@amount + 1))
+    timestamp4 = Duration.add(timestamp3, Duration.from_microseconds(@amount + 1))
     event1 = %Event{timestamp: timestamp1, stream_id: @op1}
     event2 = %Event{
       timestamp: timestamp2, stream_id: @op1
     }
     event3 = %Event{
       timestamp: timestamp3, stream_id: @op1
+    }
+    event4 = %Event{
+      timestamp: timestamp4, stream_id: @op1, type: :progress
     }
 
     GenComputation.send_event(@processor, event1)
@@ -53,7 +57,6 @@ defmodule TesslaServer.Computation.Timing.InPastTest do
 
     assert_receive({_, {:process, change2}})
     assert change2.timestamp == timestamp2
-    assert change2.value == :nothing
     assert change2.type == :progress
 
     GenComputation.send_event(@processor, event3)
@@ -68,6 +71,16 @@ defmodule TesslaServer.Computation.Timing.InPastTest do
     assert change4.value
     assert change4.type == :change
 
+    GenComputation.send_event(@processor, event4)
+
+    assert_receive({_, {:process, change5}})
+    assert_receive({_, {:process, change6}})
+    assert change5.timestamp == Duration.add(timestamp3, Duration.from_microseconds(@amount))
+    refute change5.value
+    assert change5.type == :change
+
+    assert change6.timestamp == timestamp4
+    assert change6.type == :progress
     :ok = GenComputation.stop(@processor)
   end
 end

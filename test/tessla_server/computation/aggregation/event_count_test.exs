@@ -3,7 +3,7 @@ defmodule TesslaServer.Computation.Aggregation.EventCountTest do
   use Timex
 
   alias TesslaServer.Computation.Aggregation.EventCount
-  alias TesslaServer.{Event, GenComputation, Registry}
+  alias TesslaServer.{Event, GenComputation, Registry, Source}
 
   import System, only: [unique_integer: 0]
 
@@ -21,27 +21,43 @@ defmodule TesslaServer.Computation.Aggregation.EventCountTest do
 
   test "Should increment eventcount on every new event" do
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
-    assert(out0.value == 0)
 
-    timestamp = Duration.now
+    Source.start_evaluation
 
-    event1 = %Event{timestamp: timestamp, stream_id: @op1}
-    event2 = %Event{
-      timestamp: Duration.add(timestamp, Duration.from_seconds(2)), stream_id: @op1
+    assert_receive({_, {:process, change0}})
+    assert(change0.value == 0)
+
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(3))
+
+    event1 = %Event{timestamp: timestamp1, stream_id: @op1}
+    progress2 = %Event{
+      timestamp: timestamp2, stream_id: @op1, type: :progress
+    }
+    event3 = %Event{
+      timestamp: timestamp3, stream_id: @op1
     }
 
     GenComputation.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: [out1, ^out0]}}})
-    assert out1.timestamp == event1.timestamp
-    assert out1.value == 1
+    assert_receive({_, {:process, change1}})
+    assert change1.timestamp == timestamp1
+    assert change1.value == 1
+    assert change1.type == :change
 
-    GenComputation.send_event(@processor, event2)
+    GenComputation.send_event(@processor, progress2)
 
-    assert_receive({_, {:update_input_stream, %{events: [out2, ^out1, ^out0]}}})
-    assert out2.value == 2
-    assert out2.timestamp == event2.timestamp
+    assert_receive({_, {:process, change2}})
+    assert change2.type == :progress
+    assert change2.timestamp == timestamp2
+
+    GenComputation.send_event(@processor, event3)
+
+    assert_receive({_, {:process, change3}})
+    assert change3.timestamp == timestamp3
+    assert change3.value == 2
+    assert change3.type == :change
 
     :ok = GenComputation.stop(@processor)
   end

@@ -8,32 +8,49 @@ defmodule TesslaServer.Computation.Aggregation.EventMinimum do
   which should hold the default value.
   """
 
-  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.{GenComputation, Event, Registry}
   alias TesslaServer.Computation.State
 
   use GenComputation
-  use Timex
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   op1 = hd(state.operands)
-  #   new_event = event_map[op1]
-  #   current_event = EventStream.event_at(state.history.output, timestamp)
-  #   if new_event.value < current_event.value do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
+  def init(state) do
+    Registry.subscribe_to :source
+    super state
+  end
 
-  # def init_output(state) do
-  #   default_value = state.options[:default]
-  #   default_event = %Event{stream_id: state.stream_id, value: default_value}
+  def handle_cast(:start_evaluation, state) do
+    first_event = %Event{
+      stream_id: state.stream_id, value: state.cache[:minimum], type: output_event_type
+    }
 
-  #   {:ok, history} = History.update_output(state.history, default_event)
-  #   %{history.output | type: output_stream_type}
-  # end
+    Enum.each state.children, fn child ->
+      GenComputation.send_event child, first_event
+    end
+    {:noreply, state}
+  end
 
-  # def output_stream_type, do: :signal
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
+
+    case new_event.type do
+      :event ->
+        old_min = Map.get state.cache, :minimum
+        new_min = Enum.min [new_event.value, old_min]
+
+        if new_min < old_min do
+          {:ok, %Event{
+            stream_id: state.stream_id, timestamp: timestamp, value: new_min, type: output_event_type
+          }, %{minimum: new_min}}
+        else
+          {:progress, state.cache}
+        end
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def init_cache(state) do
+    %{minimum: state.options[:default]}
+  end
+
+  def output_event_type, do: :change
 end

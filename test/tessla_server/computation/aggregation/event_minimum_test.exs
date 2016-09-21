@@ -3,9 +3,8 @@ defmodule TesslaServer.Computation.Aggregation.EventMinimumTest do
   use Timex
 
   alias TesslaServer.Computation.Aggregation.EventMinimum
-  alias TesslaServer.{Event, GenComputation, Registry}
+  alias TesslaServer.{Event, GenComputation, Registry, Source}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer
@@ -24,78 +23,54 @@ defmodule TesslaServer.Computation.Aggregation.EventMinimumTest do
 
   test "Should take value of new event if it is smaller than previous minimum" do
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: events, type: :signal}}})
-    assert(hd(events).value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 3, stream_id: @op1}
+
+    Source.start_evaluation
+    assert_receive({_, {:process, change0}})
+    assert change0.timestamp == Duration.zero
+    assert change0.value == @default_value
+    assert change0.type == :change
+
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp4 = Duration.add(timestamp1, Duration.from_seconds(3))
+
+    event1 = %Event{timestamp: timestamp1, value: 6, stream_id: @op1}
+    event2 = %Event{
+      timestamp: timestamp2, value: 4, stream_id: @op1
+    }
+    event3 = %Event{
+      timestamp: timestamp3, value: 4, stream_id: @op1
+    }
+    event4 = %Event{
+      timestamp: timestamp4, stream_id: @op1, type: :progress
+    }
+
 
     GenComputation.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-
-    assert(hd(events).value == event1.value)
-
-    GenComputation.send_event(@processor, event2)
-
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-    assert(hd(events).value == event2.value)
-
-    :ok = GenComputation.stop(@processor)
-  end
-
-  test "Should keep previous value if new value is bigger" do
-    GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: events, type: :signal}}})
-    assert(hd(events).value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 4, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_id: @op1}
-
-    GenComputation.send_event(@processor, event1)
-
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-
-    last_event = hd(events)
-    assert(last_event.value == event1.value)
+    assert_receive({_, {:process, change1}})
+    assert change1.timestamp == timestamp1
+    assert change1.type == :progress
 
     GenComputation.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-
-    new_event = hd(events)
-    assert(new_event == last_event)
-    assert(progressed_to == event2.timestamp)
-
-    :ok = GenComputation.stop(@processor)
-  end
-
-  test "Should keep default value until smaller value occurs" do
-    GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: events, type: :signal}}})
-
-    first_event = hd(events)
-    assert(first_event.value == @default_value)
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 6, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 5, stream_id: @op1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 3, stream_id: @op1}
-
-    GenComputation.send_event(@processor, event1)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    assert(hd(events) == first_event)
-    assert(progressed_to == event1.timestamp)
-
-    GenComputation.send_event(@processor, event2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    assert(hd(events) == first_event)
-    assert(progressed_to == event2.timestamp)
+    assert_receive({_, {:process, change2}})
+    assert change2.timestamp == timestamp2
+    assert change2.value == event2.value
+    assert change2.type == :change
 
     GenComputation.send_event(@processor, event3)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: events}}})
-    refute(hd(events) == first_event)
-    assert(progressed_to == event3.timestamp)
-    assert(hd(events).value == event3.value)
+
+    assert_receive({_, {:process, change3}})
+    assert change3.timestamp == timestamp3
+    assert change3.type == :progress
+
+    GenComputation.send_event(@processor, event4)
+
+    assert_receive({_, {:process, change4}})
+    assert change4.timestamp == timestamp4
+    assert change3.type == :progress
 
     :ok = GenComputation.stop(@processor)
   end

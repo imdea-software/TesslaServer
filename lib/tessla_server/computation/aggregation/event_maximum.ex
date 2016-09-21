@@ -7,34 +7,49 @@ defmodule TesslaServer.Computation.Aggregation.EventMaximum do
   the stream that should be aggregated over and the `options` map has to have a key `default`
   which should hold the default value.
   """
-
-  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.{GenComputation, Event, Registry}
   alias TesslaServer.Computation.State
 
   use GenComputation
-  use Timex
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   op1 = hd(state.operands)
-  #   new_event = event_map[op1]
-  #   current_event = EventStream.event_at(state.history.output, timestamp)
-  #   if new_event.value > current_event.value do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: new_event.timestamp, value: new_event.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
+  def init(state) do
+    Registry.subscribe_to :source
+    super state
+  end
 
-  # def init_output(state) do
-  #   state.history
-  #   # default_value = state.options[:default]
-  #   # default_event = %Event{stream_id: state.stream_id, value: default_value}
+  def handle_cast(:start_evaluation, state) do
+    first_event = %Event{
+      stream_id: state.stream_id, value: state.cache[:maximum], type: output_event_type
+    }
 
-  #   # {:ok, history} = History.update_output(state.history, default_event)
-  #   # %{history.output | type: output_stream_type}
-  # end
+    Enum.each state.children, fn child ->
+      GenComputation.send_event child, first_event
+    end
+    {:noreply, state}
+  end
 
-  # def output_stream_type, do: :signal
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
+
+    case new_event.type do
+      :event ->
+        old_max = Map.get state.cache, :maximum
+        new_max = Enum.max [new_event.value, old_max]
+
+        if new_max > old_max do
+          {:ok, %Event{
+            stream_id: state.stream_id, timestamp: timestamp, value: new_max, type: output_event_type
+          }, %{maximum: new_max}}
+        else
+          {:progress, state.cache}
+        end
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def init_cache(state) do
+    %{maximum: state.options[:default]}
+  end
+
+  def output_event_type, do: :change
 end
