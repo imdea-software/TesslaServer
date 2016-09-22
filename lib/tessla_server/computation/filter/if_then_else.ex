@@ -13,36 +13,40 @@ defmodule TesslaServer.Computation.Filter.IfThenElse do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2, op3] = state.operands
-  #   condition_signal = event_map[op1]
-  #   true_signal = event_map[op2]
-  #   false_signal = event_map[op3]
+  def process_event_map(event_map, timestamp, state) do
+    [op1, op2, op3] = state.operands
+    cache = state.cache
 
-  #   cond_changed = (condition_signal.timestamp == timestamp)
-  #   true_changed = (true_signal.timestamp == timestamp)
-  #   false_changed = (false_signal.timestamp == timestamp)
+    filter_change = event_map[op1]
+    if_change = event_map[op2]
+    else_change = event_map[op3]
 
-  #   new_value = if condition_signal.value, do: true_signal.value, else: false_signal.value
+    filter_value = get_value_for :filter_value, filter_change, cache
+    if_value = get_value_for :if_value, if_change, cache
+    else_value = get_value_for :else_value, else_change, cache
 
-  #   cond do
-  #     cond_changed ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id,
-  #         timestamp: timestamp,
-  #         value: new_value
-  #       }}
-  #     true_changed and condition_signal.value ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: timestamp, value: new_value
-  #       }}
-  #     false_changed and !condition_signal.value ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: timestamp, value: new_value
-  #       }}
-  #     true -> :wait
-  #   end
-  # end
+    last_value = cache[:last_value]
 
-  # def output_stream_type, do: :signal
+    new_value = if filter_value, do: if_value, else: else_value
+
+    new_cache = %{
+      filter_value: filter_value, if_value: if_value,
+      else_value: else_value, last_value: new_value
+    }
+
+    if new_value == last_value do
+      {:progress, new_cache}
+    else
+      {:ok, %Event{
+        stream_id: state.stream_id, timestamp: timestamp, value: new_value, type: output_event_type
+      }, new_cache}
+    end
+  end
+
+  defp get_value_for(operator, nil, cache), do: cache[operator]
+  defp get_value_for(operator, %{type: :progress}, cache), do: cache[operator]
+  defp get_value_for(_, change, _), do: change.value
+
+
+  def output_event_type, do: :change
 end
