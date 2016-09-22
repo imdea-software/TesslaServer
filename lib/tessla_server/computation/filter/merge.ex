@@ -13,16 +13,18 @@ defmodule TesslaServer.Computation.Filter.Merge do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   event1 = event_map[op1]
-  #   event2 = event_map[op2]
-  #   latest_event = [event1, event2]
-  #               |> Enum.filter(&(!is_nil(&1)))
-  #               |> Enum.max_by(&(&1.timestamp))
+  def process_event_map(event_map, timestamp, state) do
+    [op1, op2] = state.operands
+    event1 = event_map[op1]
+    event2 = event_map[op2]
 
-  #   {:ok, %Event{
-  #     stream_id: state.stream_id, timestamp: timestamp, value: latest_event.value
-  #   }}
-  # end
+    cond do
+      event1 && event1.type == :event ->
+        {:ok, %Event{value: event1.value, timestamp: timestamp}, %{}}
+      event2 && event2.type == :event ->
+        {:ok, %Event{value: event2.value, timestamp: timestamp}, %{}}
+      true ->
+        {:progress, %{}}
+    end
+  end
 end
