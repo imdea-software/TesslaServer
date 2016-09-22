@@ -134,10 +134,6 @@ defmodule TesslaServer.GenComputation do
       end
 
       def process_event_map(event_map, timestamp, state) do
-        # event = %Event{
-        #   stream_id: state.stream_id, timestamp: timestamp, type: output_event_type
-        # }
-        # {:ok, event}
         {:progress, state.cache}
       end
 
