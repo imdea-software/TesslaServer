@@ -16,13 +16,15 @@ defmodule TesslaServer.Computation.Filter.IfThen do
 
   def process_event_map(event_map, timestamp, state) do
     [op1, op2] = state.operands
-    change = event_map[op2] || state.cache[:last_change]
-    cache = %{last_change: change}
+    change = event_map[op2]
+
+    change_value = if change && change.type == :change, do: change.value, else: state.cache[:last_value]
+    cache = %{last_value: change_value}
 
     sampler = event_map[op1]
     if sampler && sampler.type == :event do
         {:ok, %Event{
-          stream_id: state.stream_id, timestamp: timestamp, value: change.value
+          stream_id: state.stream_id, timestamp: timestamp, value: change_value
         }, cache}
     else
         {:progress, cache}
