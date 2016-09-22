@@ -11,23 +11,26 @@ defmodule TesslaServer.Computation.Filter.Filter do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   to_filter = event_map[op1]
-  #   filter = event_map[op2]
-  #   cond do
-  #     !to_filter ->
-  #       :wait
-  #     !filter ->
-  #       :wait
-  #     !(to_filter.timestamp == timestamp) ->
-  #       :wait
-  #     filter.value ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: timestamp, value: to_filter.value
-  #       }}
-  #     true ->
-  #       :wait
-  #   end
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    [op1, op2] = state.operands
+
+    new_event = event_map[op1]
+    filter_event = event_map[op2]
+
+    filter = if filter_event && filter_event.type != :progress do
+      filter_event.value
+    else
+      state.cache[:filter]
+    end
+
+    cond do
+      !filter -> {:progress, %{filter: false}}
+      is_nil new_event -> {:progress, %{filter: filter}}
+      new_event.type == :progress -> {:progress, %{filter: filter}}
+      true ->
+        {:ok,
+         %Event{stream_id: state.stream_id, value: new_event.value, timestamp: timestamp
+        }, %{filter: filter}}
+    end
+  end
 end

@@ -5,7 +5,6 @@ defmodule TesslaServer.Computation.Filter.ChangeOfTest do
   alias TesslaServer.Computation.Filter.ChangeOf
   alias TesslaServer.{Event, GenComputation, Registry}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer
@@ -23,39 +22,36 @@ defmodule TesslaServer.Computation.Filter.ChangeOfTest do
   test "Should emit an event whenever the signal changes" do
 
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, initial_output}})
-    assert(initial_output.progressed_to == Time.zero)
-    assert(initial_output.events == [])
-    assert initial_output.type == :events
 
-    timestamp = DateTime.now
+    timestamp0 = Duration.zero
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add timestamp1, Duration.from_seconds 2
+    timestamp3 = Duration.add timestamp1, Duration.from_seconds 3
 
-    signal1 = %Event{value: 1, stream_id: @op1}
-    signal2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 2, stream_id: @op1}
-    signal3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: 2, stream_id: @op1}
+    signal0 = %Event{value: 1, stream_id: @op1}
+    signal1 = %Event{timestamp: timestamp1, value: 2, stream_id: @op1}
+    signal2 = %Event{timestamp: timestamp2, type:  :progress, stream_id: @op1}
+    signal3 = %Event{timestamp: timestamp3, value: 1, stream_id: @op1}
+
+    GenComputation.send_event(@processor, signal0)
+    assert_receive {_, {:process, %Event{
+       value: 1, type: :event, timestamp:   ^timestamp0
+     }}}
 
     GenComputation.send_event(@processor, signal1)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to1,
-        events: [out1]}}}
-    )
+    assert_receive {_, {:process, %Event{
+       value: 2, type: :event, timestamp: ^timestamp1
+     }}}
+
     GenComputation.send_event(@processor, signal2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to2,
-        events: [out2, ^out1]}}}
-    )
+    assert_receive {_, {:process, %Event{
+       type: :progress, timestamp: ^timestamp2
+     }}}
 
     GenComputation.send_event(@processor, signal3)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to3,
-        events: [^out2, ^out1]}}}
-    )
-
-    assert progressed_to1 == signal1.timestamp
-    assert progressed_to2 == signal2.timestamp
-    assert progressed_to3 == signal3.timestamp
-
-    assert out1.value == signal1.value
-    assert out1.timestamp == signal1.timestamp
-    assert out2.value == signal2.value
-    assert out2.timestamp == signal2.timestamp
+    assert_receive {_, {:process, %Event{
+       value: 1, type: :event, timestamp: ^timestamp3
+     }}}
 
     :ok = GenComputation.stop @processor
   end

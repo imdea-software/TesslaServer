@@ -11,14 +11,19 @@ defmodule TesslaServer.Computation.Filter.ChangeOf do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1] = state.operands
-  #   signal = event_map[op1]
-  #   latest_output = History.latest_output state.history
-  #   if latest_output && latest_output.value == signal.value do
-  #     :wait
-  #   else
-  #     {:ok, %Event{timestamp: timestamp, value: signal.value, stream_id: state.stream_id}}
-  #   end
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
+
+    case new_event.type do
+      :event ->
+        {:ok, 
+         %Event{
+           stream_id: state.stream_id, timestamp: timestamp,
+           value: new_event.value, type: output_event_type
+         },
+          state.cache
+        }
+      :progress -> {:progress, state.cache}
+    end
+  end
 end

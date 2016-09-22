@@ -5,7 +5,6 @@ defmodule TesslaServer.Computation.Filter.FilterTest do
   alias TesslaServer.Computation.Filter.Filter
   alias TesslaServer.{Event, GenComputation, Registry}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer
@@ -24,49 +23,69 @@ defmodule TesslaServer.Computation.Filter.FilterTest do
   test "Should filter latest Event of first stream with second stream and notify children" do
 
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, initial_output}})
-    assert(initial_output.progressed_to == Time.zero)
-    assert(initial_output.events == [])
-    assert initial_output.type == :events
 
-    timestamp = DateTime.now
-    filter1 = %Event{value: true, stream_id: @op2}
-    filter2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 1)), value: false, stream_id: @op2}
-    filter3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 3)), value: true, stream_id: @op2}
-    filter4 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 5)), value: false, stream_id: @op2}
+    timestamp0 = Duration.zero
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp4 = Duration.add(timestamp1, Duration.from_seconds(3))
+    timestamp5 = Duration.add(timestamp1, Duration.from_seconds(4))
 
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 2, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: 4, stream_id: @op1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 4, stream_id: @op1}
+    filter0 = %Event{value: true, stream_id: @op2}
+    filter1 = %Event{timestamp: timestamp1, value: false, stream_id: @op2, type: :change}
+    filter2 = %Event{timestamp: timestamp2, value: true, stream_id: @op2, type: :change}
+    filter3 = %Event{timestamp: timestamp3, type: :progress, stream_id: @op2}
+    filter5 = %Event{timestamp: timestamp5, value: :false, stream_id: @op2, type: :change}
 
-    GenComputation.send_event(@processor, filter1)
+    event1 = %Event{timestamp: timestamp1, stream_id: @op1}
+    event2 = %Event{timestamp: timestamp2, value: 2, stream_id: @op1}
+    event3 = %Event{timestamp: timestamp3, value: 3, stream_id: @op1}
+    event4 = %Event{timestamp: timestamp4, type: :progress, stream_id: @op1}
+    event5 = %Event{timestamp: timestamp5, value: 5, stream_id: @op1}
+
+    GenComputation.send_event(@processor, filter0)
 
     refute_receive(_)
 
     GenComputation.send_event(@processor, event1)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: []}}})
-    assert(progressed_to == filter1.timestamp)
+    assert_receive {_, {:process,
+      %Event{
+        type: :progress, timestamp: ^timestamp0
+      }}}
+
+
+    GenComputation.send_event(@processor, filter1)
+    assert_receive {_, {:process,
+      %Event{
+        type: :progress, timestamp: ^timestamp1
+      }}}
 
     GenComputation.send_event(@processor, filter2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [filtered1]}}})
-    assert(progressed_to == event1.timestamp)
-    assert(filtered1.value == event1.value)
-    assert(filtered1.timestamp == event1.timestamp)
-
-    GenComputation.send_event(@processor, filter3)
-    refute_receive(_)
-    GenComputation.send_event(@processor, filter4)
-    refute_receive(_)
-
     GenComputation.send_event(@processor, event2)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [^filtered1]}}})
-    assert(progressed_to == event2.timestamp)
+    assert_receive {_, {:process,
+      %Event{
+        type: :event, timestamp: ^timestamp2, value: 2
+      }}}
 
     GenComputation.send_event(@processor, event3)
-    assert_receive({_, {:update_input_stream, %{progressed_to: progressed_to, events: [filtered2, ^filtered1]}}})
-    assert(progressed_to == event3.timestamp)
-    assert(filtered2.value == event3.value)
-    assert(filtered2.timestamp == event3.timestamp)
+    GenComputation.send_event(@processor, filter3)
+    assert_receive {_, {:process,
+      %Event{
+        type: :event, timestamp: ^timestamp3, value: 3
+      }}}
+
+    GenComputation.send_event(@processor, event4)
+    GenComputation.send_event(@processor, event5)
+    GenComputation.send_event(@processor, filter5)
+
+    assert_receive {_, {:process,
+      %Event{
+        type: :progress, timestamp: ^timestamp4
+      }}}
+    assert_receive {_, {:process,
+      %Event{
+        type: :progress, timestamp: ^timestamp5
+      }}}
 
     :ok = GenComputation.stop @processor
   end
