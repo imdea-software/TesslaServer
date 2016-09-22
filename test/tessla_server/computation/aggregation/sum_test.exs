@@ -3,9 +3,8 @@ defmodule TesslaServer.Computation.Aggregation.SumTest do
   use Timex
 
   alias TesslaServer.Computation.Aggregation.Sum
-  alias TesslaServer.{Event, GenComputation, Registry}
+  alias TesslaServer.{Event, GenComputation, Registry, Source}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   doctest Sum
@@ -22,35 +21,56 @@ defmodule TesslaServer.Computation.Aggregation.SumTest do
 
   test "Should sum value of all events happened" do
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{type: :signal, events: [out0]}}})
-    assert(out0.value == 0)
 
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), stream_id: @op1, value: 1}
+    Source.start_evaluation
+
+    assert_receive({_, {:process, change0}})
+    assert change0.value == 0
+    assert change0.type == :change
+    assert change0.timestamp == Duration.zero
+
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp4 = Duration.add(timestamp1, Duration.from_seconds(3))
+
+    event1 = %Event{timestamp: timestamp1, stream_id: @op1, value: 1}
     event2 = %Event{
-      timestamp: to_timestamp(shift(timestamp, seconds: 2)), stream_id: @op1, value: 3
+      timestamp: timestamp2, stream_id: @op1, value: 3
     }
     event3 = %Event{
-      timestamp: to_timestamp(shift(timestamp, seconds: 4)), stream_id: @op1, value: 4
+      timestamp: timestamp3, stream_id: @op1, type: :progress
+    }
+    event4 = %Event{
+      timestamp: timestamp4, stream_id: @op1, value: 4
     }
 
     GenComputation.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: [out1, ^out0]}}})
-    assert out1.timestamp == event1.timestamp
-    assert out1.value == 1
+    assert_receive({_, {:process, change1}})
+    assert change1.value == 1
+    assert change1.type == :change
+    assert change1.timestamp == timestamp1
 
     GenComputation.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{events: [out2, ^out1, ^out0]}}})
-    assert out2.value == 4
-    assert out2.timestamp == event2.timestamp
+    assert_receive({_, {:process, change2}})
+    assert change2.value == 4
+    assert change2.type == :change
+    assert change2.timestamp == timestamp2
 
     GenComputation.send_event(@processor, event3)
 
-    assert_receive({_, {:update_input_stream, %{events: [out3, ^out2, ^out1, ^out0]}}})
-    assert out3.value == 8
-    assert out3.timestamp == event3.timestamp
+    assert_receive({_, {:process, change3}})
+    assert change3.type == :progress
+    assert change3.timestamp == timestamp3
+
+    GenComputation.send_event(@processor, event4)
+
+    assert_receive({_, {:process, change4}})
+    assert change4.value == 8
+    assert change4.type == :change
+    assert change4.timestamp == timestamp4
 
     :ok = GenComputation.stop(@processor)
   end

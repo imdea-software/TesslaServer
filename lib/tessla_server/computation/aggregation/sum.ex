@@ -6,27 +6,48 @@ defmodule TesslaServer.Computation.Aggregation.Sum do
   the Event Stream which events' values should be summed.
   """
 
-  alias TesslaServer.{GenComputation, Event}
+  alias TesslaServer.{GenComputation, Event, Registry}
   alias TesslaServer.Computation.State
 
   use GenComputation
-  use Timex
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   new_event = event_map[hd(state.operands)]
-  #   last_event = History.latest_output state.history
-  #   {:ok, %Event{
-  #     stream_id: state.stream_id, timestamp: timestamp, value: last_event.value + new_event.value
-  #   }}
-  # end
+  def init(state) do
+    Registry.subscribe_to :source
+    super state
+  end
 
-  # def init_output(state) do
-  #   default_value = 0
-  #   default_event = %Event{stream_id: state.stream_id, value: default_value}
+  def init_cache(state) do
+    %{sum: 0}
+  end
 
-  #   {:ok, stream} = EventStream.add_event(state.history.output, default_event)
-  #   %{stream | type: output_stream_type}
-  # end
+  def handle_cast(:start_evaluation, state) do
+    first_event = %Event{
+      stream_id: state.stream_id, value: 0, type: output_event_type
+    }
 
-  # def output_stream_type, do: :signal
+    Enum.each state.children, fn child ->
+      GenComputation.send_event child, first_event
+    end
+    {:noreply, state}
+  end
+
+  def process_event_map(event_map, timestamp, state) do
+    new_event = event_map[hd(state.operands)]
+
+    case new_event.type do
+      :event ->
+        old_sum = Map.get state.cache, :sum
+        new_sum = old_sum + new_event.value
+        {:ok, 
+         %Event{
+           stream_id: state.stream_id, timestamp: timestamp,
+           value: new_sum, type: output_event_type
+         },
+          %{sum: new_sum}
+        }
+      :progress -> {:progress, state.cache}
+    end
+  end
+
+  def output_event_type, do: :change
 end
