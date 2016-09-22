@@ -71,9 +71,9 @@ defmodule TesslaServer.Computation.InputBuffer do
   defp pop_head_at(buffer, timestamp) do
     partitioned = buffer.input_queues
                   |> Enum.map(&pop_event_at_timestamp(&1, timestamp))
-                  |> Map.new
-    to_process = partitioned |> Map.keys |> Enum.reduce(%{}, &Map.merge/2)
-    input_queues = partitioned |> Map.values |> Enum.reduce(%{}, &Map.merge/2)
+    {to_process, input_queues} = Enum.reduce partitioned, fn({t1, t2}, {acc1, acc2}) ->
+      {Map.merge(acc1, t1), Map.merge(acc2, t2)}
+    end
 
     updated_buffer = %{buffer | input_queues: input_queues}
     {to_process, timestamp, updated_buffer}
