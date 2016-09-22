@@ -1,5 +1,5 @@
 defmodule TesslaServer.Computation.Aggregation.EventMinimumTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Timex
 
   alias TesslaServer.Computation.Aggregation.EventMinimum
@@ -11,7 +11,6 @@ defmodule TesslaServer.Computation.Aggregation.EventMinimumTest do
   @default_value 5
   @test unique_integer
   @processor unique_integer
-
 
   doctest EventMinimum
 

@@ -1,5 +1,5 @@
 defmodule TesslaServer.Computation.Aggregation.MrvTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Timex
 
   alias TesslaServer.Computation.Aggregation.Mrv

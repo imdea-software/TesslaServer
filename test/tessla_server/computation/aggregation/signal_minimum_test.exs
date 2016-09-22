@@ -23,7 +23,6 @@ defmodule TesslaServer.Computation.Aggregation.SignalMinimumTest do
   test "Should take value of new event if it is smaller than previous minimum" do
     GenComputation.add_child(@processor, @test)
 
-
     timestamp0 = Duration.zero
     timestamp1 = Duration.now
     timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))

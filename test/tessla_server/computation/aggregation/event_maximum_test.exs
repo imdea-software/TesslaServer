@@ -1,5 +1,5 @@
 defmodule TesslaServer.Computation.Aggregation.EventMaximumTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Timex
 
   alias TesslaServer.Computation.Aggregation.EventMaximum

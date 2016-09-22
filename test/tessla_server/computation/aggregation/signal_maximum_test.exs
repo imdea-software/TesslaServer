@@ -22,7 +22,6 @@ defmodule TesslaServer.Computation.Aggregation.SignalMaximumTest do
   test "Should take value of new event if it is bigger than previous maximum" do
     GenComputation.add_child(@processor, @test)
 
-
     timestamp0 = Duration.zero
     timestamp1 = Duration.now
     timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))

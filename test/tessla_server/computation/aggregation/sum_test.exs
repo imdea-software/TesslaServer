@@ -1,5 +1,5 @@
 defmodule TesslaServer.Computation.Aggregation.SumTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Timex
 
   alias TesslaServer.Computation.Aggregation.Sum
