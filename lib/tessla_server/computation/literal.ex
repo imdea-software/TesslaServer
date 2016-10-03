@@ -23,7 +23,9 @@ defmodule TesslaServer.Computation.Literal do
   end
 
   def handle_cast(:start_evaluation, state) do
-    literal = %Event{value: state.value, stream_id: state.id, timestamp: :literal}
+    literal = %Event{
+      value: state.value, stream_id: state.id, timestamp: :literal, type: :change
+    }
     Enum.each state.children, fn child ->
       GenComputation.send_event child, literal
     end
