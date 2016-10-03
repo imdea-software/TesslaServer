@@ -23,7 +23,7 @@ defmodule TesslaServer.EventQueue do
   @spec progress_to(Timex.Duration.t) :: :ok | no_return
   defp progress_to(timestamp) do
     Agent.update(__MODULE__, fn queue = %{progressed_to: progressed_to} ->
-      if progressed_to >= timestamp do
+      if Duration.to_erl(progressed_to) >= Duration.to_erl(timestamp) do
         raise "External Event received out of order #{inspect timestamp}, progress: #{inspect progressed_to}"
       end
       %{queue | progressed_to: timestamp}
