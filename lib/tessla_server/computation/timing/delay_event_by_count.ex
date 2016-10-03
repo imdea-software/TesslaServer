@@ -11,23 +11,25 @@ defmodule TesslaServer.Computation.Timing.DelayEventByCount do
   use GenComputation
   use Timex
 
-  # def prepare_events(at, state) do
-  #   stream = state.history.inputs[hd(state.operands)]
-  #   events_before = EventStream.events_in_timeslot(stream, Time.zero, at)
-  #   event = Enum.at(events_before, state.options[:count])
-  #   if event, do: %{event.stream_id => event}, else: %{}
-  # end
+  def init_cache(_) do
+    %{buffer: []}
+  end
 
-  # def process_events(timestamp, event_map, state) when map_size(event_map) == 0 do
-  #   {:ok, history} = History.progress_output(state.history, timestamp)
-  #   %{state | history: history}
-  # end
-  # def process_events(timestamp, event_map, state) do
-  #   delayed_event = event_map[hd(state.operands)]
-  #   new_output = %Event{
-  #     stream_id: state.stream_id, timestamp: timestamp, value: delayed_event.value
-  #   }
-  #   {:ok, history} = History.update_output(state.history, new_output)
-  #   %{state | history: history}
-  # end
+  def process_event_map(event_map, timestamp, state = %{cache: cache}) do
+    new_event = event_map[hd(state.operands)]
+    buffer = cache[:buffer]
+    delay_count = state.options[:count]
+
+    cond do
+      length(buffer) == delay_count && new_event.type == :event ->
+        [output_value | new_buffer] = buffer ++ [new_event.value]
+        output_event = %Event{value: output_value, timestamp: timestamp, stream_id: state.stream_id}
+        {:ok, output_event, %{buffer: new_buffer}}
+      new_event.type == :event ->
+        new_buffer = buffer ++ [new_event.value]
+        {:progress, %{buffer: new_buffer}}
+      true ->
+        {:progress, state.cache}
+    end
+  end
 end
