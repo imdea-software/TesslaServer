@@ -7,7 +7,7 @@ defmodule TesslaServer.Computation.Aggregation.Sma do
   `count` specifying the amount of Events which the average should be formed over.
   """
 
-  alias TesslaServer.{GenComputation, Event, Registry}
+  alias TesslaServer.{GenComputation, Event}
   alias TesslaServer.Computation.State
 
   use GenComputation
@@ -34,7 +34,7 @@ defmodule TesslaServer.Computation.Aggregation.Sma do
     end
   end
 
-  def init_cache(state) do
+  def init_cache(_) do
     %{values: []}
   end
 end

@@ -16,7 +16,7 @@ defmodule TesslaServer.Computation.Aggregation.Sum do
     super state
   end
 
-  def init_cache(state) do
+  def init_cache(_) do
     %{sum: 0}
   end
 
