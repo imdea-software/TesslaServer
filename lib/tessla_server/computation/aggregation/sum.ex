@@ -38,7 +38,7 @@ defmodule TesslaServer.Computation.Aggregation.Sum do
       :event ->
         old_sum = Map.get state.cache, :sum
         new_sum = old_sum + new_event.value
-        {:ok, 
+        {:ok,
          %Event{
            stream_id: state.stream_id, timestamp: timestamp,
            value: new_sum, type: output_event_type

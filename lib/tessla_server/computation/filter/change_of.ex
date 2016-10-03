@@ -16,7 +16,7 @@ defmodule TesslaServer.Computation.Filter.ChangeOf do
 
     case new_event.type do
       :event ->
-        {:ok, 
+        {:ok,
          %Event{
            stream_id: state.stream_id, timestamp: timestamp,
            value: new_event.value, type: output_event_type
