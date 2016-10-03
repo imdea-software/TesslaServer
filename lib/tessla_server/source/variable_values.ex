@@ -14,9 +14,10 @@ defmodule TesslaServer.Source.VariableValues do
     super state
   end
 
-  def process_event_map(_, timestamp, state) do
+  def process_event_map(event_map, timestamp, state) do
+    input_event = event_map |> Map.values |> hd
     event = %Event{
-      stream_id: state.stream_id, timestamp: timestamp
+      stream_id: state.stream_id, timestamp: timestamp, value: input_event.value
     }
     {:ok, event, state.cache}
   end
