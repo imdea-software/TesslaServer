@@ -1,6 +1,6 @@
 defmodule TesslaServer.Computation.Lifted.And do
   @moduledoc """
-  Implements a `Computation` that performs an `and` on two boolean streams
+  Implements a `Computation` that performs an `and` on two boolean signals.
 
   To do so the `state.operands` list has to be initialized with two integers representing the ids
   of the streams which should be the base of the computation
@@ -8,22 +8,10 @@ defmodule TesslaServer.Computation.Lifted.And do
 
   alias TesslaServer.{GenComputation, Event}
   alias TesslaServer.Computation.State
+  alias TesslaServer.Computation.Lifted.GenLifted
 
   use GenComputation
+  use GenLifted, combine_operation: &and/2, equal_operation: &==/2
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   event1 = event_map[op1]
-  #   event2 = event_map[op2]
-
-  #   if event1 && event2 do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: timestamp, value: event1.value and event2.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
-
-  # def output_stream_type, do: :signal
+  def output_event_type, do: :change
 end
