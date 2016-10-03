@@ -19,6 +19,15 @@ defmodule TesslaServer.Output do
   end
 
   @spec log_new_event(GenComputation.id, Event.t) :: :ok
+  def log_new_event(id, event = %Event{type: :progress}) do
+    Agent.cast __MODULE__, fn state ->
+      name = Map.get(state, id)
+      if name do
+        Logger.warn("#{name} progressed to: #{inspect event.timestamp}" <> "\n-------------\n")
+      end
+      state
+    end
+  end
   def log_new_event(id, event) do
     Agent.cast __MODULE__, fn state ->
       name = Map.get(state, id)
