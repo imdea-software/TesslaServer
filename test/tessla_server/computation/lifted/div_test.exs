@@ -59,7 +59,7 @@ defmodule TesslaServer.Computation.Lifted.DivTest do
     GenComputation.send_event(@processor, event2_0)
 
     assert_receive {_, {:process,
-      %Event{type: :change, timestamp: ^timestamp0, value: 1/1}}
+      %Event{type: :change, timestamp: ^timestamp0, value: 1 / 1}}
     }
 
     GenComputation.send_event(@processor, event2_1)
@@ -67,19 +67,19 @@ defmodule TesslaServer.Computation.Lifted.DivTest do
     GenComputation.send_event(@processor, event1_2)
 
     assert_receive {_, {:process,
-      %Event{type: :change, timestamp: ^timestamp1, value: 1/4}
+      %Event{type: :change, timestamp: ^timestamp1, value: 1 / 4}
     }}
 
     GenComputation.send_event(@processor, event2_3)
 
     assert_receive {_, {:process,
-      %Event{type: :change, timestamp: ^timestamp2, value: 2/4}
+      %Event{type: :change, timestamp: ^timestamp2, value: 2 / 4}
     }}
 
     GenComputation.send_event(@processor, event1_3)
 
     assert_receive {_, {:process,
-      %Event{type: :change, timestamp: ^timestamp3, value: 4/2}
+      %Event{type: :change, timestamp: ^timestamp3, value: 4 / 2}
     }}
 
     GenComputation.send_event(@processor, event1_4)
