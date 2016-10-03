@@ -10,9 +10,18 @@ defmodule TesslaServer.Computation.Filter.OccurAny do
 
   use GenComputation
 
-  # def perform_computation(timestamp, _, state) do
-  #   {:ok, %Event{
-  #     stream_id: state.stream_id, timestamp: timestamp
-  #   }}
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    [op1, op2] = state.operands
+    event1 = event_map[op1]
+    event2 = event_map[op2]
+
+    event1_happened = event1 && event1.type == :event
+    event2_happened = event2 && event2.type == :event
+
+    if event1_happened || event2_happened do
+      {:ok, %Event{timestamp: timestamp}, %{}}
+    else
+      {:progress, %{}}
+    end
+  end
 end
