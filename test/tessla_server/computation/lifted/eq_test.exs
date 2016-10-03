@@ -5,7 +5,6 @@ defmodule TesslaServer.Computation.Lifted.EqTest do
   alias TesslaServer.Computation.Lifted.Eq
   alias TesslaServer.{Event, GenComputation, Registry}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer

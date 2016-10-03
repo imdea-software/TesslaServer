@@ -14,21 +14,20 @@ defmodule TesslaServer.Computation.Filter.Sample do
 
   use GenComputation
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   sampler = event_map[op2]
-  #   signal = event_map[op1]
-  #   cond do
-  #     !sampler ->
-  #       :wait
-  #     !signal ->
-  #       :wait
-  #     !(sampler.timestamp == timestamp) ->
-  #       :wait
-  #     true ->
-  #       {:ok, %Event{
-  #         stream_id: state.stream_id, timestamp: timestamp, value: signal.value
-  #       }}
-  #   end
-  # end
+  def process_event_map(event_map, timestamp, state) do
+    [op1, op2] = state.operands
+    change = event_map[op1]
+
+    change_value = if change && change.type == :change, do: change.value, else: state.cache[:last_value]
+    cache = %{last_value: change_value}
+
+    sampler = event_map[op2]
+    if sampler && sampler.type == :event do
+        {:ok, %Event{
+          stream_id: state.stream_id, timestamp: timestamp, value: change_value
+        }, cache}
+    else
+        {:progress, cache}
+    end
+  end
 end
