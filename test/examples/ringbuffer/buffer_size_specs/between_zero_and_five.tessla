@@ -24,7 +24,7 @@
     "operands":[8]
   },{
     "id":2,
-    "nodetype":"TesslaServer.ComputatioComputation.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":5
     }
