@@ -49,7 +49,8 @@ defmodule TesslaServer.Computation.Lifted.GenLifted do
         end
 
         if is_nil(new_value) || unquote(equal_operation).(new_value, last_value) do
-          {:progress, state.cache}
+          updated_cache = Map.merge state.cache, new_cache
+          {:progress, updated_cache}
         else
           updated_cache = state.cache
                           |> Map.merge(new_cache)
