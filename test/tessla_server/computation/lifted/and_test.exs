@@ -64,7 +64,6 @@ defmodule TesslaServer.Computation.Lifted.AndTest do
 
     GenComputation.send_event(@processor, event2_1)
 
-    refute_receive _
     GenComputation.send_event(@processor, event1_2)
 
     assert_receive {_, {:process,

@@ -1,28 +1,16 @@
 defmodule TesslaServer.Computation.Lifted.Mul do
   @moduledoc """
-  Implements a `Computation` that multiplies two event streams
+  Implements a `Computation` that multiplies two Signals.
 
   To do so the `state.operands` list has to be initialized with two integers representing the ids of
   the event streams that should be multiplied.
   """
   alias TesslaServer.{GenComputation, Event}
   alias TesslaServer.Computation.State
+  alias TesslaServer.Computation.Lifted.GenLifted
 
   use GenComputation
+  use GenLifted, combine_operation: &*/2, equal_operation: &==/2
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   event1 = event_map[op1]
-  #   event2 = event_map[op2]
-
-  #   if event1 && event2 do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: timestamp, value: event1.value * event2.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
-
-  # def output_stream_type, do: :signal
+  def output_event_type, do: :change
 end

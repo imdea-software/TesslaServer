@@ -5,7 +5,6 @@ defmodule TesslaServer.Computation.Lifted.NegTest do
   alias TesslaServer.Computation.Lifted.Neg
   alias TesslaServer.{Event, GenComputation, Registry}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
   @op1 unique_integer
@@ -22,34 +21,55 @@ defmodule TesslaServer.Computation.Lifted.NegTest do
 
   test "Should compare latest Events and notify children" do
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, initial_output}})
-    assert(initial_output.progressed_to == Time.zero)
-    assert(initial_output.events == [])
-    assert initial_output.type == :signal
 
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_id: @op1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 3, stream_id: @op1}
+    timestamp0 = Duration.zero
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp4 = Duration.add(timestamp1, Duration.from_seconds(3))
+
+    event0 = %Event{timestamp: timestamp0, value: 0, stream_id: @op1, type: :change}
+    event1 = %Event{timestamp: timestamp1, value: 4, stream_id: @op1, type: :change}
+    event2 = %Event{
+      timestamp: timestamp2, value: -6, stream_id: @op1, type: :change
+    }
+    event3 = %Event{
+      timestamp: timestamp3, value: 6, stream_id: @op1, type: :change
+    }
+    event4 = %Event{
+      timestamp: timestamp4, stream_id: @op1, type: :progress
+    }
+
+
+    GenComputation.send_event(@processor, event0)
+    assert_receive {_, {:process,
+     %Event{type: :change, timestamp: ^timestamp0, value: 0}
+    }}
 
     GenComputation.send_event(@processor, event1)
 
-    assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to, events: [out0]}}}
-    assert out0.value == -1
-    assert progressed_to == event1.timestamp
+    assert_receive {_, {:process,
+     %Event{type: :change, timestamp: ^timestamp1, value: -4}
+    }}
 
     GenComputation.send_event(@processor, event2)
 
-    assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to, events: [out1, ^out0]}}}
-    assert out1.value == 2
-    assert progressed_to == event2.timestamp
+    assert_receive {_, {:process,
+     %Event{type: :change, timestamp: ^timestamp2, value: 6}
+    }}
 
     GenComputation.send_event(@processor, event3)
 
-    assert_receive {_, {:update_input_stream, %{progressed_to: progressed_to, events: [out2, ^out1, ^out0]}}}
-    assert out2.value == -3
-    assert progressed_to == event3.timestamp
+    assert_receive {_, {:process,
+     %Event{type: :change, timestamp: ^timestamp3, value: -6}
+    }}
 
-    :ok = GenComputation.stop @processor
+    GenComputation.send_event(@processor, event4)
+
+    assert_receive {_, {:process,
+     %Event{type: :progress, timestamp: ^timestamp4}
+    }}
+
+    :ok = GenComputation.stop(@processor)
   end
 end

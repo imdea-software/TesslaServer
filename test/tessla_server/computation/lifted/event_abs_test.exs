@@ -5,10 +5,9 @@ defmodule TesslaServer.Computation.Lifted.EventAbsTest do
   alias TesslaServer.Computation.Lifted.EventAbs
   alias TesslaServer.{Event, GenComputation, Registry}
 
-  import DateTime, only: [now: 0, shift: 2, to_timestamp: 1]
   import System, only: [unique_integer: 0]
 
-  @op1 unique_integer
+  @op unique_integer
   @test unique_integer
   @processor unique_integer
 
@@ -16,37 +15,52 @@ defmodule TesslaServer.Computation.Lifted.EventAbsTest do
 
   setup do
     Registry.register @test
-    EventAbs.start @processor, [@op1]
+    EventAbs.start @processor, [@op]
     :ok
   end
 
   test "Should compute abs of latest Event and notify children" do
     GenComputation.add_child(@processor, @test)
-    assert_receive({_, {:update_input_stream, %{events: [], progressed_to: progressed_to, type: :events}}})
-    assert(progressed_to == Time.zero)
 
-    timestamp = DateTime.now
-    event1 = %Event{timestamp: to_timestamp(timestamp), value: 1, stream_id: @op1}
-    event2 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 2)), value: -2, stream_id: @op1}
-    event3 = %Event{timestamp: to_timestamp(shift(timestamp, seconds: 4)), value: 0, stream_id: @op1}
+    timestamp1 = Duration.now
+    timestamp2 = Duration.add(timestamp1, Duration.from_seconds(1))
+    timestamp3 = Duration.add(timestamp1, Duration.from_seconds(2))
+    timestamp4 = Duration.add(timestamp1, Duration.from_seconds(3))
+
+    event1 = %Event{timestamp: timestamp1, stream_id: @op, value: 1}
+    event2 = %Event{
+      timestamp: timestamp2, stream_id: @op, value: -3
+    }
+    event3 = %Event{
+      timestamp: timestamp3, stream_id: @op, type: :progress
+    }
+    event4 = %Event{
+      timestamp: timestamp4, stream_id: @op, value: 4
+    }
 
     GenComputation.send_event(@processor, event1)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-
-    assert(hd(events).value == abs event1.value)
+    assert_receive {_, {:process,
+      %Event{type: :event, timestamp: ^timestamp1, value: 1}}
+    }
 
     GenComputation.send_event(@processor, event2)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
-
-    assert(hd(events).value == abs event2.value)
+    assert_receive {_, {:process,
+      %Event{type: :event, timestamp: ^timestamp2, value: 3}}
+    }
 
     GenComputation.send_event(@processor, event3)
 
-    assert_receive({_, {:update_input_stream, %{events: events}}})
+    assert_receive {_, {:process,
+      %Event{type: :progress, timestamp: ^timestamp3}}
+    }
 
-    assert(hd(events).value == abs event3.value)
+    GenComputation.send_event(@processor, event4)
+
+    assert_receive {_, {:process,
+      %Event{type: :event, timestamp: ^timestamp4, value: 4}}
+    }
 
     :ok = GenComputation.stop(@processor)
   end

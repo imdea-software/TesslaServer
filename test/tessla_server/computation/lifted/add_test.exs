@@ -21,7 +21,6 @@ defmodule TesslaServer.Computation.Lifted.AddTest do
   end
 
   test "Should add latest Events and notify children" do
-
     GenComputation.add_child(@processor, @test)
 
     timestamp0 = Duration.zero

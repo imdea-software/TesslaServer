@@ -8,22 +8,10 @@ defmodule TesslaServer.Computation.Lifted.Or do
 
   alias TesslaServer.{GenComputation, Event}
   alias TesslaServer.Computation.State
+  alias TesslaServer.Computation.Lifted.GenLifted
 
   use GenComputation
+  use GenLifted, combine_operation: &or/2, equal_operation: &==/2
 
-  # def perform_computation(timestamp, event_map, state) do
-  #   [op1, op2] = state.operands
-  #   event1 = event_map[op1]
-  #   event2 = event_map[op2]
-
-  #   if event1 && event2 do
-  #     {:ok, %Event{
-  #       stream_id: state.stream_id, timestamp: timestamp, value: event1.value or event2.value
-  #     }}
-  #   else
-  #     :wait
-  #   end
-  # end
-
-  # def output_stream_type, do: :signal
+  def output_event_type, do: :change
 end
