@@ -9,7 +9,6 @@ defmodule TesslaServer.Computation.Timing.DelayEventByCount do
   alias TesslaServer.Computation.State
 
   use GenComputation
-  use Timex
 
   def init_cache(_) do
     %{buffer: []}

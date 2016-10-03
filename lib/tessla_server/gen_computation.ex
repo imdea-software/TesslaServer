@@ -120,6 +120,9 @@ defmodule TesslaServer.GenComputation do
           {:ok, new_event, cache} ->
             propagate_output new_event, state
             cache
+          {:progress, shifted_time, cache} ->
+            propagate_progress shifted_time, state
+            cache
           {:progress, cache} ->
             propagate_progress timestamp, state
             cache
