@@ -34,6 +34,11 @@ defmodule TesslaServer.Output do
       if name do
         formatted = format event
         Logger.warn("New output of #{name}: \n" <> formatted <> "\n-------------\n")
+        # Remove comment to terminate TesslaServer on first `true` value
+        # if event.value == true do
+        #   Logger.flush
+        #   System.halt
+        # end
       end
       state
     end
