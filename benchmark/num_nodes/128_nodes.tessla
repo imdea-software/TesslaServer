@@ -2,477 +2,477 @@
   "type":"java.util.Collections$UnmodifiableSet",
   "items":[{
     "id":102,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[92]
   },{
     "id":25,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[54]
   },{
     "id":47,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[75]
   },{
     "id":61,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[104]
   },{
     "id":109,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[103]
   },{
     "id":77,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[93]
   },{
     "id":11,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[59]
   },{
     "id":103,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[82]
   },{
     "id":6,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[40]
   },{
     "id":96,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[13]
   },{
     "id":94,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[51]
   },{
     "id":72,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[98]
   },{
     "id":86,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[44]
   },{
     "id":119,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[89]
   },{
     "id":42,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[27]
   },{
     "id":99,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[33]
   },{
     "id":39,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[86]
   },{
     "id":33,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[47]
   },{
     "id":19,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[130]
   },{
     "id":55,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[91]
   },{
     "id":29,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[121]
   },{
     "id":66,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[116]
   },{
     "id":76,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[42]
   },{
     "id":65,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[76]
   },{
     "id":80,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[4]
   },{
     "id":90,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[17]
   },{
     "id":69,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[122]
   },{
     "id":129,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[62]
   },{
     "id":121,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[23]
   },{
     "id":116,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[3]
   },{
     "id":17,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[115]
   },{
     "id":36,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[11]
   },{
     "id":20,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[88]
   },{
     "id":12,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[8]
   },{
     "id":50,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[63]
   },{
     "id":118,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[43]
   },{
     "id":91,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[35]
   },{
     "id":92,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[94]
   },{
     "id":26,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[28]
   },{
     "id":59,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[129]
   },{
     "id":28,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[128]
   },{
     "id":5,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[77]
   },{
     "id":100,
-    "nodetype":"TesslaServer.Node.Aggregation.EventCount",
+    "nodetype":"TesslaServer.Computation.Aggregation.EventCount",
     "operands":[124]
   },{
     "id":81,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[123]
   },{
     "id":56,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[84]
   },{
     "id":120,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[72]
   },{
     "id":101,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[12]
   },{
     "id":106,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[16]
   },{
     "id":18,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[117]
   },{
     "id":130,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[29]
   },{
     "id":71,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[85]
   },{
     "id":108,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[126]
   },{
     "id":97,
-    "nodetype":"TesslaServer.Node.Literal",
+    "nodetype":"TesslaServer.Computation.Literal",
     "options":{
       "value":1000
     }
   },{
     "id":46,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[0]
   },{
     "id":87,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[58]
   },{
     "id":123,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[127]
   },{
     "id":54,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[53]
   },{
     "id":16,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[78]
   },{
     "id":8,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[52]
   },{
     "id":70,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[25]
   },{
     "id":32,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[79]
   },{
     "id":57,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[30]
   },{
     "id":45,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[73]
   },{
     "id":89,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[21]
   },{
     "id":84,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[70]
   },{
     "id":115,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[105]
   },{
     "id":74,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[38]
   },{
     "id":4,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[39]
   },{
     "id":3,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[64]
   },{
     "id":49,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[10]
   },{
     "id":37,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[46]
   },{
     "id":83,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[87]
   },{
     "id":13,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[1]
   },{
     "id":10,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[90]
   },{
     "id":2,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[67]
   },{
     "id":44,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[99]
   },{
     "id":117,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[74]
   },{
     "id":27,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[100]
   },{
     "id":60,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[6]
   },{
     "id":15,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[112]
   },{
     "id":104,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[119]
   },{
     "id":53,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[19]
   },{
     "id":67,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[9]
   },{
     "id":64,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[83]
   },{
     "id":114,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[118]
   },{
     "id":24,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[120]
   },{
     "id":38,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[110]
   },{
     "id":95,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[5]
   },{
     "id":58,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[24]
   },{
     "id":98,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[22]
   },{
     "id":126,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[102]
   },{
     "id":0,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[57]
   },{
     "id":23,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[108]
   },{
     "id":112,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[34]
   },{
     "id":105,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[65]
   },{
     "id":82,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[18]
   },{
     "id":110,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[111]
   },{
     "id":21,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[45]
   },{
     "id":122,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[48]
   },{
     "id":128,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[2]
   },{
     "id":1,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[55]
   },{
     "id":88,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[71]
   },{
     "id":78,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[31]
   },{
     "id":40,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[26]
   },{
     "id":41,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[50]
   },{
     "id":43,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[15]
   },{
     "id":62,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[37]
   },{
     "id":35,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[95]
   },{
     "id":79,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[56]
   },{
     "id":113,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[69]
   },{
     "id":52,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[20]
   },{
     "id":125,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[106]
   },{
     "id":22,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[80]
   },{
     "id":30,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[113]
   },{
     "id":75,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[14]
   },{
     "id":51,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[101]
   },{
     "id":111,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[32]
   },{
     "id":73,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[66]
   },{
     "id":124,
@@ -482,43 +482,43 @@
     }
   },{
     "id":9,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[109]
   },{
     "id":63,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[60]
   },{
     "id":31,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[49]
   },{
     "id":107,
-    "nodetype":"TesslaServer.Node.Lifted.Eq",
+    "nodetype":"TesslaServer.Computation.Lifted.Eq",
     "operands":[114,97]
   },{
     "id":127,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[125]
   },{
     "id":14,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[81]
   },{
     "id":48,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[61]
   },{
     "id":34,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[96]
   },{
     "id":93,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[41]
   },{
     "id":85,
-    "nodetype":"TesslaServer.Node.Lifted.SignalAbs",
+    "nodetype":"TesslaServer.Computation.Lifted.SignalAbs",
     "operands":[36]
   }]
 }
