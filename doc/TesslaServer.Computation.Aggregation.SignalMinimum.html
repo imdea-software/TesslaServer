@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Source.InstructionExecutions – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Aggregation.SignalMinimum – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,18 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Source.InstructionExecutions
+        TesslaServer.Computation.Aggregation.SignalMinimum
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
-executed.
-The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code>.</p>
+          <p>Implements a <code class="inline">Computation</code> that emits the minimum value ever occured on an Signal Stream
+or a default value if it’s smaller than all values occured to that point.</p>
+<p>To do so the <code class="inline">state.operands</code> list has to be initialized with one integer representing the id of
+the stream that should be aggregated over and the <code class="inline">options</code> map has to have a key <code class="inline">default</code>
+which should hold the default value.</p>
 
         </section>
       

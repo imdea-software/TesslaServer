@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Source.InstructionExecutions – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Monitors.Monitor – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,16 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Source.InstructionExecutions
+        TesslaServer.Computation.Monitors.Monitor
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
-executed.
-The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code>.</p>
+          <p>Implements an Monitor based on multiple inputs, that are used in the LTL expression and a clock.
+state.options has to hold the id of the clock, the states, the initial state as <code class="inline">current_state</code>
+and the transitions.</p>
 
         </section>
       

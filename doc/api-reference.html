@@ -4,22 +4,20 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.14.1">
     <title>API Reference – tessla_server v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="extras">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
 <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -50,26 +48,18 @@
 
     
   </ul>
-
+  <div class="gradient"></div>
   <ul id="full-list" class="sidebar-fullList"></ul>
-  <div class="sidebar-noResults"></div>
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
   <h1>
     <small class="visible-xs">tessla_server v0.0.1</small>
     API Reference
   </h1>
-
-  <ul class="summary-links">
-    
-      <li><a href="#modules">Modules</a></li>
-    
-    
-    
-  </ul>
 
   
     <section id="modules" class="details-list">
@@ -83,9 +73,375 @@
   
 </div>
 <div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.EventCount.html">TesslaServer.Computation.Aggregation.EventCount</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits a Signal holding the amount of Events happened on an Event
+Stream.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events should be counted</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.EventMaximum.html">TesslaServer.Computation.Aggregation.EventMaximum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits the maximum value ever occured on an Event Stream
+or a default value if it’s bigger than all values occured to that point</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.EventMinimum.html">TesslaServer.Computation.Aggregation.EventMinimum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits the minimum value ever occured on an Event Stream
+or a default value if it’s smaller than all values occured to that point</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.Mrv.html">TesslaServer.Computation.Aggregation.Mrv</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits a Signal holding the value of the latest event happened on the input.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the EventStream which values should be converted into a Signal and options has to hold
+the initial value under the key <code class="inline">default</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.SignalMaximum.html">TesslaServer.Computation.Aggregation.SignalMaximum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits the maximum value ever occured on an Signal Stream
+or a default value if it’s bigger than all values occured to that point</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.SignalMinimum.html">TesslaServer.Computation.Aggregation.SignalMinimum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits the minimum value ever occured on an Signal Stream
+or a default value if it’s smaller than all values occured to that point</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.Sma.html">TesslaServer.Computation.Aggregation.Sma</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits an Event with the simple moving average 
+of the last x input events every time a new Event is received.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events should be the base for the computation and the options map has to hold a key
+<code class="inline">count</code> specifying the amount of Events which the average should be formed over</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Aggregation.Sum.html">TesslaServer.Computation.Aggregation.Sum</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits a Signal holding the summed value of all events happened on the
+input EventStream.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events’ values should be summed</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.ChangeOf.html">TesslaServer.Computation.Filter.ChangeOf</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits Events with the value of a Signal whenever the Signal changes
+it’s value.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one integer specifying the id of
+the Signal of which the changes should be emitted</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.Filter.html">TesslaServer.Computation.Filter.Filter</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that filters an event stream by the value of a boolean Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.IfThen.html">TesslaServer.Computation.Filter.IfThen</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits Events with the value of a Signal whenever an input Event is
+received</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.IfThenElse.html">TesslaServer.Computation.Filter.IfThenElse</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits a Signal with the value of the second input Signal if the first
+boolean Signal is <code class="inline">true</code> or with the value of the third signal otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.Merge.html">TesslaServer.Computation.Filter.Merge</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that merges two event streams.
+The first specified stream takes presedence over the second, meaning if on both streams
+an event happens at the same time, the value of the first will be used</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.OccurAll.html">TesslaServer.Computation.Filter.OccurAll</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Comptation</code> that emits Events whenever both input stream are emitting an Event</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.OccurAny.html">TesslaServer.Computation.Filter.OccurAny</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits Events whenever one input stream is emitting an Event</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Filter.Sample.html">TesslaServer.Computation.Filter.Sample</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits Events with the value of a Signal whenever an input Event is
+received</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.InputBuffer.html">TesslaServer.Computation.InputBuffer</a></div>
+  
+    <div class="summary-synopsis"><p>Functionality to buffer inputs to a computations and get the next
+events to compute</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Add.html">TesslaServer.Computation.Lifted.Add</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that adds two Signals</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.And.html">TesslaServer.Computation.Lifted.And</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that performs an <code class="inline">and</code> on two boolean signals</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Div.html">TesslaServer.Computation.Lifted.Div</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that divides two Signals</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Eq.html">TesslaServer.Computation.Lifted.Eq</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Signals.
+if both are the same and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.EventAbs.html">TesslaServer.Computation.Lifted.EventAbs</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that computes the absolute value of an Event Stream</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.EventNot.html">TesslaServer.Computation.Lifted.EventNot</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that computes the boolean not of a boolean Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.GenLifted.html">TesslaServer.Computation.Lifted.GenLifted</a></div>
+  
+    <div class="summary-synopsis"><p>Convenience wrapper for Lifted Computations working on two Signals and combine them somehow</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Geq.html">TesslaServer.Computation.Lifted.Geq</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Signals and emits true if the first is
+greater or equal to the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Gt.html">TesslaServer.Computation.Lifted.Gt</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Signals and emits true
+if the first is greater than the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Implies.html">TesslaServer.Computation.Lifted.Implies</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that performs an <code class="inline">implies</code> on two boolean Signals</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Leq.html">TesslaServer.Computation.Lifted.Leq</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Signals and returns true if the first is
+smaller or equal to the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Lt.html">TesslaServer.Computation.Lifted.Lt</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Signals and returns true if the first is
+smaller than the second and false otherwise</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Max.html">TesslaServer.Computation.Lifted.Max</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer signals and yields the value of the bigger one</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Min.html">TesslaServer.Computation.Lifted.Min</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that compares two integer Streams and returns the smaller one</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Mul.html">TesslaServer.Computation.Lifted.Mul</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that multiplies two Signals</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Neg.html">TesslaServer.Computation.Lifted.Neg</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that computes the negative value of a Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Or.html">TesslaServer.Computation.Lifted.Or</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that performs an <code class="inline">or</code> on two boolean streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.SignalAbs.html">TesslaServer.Computation.Lifted.SignalAbs</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that computes the absolute value of a Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.SignalNot.html">TesslaServer.Computation.Lifted.SignalNot</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that computes the boolean not of a boolean Signal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Lifted.Sub.html">TesslaServer.Computation.Lifted.Sub</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that substracts two event streams</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Literal.html">TesslaServer.Computation.Literal</a></div>
+  
+    <div class="summary-synopsis"><p>Represents a Literal</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Monitors.Monitor.html">TesslaServer.Computation.Monitors.Monitor</a></div>
+  
+    <div class="summary-synopsis"><p>Implements an Monitor based on multiple inputs, that are used in the LTL expression and a clock.
+state.options has to hold the id of the clock, the states, the initial state as <code class="inline">current_state</code>
+and the transitions</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.State.html">TesslaServer.Computation.State</a></div>
+  
+    <div class="summary-synopsis"><p>Struct to represent the state of a <code class="inline">Computation</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Timing.DelayEventByCount.html">TesslaServer.Computation.Timing.DelayEventByCount</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that delays input events until a later event occurs.
+The Number of events that need to occur must be specified under <code class="inline">count</code> in <code class="inline">state.options</code>.
+The Stream that should be delayed should be specified in <code class="inline">state.operands</code> as the only id in the list</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Timing.DelayEventByTime.html">TesslaServer.Computation.Timing.DelayEventByTime</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that delays the values of an Eventstream by the amount specified in
+<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Timing.DelaySignalByTime.html">TesslaServer.Computation.Timing.DelaySignalByTime</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that delays the values of a Signal by the amount specified in
+<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds.
+Only tested for positive values of amount.
+The output signal will hold the value specified under the key <code class="inline">default</code> in <code class="inline">state.options</code> as long as the first value
+is delayed</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Timing.InPast.html">TesslaServer.Computation.Timing.InPast</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits a Signal holding the value true whenever
+an event happened on the input in a specified amount of time in the past.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing
+the id of the Event Stream which should be monitored and <code class="inline">state.options</code> has to
+hold the key <code class="inline">amount</code> specifying the timeslot where an event should have happened
+in past in microseconds</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature"><a href="TesslaServer.Computation.Timing.Timestamps.html">TesslaServer.Computation.Timing.Timestamps</a></div>
+  
+    <div class="summary-synopsis"><p>Implements a <code class="inline">Computation</code> that emits an Event everytime an input Event is
+received and has its timestamp as it’s value.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing
+the id of the Event Stream which timestamps should be emitted</p>
+</div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Event.html">TesslaServer.Event</a></div>
   
-    <div class="summary-synopsis"><p>Contains the struct to represents Events which are modified by <a href="TesslaServer.Node.html"><code class="inline">TesslaServer.Node</code></a> implementations</p>
+    <div class="summary-synopsis"><p>Represents an <code class="inline">Event</code> on a Stream.
+Note that Event here is meant in a broader sense than the Tessla one,
+as it can represent an event on an eventstream, a change of a signal or
+the progress of a stream</p>
 </div>
   
 </div>
@@ -97,376 +453,12 @@
   
 </div>
 <div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.EventStream.html">TesslaServer.EventStream</a></div>
+  <div class="summary-signature"><a href="TesslaServer.GenComputation.html">TesslaServer.GenComputation</a></div>
   
-    <div class="summary-synopsis"><p>Represents a Stream, generated either from external Events or by computation through
-a <code class="inline">Node</code>
-Note that <code class="inline">progressed_to</code> can be bigger than the <code class="inline">timestamp</code> of the latest <code class="inline">Event</code>:
-If all Inputs of the <code class="inline">Node</code> generating this <code class="inline">Stream</code> have advanced to at least <code class="inline">t</code> but
-no new Event is generated (e.g. because the <code class="inline">Node</code> is a delay with a higher value)
-the <code class="inline">Stream</code> will be progressed to <code class="inline">t</code> but no Event with a timestamp <code class="inline">t</code> is present</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.html">TesslaServer.Node</a></div>
-  
-    <div class="summary-synopsis"><p>Base Module to work with Modules implementing the Node behaviour.
-Note that nodes should implement specific GenServer calls, this cant be expressed right now by
+    <div class="summary-synopsis"><p>Base Module to work with Modules implementing the GenComputation behaviour.
+Note that Computations should implement specific GenServer calls, this cant be expressed right now by
 callbacks because the callbacks are allready defined in GenServer.
-Look at the methods below to see which messages are sent to a Node</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.EventCount.html">TesslaServer.Node.Aggregation.EventCount</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the amount of Events happened on an Event
-Stream.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the Event Stream which events should be counted</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.EventMaximum.html">TesslaServer.Node.Aggregation.EventMaximum</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the maximum value ever occured on an Event Stream
-or a default value if it’s bigger than all values occured to that point</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.EventMinimum.html">TesslaServer.Node.Aggregation.EventMinimum</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the minimum value ever occured on an Event Stream
-or a default value if it’s smaller than all values occured to that point</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Mrv.html">TesslaServer.Node.Aggregation.Mrv</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the value of the latest event happened on the input.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the EventStream which values should be converted into a Signal</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.SignalMaximum.html">TesslaServer.Node.Aggregation.SignalMaximum</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the maximum value ever occured on an Signal Stream
-or a default value if it’s bigger than all values occured to that point</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.SignalMinimum.html">TesslaServer.Node.Aggregation.SignalMinimum</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits the minimum value ever occured on an Signal Stream
-or a default value if it’s smaller than all values occured to that point</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Sma.html">TesslaServer.Node.Aggregation.Sma</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits an Event with the simple moving average of the last x input events every time a
-new Event is received.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the Event Stream which events should be the base for the computation and the options map has to hold a key
-<code class="inline">count</code> specifying the amount of Events which the average should be formed over</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Aggregation.Sum.html">TesslaServer.Node.Aggregation.Sum</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the summed value of all events happened on the
-input EventStream.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the Event Stream which events’ values should be summed</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.ChangeOf.html">TesslaServer.Node.Filter.ChangeOf</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever the Signal changes
-it’s value.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one integer specifying the id of
-the Signal of which the changes should be emitted</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Filter.html">TesslaServer.Node.Filter.Filter</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that filters an event stream by the value of a boolean Signal</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.IfThen.html">TesslaServer.Node.Filter.IfThen</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever an input Event is
-received</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.IfThenElse.html">TesslaServer.Node.Filter.IfThenElse</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal with the value of the second input Signal if the first
-boolean Signal is <code class="inline">true</code> or with the value of the third signal otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Merge.html">TesslaServer.Node.Filter.Merge</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that merges two event streams.
-The first specified stream takes presedence over the second, meaning if on both streams
-an event happens at the same time, the value of the first will be used</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.OccurAll.html">TesslaServer.Node.Filter.OccurAll</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events whenever both input stream are emitting an Event</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.OccurAny.html">TesslaServer.Node.Filter.OccurAny</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events whenever one input stream is emitting an Event</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Filter.Sample.html">TesslaServer.Node.Filter.Sample</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits Events with the value of a Signal whenever an input Event is
-received</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.History.html">TesslaServer.Node.History</a></div>
-  
-    <div class="summary-synopsis"><p>Contains the Structure and Methods to work with the History of a <a href="TesslaServer.Node.html"><code class="inline">TesslaServer.Node</code></a></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Add.html">TesslaServer.Node.Lifted.Add</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that adds two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.And.html">TesslaServer.Node.Lifted.And</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">and</code> on two boolean streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Div.html">TesslaServer.Node.Lifted.Div</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that divides two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Eq.html">TesslaServer.Node.Lifted.Eq</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true 
-if both are the same and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.EventAbs.html">TesslaServer.Node.Lifted.EventAbs</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.EventNot.html">TesslaServer.Node.Lifted.EventNot</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the boolean not of a boolean stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Geq.html">TesslaServer.Node.Lifted.Geq</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
-greater or equal to the second and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Gt.html">TesslaServer.Node.Lifted.Gt</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
-greater than the second and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Implies.html">TesslaServer.Node.Lifted.Implies</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">implies</code> on two boolean streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Leq.html">TesslaServer.Node.Lifted.Leq</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
-smaller or equal to the second and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Lt.html">TesslaServer.Node.Lifted.Lt</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns true if the first is
-smaller than the second and false otherwise</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Max.html">TesslaServer.Node.Lifted.Max</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns the bigger one</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Min.html">TesslaServer.Node.Lifted.Min</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that compares two integer Streams and returns the smaller one</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Mul.html">TesslaServer.Node.Lifted.Mul</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that multiplies two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Neg.html">TesslaServer.Node.Lifted.Neg</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the negative value of a stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Or.html">TesslaServer.Node.Lifted.Or</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that performs an <code class="inline">or</code> on two boolean streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.SignalAbs.html">TesslaServer.Node.Lifted.SignalAbs</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the absolute value of a stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.SignalNot.html">TesslaServer.Node.Lifted.SignalNot</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that computes the boolean not of a boolean stream</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Lifted.Sub.html">TesslaServer.Node.Lifted.Sub</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that substracts two event streams</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Literal.html">TesslaServer.Node.Literal</a></div>
-  
-    <div class="summary-synopsis"><p>Represents a Literal</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Monitors.Monitor.html">TesslaServer.Node.Monitors.Monitor</a></div>
-  
-    <div class="summary-synopsis"><p>Implements an Monitor based on multiple inputs, that are used in the LTL expression and a clock.
-state.options has to hold the id of the clock, the states, the initial state as <code class="inline">current_state</code>
-and the transitions</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.State.html">TesslaServer.Node.State</a></div>
-  
-    <div class="summary-synopsis"><p>Struct to represent the state of a <code class="inline">Node</code></p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Timing.DelayEventByCount.html">TesslaServer.Node.Timing.DelayEventByCount</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that delays input events until a later event occurs.
-The Number of events that need to occur must be specified under <code class="inline">count</code> in <code class="inline">state.options</code>.
-The Stream that should be delayed should be specified in <code class="inline">state.operands</code> as the only id in the list</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Timing.DelayEventByTime.html">TesslaServer.Node.Timing.DelayEventByTime</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that delays the values of an <code class="inline">EventStream</code> by the amount specified in
-<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Timing.DelaySignalByTime.html">TesslaServer.Node.Timing.DelaySignalByTime</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that delays the values of a signal Stream by the amount specified in
-<code class="inline">options</code> under the key <code class="inline">amount</code> in microseconds.
-Only tested for positive values of amount.
-The output signal will hold the value specified under the key <code class="inline">default</code> in <code class="inline">state.options</code> as long as the first value
-is delayed</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Timing.InPast.html">TesslaServer.Node.Timing.InPast</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits a Signal holding the value true whenever an event happened on the input in a specified
-amount of time in the past.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the Event Stream which should be monitored and <code class="inline">state.options</code> has to hold the key <code class="inline">amount</code> specifying the timeslot
-where an event should have happened in past in microseconds</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.Node.Timing.Timestamps.html">TesslaServer.Node.Timing.Timestamps</a></div>
-  
-    <div class="summary-synopsis"><p>Implements a <code class="inline">Node</code> that emits an Event everytime an input Event is received and has it’s timestamp as it’s value.
-To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
-the Event Stream which timestamps should be emitted</p>
+Look at the methods below to see which messages are sent to a Computation</p>
 </div>
   
 </div>
@@ -474,21 +466,14 @@ the Event Stream which timestamps should be emitted</p>
   <div class="summary-signature"><a href="TesslaServer.Output.html">TesslaServer.Output</a></div>
   
     <div class="summary-synopsis"><p>Used to log outputs.
-Has to be initialized at startup to hold the ids and names of nodes that should be logged</p>
+Has to be initialized at startup to hold the ids and names of streams that should be logged</p>
 </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.Registry.html">TesslaServer.Registry</a></div>
   
-    <div class="summary-synopsis"><p>Helper functions for node registration</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.SimpleNode.html">TesslaServer.SimpleNode</a></div>
-  
-    <div class="summary-synopsis"><p>Basic implementation of the Node behaviour that can be used by concrete Nodes to bootstrap</p>
+    <div class="summary-synopsis"><p>Helper functions for process registration</p>
 </div>
   
 </div>
@@ -543,28 +528,7 @@ The variable has to be specified as a <code class="inline">String.t</code> in <c
 <div class="summary-row">
   <div class="summary-signature"><a href="TesslaServer.SpecProcessor.GraphBuilder.html">TesslaServer.SpecProcessor.GraphBuilder</a></div>
   
-    <div class="summary-synopsis"><p>Takes a Tessla spec and generates a DAG of <a href="TesslaServer.Node.html"><code class="inline">TesslaServer.Node</code></a> modules which represents the spec</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.SpecProcessor.Lexer.html">TesslaServer.SpecProcessor.Lexer</a></div>
-  
-    <div class="summary-synopsis"><p>Lexes the cleaned and structured tessla spec</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.SpecProcessor.Parser.html">TesslaServer.SpecProcessor.Parser</a></div>
-  
-    <div class="summary-synopsis"><p>Invokes the parser on the lexed input</p>
-</div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature"><a href="TesslaServer.SpecProcessor.Preprocessor.html">TesslaServer.SpecProcessor.Preprocessor</a></div>
-  
-    <div class="summary-synopsis"><p>Preprocesses a Tessla Spec</p>
+    <div class="summary-synopsis"><p>Takes a Tessla spec and generates a DAG of <a href="TesslaServer.GenComputation.html"><code class="inline">TesslaServer.GenComputation</code></a> modules which represents the spec</p>
 </div>
   
 </div>
@@ -576,23 +540,24 @@ The variable has to be specified as a <code class="inline">String.t</code> in <c
   
 
   
-    <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-5d1225399a.js"></script>
   </body>
 </html>
 

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Registry – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.State – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,14 +59,14 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Registry
+        TesslaServer.Computation.State
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Helper functions for process registration</p>
+          <p>Struct to represent the state of a <code class="inline">Computation</code></p>
 
         </section>
       
@@ -80,39 +80,27 @@
             Summary
           </h1>
           
-
-          
-  <div class="summary-functions summary">
+  <div class="summary-types summary">
     <h2>
-      <a href="#functions">Functions</a>
+      <a href="#types">Types</a>
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_pid/1">get_pid(key)</a>
+    <a href="#t:cache/0">cache()</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#register/1">register(name)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#subscribe_to/1">subscribe_to(channel)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#via_tuple/2">via_tuple(name, property? \\ :name)</a>
+    <a href="#t:t/0">t()</a>
   </div>
   
 </div>
 
   </div>
 
+
+          
 
           
 
@@ -122,65 +110,48 @@
       
 
       
-
-      
-        <section id="functions" class="details-list">
+        <section id="types" class="details-list">
           <h1 class="section-heading">
-            <a class="hover-link" href="#functions">
+            <a class="hover-link" href="#types">
               <i class="icon-link"></i>
             </a>
-            Functions
+            Types
           </h1>
-          <div class="detail" id="get_pid/1">
+          <div class="types-list">
+            <div class="detail" id="t:cache/0">
   <div class="detail-header">
-    <a href="#get_pid/1" class="detail-link" title="Link to this function">
+    <a href="#t:cache/0" class="detail-link" title="Link to this type">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_pid(key)</span>
+    <span class="signature">cache()</span>
     
     
+    
+      <div class="specs">
+        
+          <pre><a href="#t:cache/0">cache</a> :: %{}</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="register/1">
+<div class="detail" id="t:t/0">
   <div class="detail-header">
-    <a href="#register/1" class="detail-link" title="Link to this function">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">register(name)</span>
+    <span class="signature">t()</span>
     
     
     
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="subscribe_to/1">
-  <div class="detail-header">
-    <a href="#subscribe_to/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">subscribe_to(channel)</span>
-    
-    
-    
-  </div>
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="via_tuple/2">
-  <div class="detail-header">
-    <a href="#via_tuple/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">via_tuple(name, property? \\ :name)</span>
-    
-    
+      <div class="specs">
+        
+          <pre><a href="#t:t/0">t</a> :: %TesslaServer.Computation.State{cache: %{}, children: [<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>], input_buffer: <a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a>, operands: [<a href="TesslaServer.GenComputation.html#t:id/0">TesslaServer.GenComputation.id</a>], options: %{}, stream_id: <a href="TesslaServer.GenComputation.html#t:id/0">TesslaServer.GenComputation.id</a>}</pre>
+        
+      </div>
     
   </div>
   <section class="docstring">
@@ -188,7 +159,10 @@
   </section>
 </div>
 
+          </div>
         </section>
+      
+
       
 
       

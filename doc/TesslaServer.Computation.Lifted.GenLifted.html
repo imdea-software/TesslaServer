@@ -1,19 +1,19 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>404 – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Lifted.GenLifted – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
-  <body data-type="extras">
+  <body data-type="modules">
     <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
-<div class="main">
+    <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
@@ -57,14 +57,38 @@
     <div id="content" class="content-inner">
 
 
-<h2>Page not found</h2>
+      <h1>
+        <small class="visible-xs">tessla_server v0.0.1</small>
+        TesslaServer.Computation.Lifted.GenLifted
+        
+        
+      </h1>
 
-<p>Sorry, but the page you were trying to get to, does not exist. You
-may want to try searching this site using the sidebar or using our
-<a href="api-reference.html" title="API Reference">API Reference</a> page to find what
-you were looking for.</p>
+      
+        <section id="moduledoc">
+          <p>Convenience wrapper for Lifted Computations working on two Signals and combine them somehow.</p>
+<p>If you implement a new Computation that does something similar you should consider
+using this module instead to avoid duplication.</p>
+<p>To use it, just add <code class="inline">use GenLifted, combine_operation: &amp;x, equal_operation: &amp;y</code> after
+<code class="inline">use GenComputation</code>.</p>
+<p><code class="inline">combine_operation</code> will be used to combine the values of the signals whenever one or both changes.
+<code class="inline">equal_operation</code> will be used to determine if the new value is equal to the last output.
+When it returns false, a new change will be generated, else a progress event will be generated.</p>
+<p>Note that this module takes care of progress events as inputs.</p>
 
-      <footer class="footer">
+        </section>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+          <footer class="footer">
         <p>
           <span class="line">
             Built using

@@ -1,0 +1,343 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.14.1">
+    <title>TesslaServer.Computation.InputBuffer – tessla_server v0.0.1</title>
+    <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        tessla_server
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">tessla_server v0.0.1</small>
+        TesslaServer.Computation.InputBuffer
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>Functionality to buffer inputs to a computations and get the next
+events to compute.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:event_map/0">event_map()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+  
+</div>
+
+  </div>
+
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#add_event/2">add_event(buffer, event)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Adds an <code class="inline">event</code> to the appropriate queue in the <code class="inline">buffer</code>.
+If the <code class="inline">buffer</code> wasn’t initialized with the <code class="inline">id</code> of the <code class="inline">event</code> en error
+will be raised</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#can_progress?/1">can_progress?(buffer)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Determines if the buffer holds enough events to progress.
+This means that there is an event present on each queues</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#new/1">new(ids)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Sets up a new <code class="inline">InputBuffer</code> with empty queues for the given <code class="inline">ids</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pop_head/1">pop_head(buffer)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Splits the <code class="inline">buffer</code> into an event map, containing all events of the queues
+at the minimal timestamp of all queues.
+If <code class="inline">can_progress?</code> returns <code class="inline">true</code> for the buffer, this function is guaranteed to
+return a non empty event_map, else the event_map will be nil and the buffer
+will be returned unmodified</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+
+        </section>
+      
+
+      
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div class="detail" id="t:event_map/0">
+  <div class="detail-header">
+    <a href="#t:event_map/0" class="detail-link" title="Link to this type">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">event_map()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre><a href="#t:event_map/0">event_map</a> :: %{optional(<a href="TesslaServer.GenComputation.html#t:id/0">TesslaServer.GenComputation.id</a>) => <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="t:t/0">
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">t()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre><a href="#t:t/0">t</a> :: %TesslaServer.Computation.InputBuffer{input_queues: queue}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+
+          </div>
+        </section>
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="add_event/2">
+  <div class="detail-header">
+    <a href="#add_event/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">add_event(buffer, event)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>add_event(<a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: <a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Adds an <code class="inline">event</code> to the appropriate queue in the <code class="inline">buffer</code>.
+If the <code class="inline">buffer</code> wasn’t initialized with the <code class="inline">id</code> of the <code class="inline">event</code> en error
+will be raised.</p>
+
+  </section>
+</div>
+<div class="detail" id="can_progress?/1">
+  <div class="detail-header">
+    <a href="#can_progress?/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">can_progress?(buffer)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>can_progress?(<a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a>) :: boolean</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Determines if the buffer holds enough events to progress.
+This means that there is an event present on each queues.</p>
+
+  </section>
+</div>
+<div class="detail" id="new/1">
+  <div class="detail-header">
+    <a href="#new/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">new(ids)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>new([<a href="TesslaServer.GenComputation.html#t:id/0">TesslaServer.GenComputation.id</a>]) :: <a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Sets up a new <code class="inline">InputBuffer</code> with empty queues for the given <code class="inline">ids</code>.</p>
+
+  </section>
+</div>
+<div class="detail" id="pop_head/1">
+  <div class="detail-header">
+    <a href="#pop_head/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">pop_head(buffer)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>pop_head(<a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a>) :: {<a href="#t:event_map/0">event_map</a> | nil, Timex.Duration.t | nil, <a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a>}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Splits the <code class="inline">buffer</code> into an event map, containing all events of the queues
+at the minimal timestamp of all queues.
+If <code class="inline">can_progress?</code> returns <code class="inline">true</code> for the buffer, this function is guaranteed to
+return a non empty event_map, else the event_map will be nil and the buffer
+will be returned unmodified.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-5d1225399a.js"></script>
+  </body>
+</html>
+

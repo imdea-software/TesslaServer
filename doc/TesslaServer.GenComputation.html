@@ -1,0 +1,431 @@
+    <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.14.1">
+    <title>TesslaServer.GenComputation – tessla_server v0.0.1</title>
+    <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
+    
+    <script src="dist/sidebar_items.js"></script>
+  </head>
+  <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
+
+    <div class="main">
+<button class="sidebar-toggle">
+  <i class="icon-menu"></i>
+</button>
+<section class="sidebar">
+
+  
+  <a href="api-reference.html" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+        tessla_server
+      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.0.1
+      </h2>
+    </div>
+    
+  </a>
+
+  <div class="sidebar-search">
+    <i class="icon-search"></i>
+    <input type="text" class="sidebar-searchInput" placeholder="search" autocomplete="off" />
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+    
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+    
+
+    
+
+    
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">tessla_server v0.0.1</small>
+        TesslaServer.GenComputation
+        
+          <small>behaviour</small>
+        
+        
+      </h1>
+
+      
+        <section id="moduledoc">
+          <p>Base Module to work with Modules implementing the GenComputation behaviour.
+Note that Computations should implement specific GenServer calls, this cant be expressed right now by
+callbacks because the callbacks are allready defined in GenServer.
+Look at the methods below to see which messages are sent to a Computation.</p>
+
+        </section>
+      
+
+      
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <i class="icon-link"></i>
+            </a>
+            Summary
+          </h1>
+          
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:id/0">id()</a>
+  </div>
+  
+</div>
+
+  </div>
+
+
+          
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#add_child/2">add_child(parent, child)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Adds a new child to the specified <code class="inline">Computation</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#send_event/2">send_event(id, event)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Sends a new <code class="inline">Event</code> to the <code class="inline">Computation</code> that is registered with <code class="inline">id</code> to process it</p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#stop/1">stop(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Stops a <code class="inline">Computation</code> and unregisters its id from <code class="inline">gproc</code></p>
+</div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#subscribe_to_operands/1">subscribe_to_operands(id)</a>
+  </div>
+  
+    <div class="summary-synopsis"><p>Subscribes the <code class="inline">Computation</code> specified by <code class="inline">id</code> to all <code class="inline">Computation</code> it is a descendant of</p>
+</div>
+  
+</div>
+
+  </div>
+
+
+          
+
+          
+  <div class="summary-callbacks summary">
+    <h2>
+      <a href="#callbacks">Callbacks</a>
+    </h2>
+    <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:init_cache/1">init_cache(arg0)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:init_input_buffer/1">init_input_buffer(list)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:output_event_type/0">output_event_type()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#c:process_event_map/3">process_event_map(arg0, arg1, arg2)</a>
+  </div>
+  
+</div>
+
+  </div>
+
+
+        </section>
+      
+
+      
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <i class="icon-link"></i>
+            </a>
+            Types
+          </h1>
+          <div class="types-list">
+            <div class="detail" id="t:id/0">
+  <div class="detail-header">
+    <a href="#t:id/0" class="detail-link" title="Link to this type">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">id()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre><a href="#t:id/0">id</a> :: integer | nil</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+
+          </div>
+        </section>
+      
+
+      
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <i class="icon-link"></i>
+            </a>
+            Functions
+          </h1>
+          <div class="detail" id="add_child/2">
+  <div class="detail-header">
+    <a href="#add_child/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">add_child(parent, child)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>add_child(<a href="#t:id/0">id</a>, <a href="#t:id/0">id</a>) :: :ok</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Adds a new child to the specified <code class="inline">Computation</code></p>
+
+  </section>
+</div>
+<div class="detail" id="send_event/2">
+  <div class="detail-header">
+    <a href="#send_event/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">send_event(id, event)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>send_event(<a href="#t:id/0">id</a>, <a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>) :: :ok</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Sends a new <code class="inline">Event</code> to the <code class="inline">Computation</code> that is registered with <code class="inline">id</code> to process it</p>
+
+  </section>
+</div>
+<div class="detail" id="stop/1">
+  <div class="detail-header">
+    <a href="#stop/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">stop(id)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>stop(<a href="#t:id/0">id</a>) :: :ok</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Stops a <code class="inline">Computation</code> and unregisters its id from <code class="inline">gproc</code></p>
+
+  </section>
+</div>
+<div class="detail" id="subscribe_to_operands/1">
+  <div class="detail-header">
+    <a href="#subscribe_to_operands/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">subscribe_to_operands(id)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>subscribe_to_operands(<a href="#t:id/0">id</a>) :: :ok</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    <p>Subscribes the <code class="inline">Computation</code> specified by <code class="inline">id</code> to all <code class="inline">Computation</code> it is a descendant of.</p>
+
+  </section>
+</div>
+
+        </section>
+      
+
+      
+
+      
+        <section id="callbacks" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#callbacks">
+              <i class="icon-link"></i>
+            </a>
+            Callbacks
+          </h1>
+          <div class="detail" id="c:init_cache/1">
+  <div class="detail-header">
+    <a href="#c:init_cache/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">init_cache(arg0)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>init_cache(<a href="TesslaServer.Computation.State.html#t:t/0">TesslaServer.Computation.State.t</a>) :: <a href="TesslaServer.Computation.State.html#t:cache/0">TesslaServer.Computation.State.cache</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:init_input_buffer/1">
+  <div class="detail-header">
+    <a href="#c:init_input_buffer/1" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">init_input_buffer(list)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>init_input_buffer([GenComputation.id]) :: <a href="TesslaServer.Computation.InputBuffer.html#t:t/0">TesslaServer.Computation.InputBuffer.t</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:output_event_type/0">
+  <div class="detail-header">
+    <a href="#c:output_event_type/0" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">output_event_type()</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>output_event_type :: <a href="TesslaServer.Event.html#t:event_type/0">TesslaServer.Event.event_type</a></pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="c:process_event_map/3">
+  <div class="detail-header">
+    <a href="#c:process_event_map/3" class="detail-link" title="Link to this callback">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">process_event_map(arg0, arg1, arg2)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>process_event_map(<a href="TesslaServer.Computation.InputBuffer.html#t:event_map/0">TesslaServer.Computation.InputBuffer.event_map</a>, Duration.t, <a href="TesslaServer.Computation.State.html#t:t/0">TesslaServer.Computation.State.t</a>) ::
+  {:ok, events, <a href="TesslaServer.Computation.State.html#t:cache/0">TesslaServer.Computation.State.cache</a>} |
+  {:wait, <a href="TesslaServer.Computation.State.html#t:cache/0">TesslaServer.Computation.State.cache</a>} |
+  {:progress, <a href="TesslaServer.Computation.State.html#t:cache/0">TesslaServer.Computation.State.cache</a>}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
+  </section>
+</div>
+
+        </section>
+      
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.14.1),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/app-5d1225399a.js"></script>
+  </body>
+</html>
+

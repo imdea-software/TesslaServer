@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Source.InstructionExecutions – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Aggregation.Sma – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,18 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Source.InstructionExecutions
+        TesslaServer.Computation.Aggregation.Sma
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
-executed.
-The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code>.</p>
+          <p>Implements a <code class="inline">Computation</code> that emits an Event with the simple moving average 
+of the last x input events every time a new Event is received.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing the id of
+the Event Stream which events should be the base for the computation and the options map has to hold a key
+<code class="inline">count</code> specifying the amount of Events which the average should be formed over.</p>
 
         </section>
       

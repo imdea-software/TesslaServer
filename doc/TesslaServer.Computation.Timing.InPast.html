@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Source.InstructionExecutions – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Timing.InPast – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,19 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Source.InstructionExecutions
+        TesslaServer.Computation.Timing.InPast
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
-executed.
-The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code>.</p>
+          <p>Implements a <code class="inline">Computation</code> that emits a Signal holding the value true whenever
+an event happened on the input in a specified amount of time in the past.
+To do so the <code class="inline">state.operands</code> list has to be initialized with one id representing
+the id of the Event Stream which should be monitored and <code class="inline">state.options</code> has to
+hold the key <code class="inline">amount</code> specifying the timeslot where an event should have happened
+in past in microseconds.</p>
 
         </section>
       
@@ -122,6 +125,12 @@ The instruction has to be specified as a <code class="inline">String.t</code> in
   
     <div class="summary-synopsis"><p>Callback implementation for <a href="TesslaServer.GenComputation.html#c:process_event_map/3"><code class="inline">TesslaServer.GenComputation.process_event_map/3</code></a></p>
 </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#produce_changes/5">produce_changes(false_needed, true_needed, false_timestamp, true_timestamp, state)</a>
+  </div>
   
 </div>
 <div class="summary-row">
@@ -227,6 +236,26 @@ The instruction has to be specified as a <code class="inline">String.t</code> in
   <section class="docstring">
     <p>Callback implementation for <a href="TesslaServer.GenComputation.html#c:process_event_map/3"><code class="inline">TesslaServer.GenComputation.process_event_map/3</code></a>.</p>
 
+  </section>
+</div>
+<div class="detail" id="produce_changes/5">
+  <div class="detail-header">
+    <a href="#produce_changes/5" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">produce_changes(false_needed, true_needed, false_timestamp, true_timestamp, state)</span>
+    
+    
+    
+      <div class="specs">
+        
+          <pre>produce_changes(boolean, boolean, Timex.Duration.t, Timex.Duration.t, <a href="TesslaServer.Computation.State.html#t:t/0">TesslaServer.Computation.State.t</a>) :: {[<a href="TesslaServer.Event.html#t:t/0">TesslaServer.Event.t</a>], %{}}</pre>
+        
+      </div>
+    
+  </div>
+  <section class="docstring">
+    
   </section>
 </div>
 <div class="detail" id="progress/1">

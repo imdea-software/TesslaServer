@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.14.1">
-    <title>TesslaServer.Source.InstructionExecutions – tessla_server v0.0.1</title>
+    <title>TesslaServer.Computation.Timing.DelayEventByCount – tessla_server v0.0.1</title>
     <link rel="stylesheet" href="dist/app-23e810f3fe.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,16 +59,16 @@
 
       <h1>
         <small class="visible-xs">tessla_server v0.0.1</small>
-        TesslaServer.Source.InstructionExecutions
+        TesslaServer.Computation.Timing.DelayEventByCount
         
         
       </h1>
 
       
         <section id="moduledoc">
-          <p>Implements a <code class="inline">Source</code> that emits events without a value whenever a specified instruction is
-executed.
-The instruction has to be specified as a <code class="inline">String.t</code> in <code class="inline">options</code> under the key <code class="inline">instruction</code>.</p>
+          <p>Implements a <code class="inline">Computation</code> that delays input events until a later event occurs.
+The Number of events that need to occur must be specified under <code class="inline">count</code> in <code class="inline">state.options</code>.
+The Stream that should be delayed should be specified in <code class="inline">state.operands</code> as the only id in the list.</p>
 
         </section>
       
