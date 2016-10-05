@@ -1,4 +1,5 @@
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)   
+[![Build Status](https://semaphoreci.com/api/v1/miradorn/tesslaserver/branches/master/badge.svg)](https://semaphoreci.com/miradorn/tesslaserver)
 
 # Introduction
 
