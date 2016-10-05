@@ -9,7 +9,8 @@ defmodule TesslaServer.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps,
-     preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],
+     preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test,
+      "coveralls.html": :test, "coveralls.semaphore": :test],
      test_coverage: [tool: ExCoveralls]]
   end
 
@@ -39,14 +40,14 @@ defmodule TesslaServer.Mixfile do
     [
       {:timex, "~> 3.0"},
       {:tzdata, "~> 0.1.8", override: true},
-      {:earmark, "~> 1.0", only: [:dev, :test]},
-      {:ex_doc, "~> 0.13", only: [:dev, :test]},
+      {:earmark, "~> 1.0", only: :dev},
+      {:ex_doc, "~> 0.13", only: :dev},
       {:gproc, "~> 0.5"},
-      {:dogma, "~> 0.1", only: [:dev, :test]},
+      {:dogma, "~> 0.1", only: :dev},
       {:credo, "~> 0.4", only: [:dev, :test]},
       {:poison, "~> 2.0"},
       {:excoveralls, "~> 0.5", only: :test},
-      {:dialyxir, "~> 0.3", only: [:dev, :test]}
+      {:dialyxir, "~> 0.3", only: [:dev]}
     ]
   end
 
