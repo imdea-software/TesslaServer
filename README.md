@@ -1,5 +1,5 @@
 # TesslaServer
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)[![Build Status](https://semaphoreci.com/api/v1/miradorn/tesslaserver/branches/master/badge.svg)](https://semaphoreci.com/miradorn/tesslaserver)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)[![Build Status](https://semaphoreci.com/api/v1/miradorn/tesslaserver/branches/master/badge.svg)](https://semaphoreci.com/miradorn/tesslaserver)[![Deps Status](https://beta.hexfaktor.org/badge/all/github/imdea-software/TesslaServer.svg)](https://beta.hexfaktor.org/github/imdea-software/TesslaServer)
 
 ## Introduction
 
