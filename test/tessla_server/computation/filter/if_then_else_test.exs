@@ -32,22 +32,28 @@ defmodule TesslaServer.Computation.Filter.IfThenElseTest do
     timestamp4 = Duration.add timestamp0, Duration.from_seconds 4
     timestamp5 = Duration.add timestamp0, Duration.from_seconds 5
     timestamp6 = Duration.add timestamp0, Duration.from_seconds 6
+    timestamp7 = Duration.add timestamp0, Duration.from_seconds 7
+    timestamp8 = Duration.add timestamp0, Duration.from_seconds 8
 
     cond0 = %Event{value: true, stream_id: @cond}
-    cond1 = %Event{timestamp: timestamp1, value: false, stream_id: @cond}
-    cond4 = %Event{timestamp: timestamp4, value: true, stream_id: @cond}
-    cond6 = %Event{timestamp: timestamp6, value: false, stream_id: @cond}
+    cond1 = %Event{timestamp: timestamp1, value: false, stream_id: @cond, type: :change}
+    cond3 = %Event{timestamp: timestamp3, stream_id: @cond, type: :progress}
+    cond4 = %Event{timestamp: timestamp4, value: true, stream_id: @cond, type: :change}
+    cond6 = %Event{timestamp: timestamp6, value: false, stream_id: @cond, type: :change}
+    cond7 = %Event{timestamp: timestamp7, stream_id: @cond, type: :progress}
 
-    if0 = %Event{value: 1, stream_id: @if_signal}
-    if2 = %Event{timestamp: timestamp2, value: 2, stream_id: @if_signal}
-    if4 = %Event{timestamp: timestamp4, value: 4, stream_id: @if_signal}
-    if6 = %Event{timestamp: timestamp6, value: 6, stream_id: @if_signal}
+    if0 = %Event{value: 1, stream_id: @if_signal, type: :change}
+    if2 = %Event{timestamp: timestamp2, value: 2, stream_id: @if_signal, type: :change}
+    if4 = %Event{timestamp: timestamp4, value: 4, stream_id: @if_signal, type: :change}
+    if6 = %Event{timestamp: timestamp6, value: 6, stream_id: @if_signal, type: :change}
+    if7 = %Event{timestamp: timestamp7, stream_id: @if_signal, type: :progress}
 
-    else0 = %Event{value: -1, stream_id: @else_signal}
-    else2 = %Event{timestamp: timestamp2, value: -2, stream_id: @else_signal}
-    else3 = %Event{timestamp: timestamp3, value: -3, stream_id: @else_signal}
-    else5 = %Event{timestamp: timestamp5, value: -5, stream_id: @else_signal}
-    else6 = %Event{timestamp: timestamp6, value: 4, stream_id: @else_signal}
+    else0 = %Event{value: -1, stream_id: @else_signal, type: :change}
+    else2 = %Event{timestamp: timestamp2, value: -2, stream_id: @else_signal, type: :change}
+    else3 = %Event{timestamp: timestamp3, value: -3, stream_id: @else_signal, type: :change}
+    else5 = %Event{timestamp: timestamp5, value: -5, stream_id: @else_signal, type: :change}
+    else6 = %Event{timestamp: timestamp6, value: 4, stream_id: @else_signal, type: :change}
+    else8 = %Event{timestamp: timestamp8, stream_id: @else_signal, type: :progress}
 
     GenComputation.send_event(@processor, cond0)
     GenComputation.send_event(@processor, if0)
@@ -61,11 +67,12 @@ defmodule TesslaServer.Computation.Filter.IfThenElseTest do
     assert_receive {_, {:process,
       %Event{type: :change, timestamp: ^timestamp1, value: -1}}}
 
-    GenComputation.send_event(@processor, else3)
-    refute_receive _
-    GenComputation.send_event(@processor, cond4)
+    GenComputation.send_event(@processor, cond3)
     assert_receive {_, {:process,
       %Event{type: :change, value: -2, timestamp: ^timestamp2}}}
+
+    GenComputation.send_event(@processor, else3)
+    GenComputation.send_event(@processor, cond4)
 
     GenComputation.send_event(@processor, if4)
     assert_receive {_, {:process,
@@ -83,6 +90,13 @@ defmodule TesslaServer.Computation.Filter.IfThenElseTest do
     GenComputation.send_event(@processor, else6)
     assert_receive {_, {:process,
       %Event{type: :progress, timestamp: ^timestamp6}}}
+
+    GenComputation.send_event(@processor, cond7)
+    GenComputation.send_event(@processor, if7)
+    GenComputation.send_event(@processor, else8)
+    assert_receive {_, {:process,
+      %Event{type: :progress, timestamp: ^timestamp7}}}
+
 
     :ok = GenComputation.stop @processor
   end
