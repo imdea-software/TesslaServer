@@ -1,7 +1,7 @@
-[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)   
-[![Build Status](https://semaphoreci.com/api/v1/miradorn/tesslaserver/branches/master/badge.svg)](https://semaphoreci.com/miradorn/tesslaserver)
+# TesslaServer
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)[![Build Status](https://semaphoreci.com/api/v1/miradorn/tesslaserver/branches/master/badge.svg)](https://semaphoreci.com/miradorn/tesslaserver)
 
-# Introduction
+## Introduction
 
 TesslaServer implements a Runtime for Tessla specifications written in Elixir.
 Tessla is a project of the ISP at the University of Luebeck in Germany.
@@ -17,13 +17,13 @@ to also install Elixir for development purposes.
 TesslaServer was implemented as part of the Master Thesis of Alexander Schramm, which will be available at GitHub at some point after he has finished it.
 The Chapter *Implementation Details* contains a lot of useful information about the general architecture of the runtime.
 
-# Howto build
+## Howto build
 
 If you have Elixir installed you can built an escript with `mix escript.build` and run it afterwards.
 
 For test and development purposes you can also load the project into an REPL by using `iex -S mix`.
 
-# Howto run
+## Howto run
 
 After building the escript you can run TesslaServer by entering `./tessla_server $specification.tessla`.
 Now you can enter events by hand in the format `stream_name value seconds microseconds`, e.g.:
@@ -48,16 +48,16 @@ Since this might get noisy you can obviously pipe it into `grep`, e.g.:
 
 if you only want to be notified about the fact, when node 4 emits a `true` event.
 
-# Howto test
+## Howto test
 
 See Elixir testing, to run tests enter: `mix test`
 
-# Howto examples
+## Howto examples
 
 Under `test/examples` some example specifications are given.
 Except the `minimal` example all should run as expected.
 
-# Howto benchmark
+## Howto benchmark
 
 Most of the benchmarks require the [dumbbench](https://github.com/tsee/dumbbench) perl program to be installed and in the path.
 
