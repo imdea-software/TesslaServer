@@ -1,0 +1,32 @@
+image: elixir:1.3.4
+before_script:
+  - mix deps.get
+stages:
+  - test
+  - check_style
+  - build
+
+test:
+  stage: test
+  script:
+    - mix test
+  cache:
+    paths:
+      - "_build"
+      - "deps"
+
+check_style:
+  stage: check_style
+  script:
+    - mix credo
+    - mix dogma
+  cache:
+    paths:
+      - "_build"
+      - "deps"
+
+build:
+  script: mix escript.build
+  artifacts:
+    paths:
+      - 

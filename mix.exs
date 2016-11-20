@@ -52,6 +52,9 @@ defmodule TesslaServer.Mixfile do
   end
 
   defp escript_config do
-    [main_module: TesslaServer]
+    [
+      main_module: TesslaServer,
+      path: "build/tessla_server"
+    ]
   end
 end
