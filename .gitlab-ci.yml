@@ -14,12 +14,14 @@ test:
 
 check_style:
   stage: check_style
+  allow_failure: true
   script:
     - mix credo
     - mix dogma
 
 coveralls:
   stage: coverage
+  allow_failure: true
   script:
     - mix coveralls
 
