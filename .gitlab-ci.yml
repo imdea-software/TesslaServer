@@ -1,4 +1,4 @@
-image: hypriot/rpi-alpine-scratch:latest
+image: hypriot/rpi-alpine-scratch:edge
 before_script:
   - apk update
   - apk upgrade
