@@ -1,8 +1,8 @@
-image: hypriot/rpi-alpine-scratch:edge
+image: armv7/armhf-ubuntu
 before_script:
-  - apk update
-  - apk upgrade
-  - apk add elixir
+  - apt-get update
+  - apt-get upgrade
+  - apt-get install elixir
   - mix deps.get
 stages:
   - check_style
