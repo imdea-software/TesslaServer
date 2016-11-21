@@ -1,5 +1,8 @@
-image: elixir:1.3.4
+image: hypriot/rpi-alpine-scratch:latest
 before_script:
+  - apk update
+  - apk upgrade
+  - apk add elixir
   - mix deps.get
 stages:
   - check_style
