@@ -2,7 +2,16 @@ image: armv7/armhf-ubuntu
 before_script:
   - apt-get update
   - apt-get upgrade -y
-  - apt-get install -y elixir erlang-ssl erlang-inets erlang-parsetools rebar
+  - apt-get install -y build-essential autoconf m4 libncurses5-dev libwxgtk2.8-dev libgl1-mesa-dev libglu1-mesa-dev libpng3 libssh-dev unixodbc-dev
+  - git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.2.0
+  - echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc
+  - echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
+  - asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
+  - asdf install erlang 19.1
+  - asdf global erlang 19.1
+  - asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
+  - asdf install elixir 1.3.4
+  - asdf global elixir 1.3.4
   - mix local.hex --force
   - mix deps.get
 stages:
