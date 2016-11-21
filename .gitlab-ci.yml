@@ -2,7 +2,7 @@ image: armv7/armhf-ubuntu
 before_script:
   - apt-get update
   - apt-get upgrade -y
-  - apt-get install -y build-essential autoconf m4 libncurses5-dev libwxgtk2.8-dev libgl1-mesa-dev libglu1-mesa-dev libpng3 libssh-dev unixodbc-dev
+  - apt-get install -y build-essential autoconf m4 libncurses5-dev libpng3 libssh-dev unixodbc-dev
   - git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.2.0
   - echo '. $HOME/.asdf/asdf.sh' >> ~/.bashrc
   - echo '. $HOME/.asdf/completions/asdf.bash' >> ~/.bashrc
