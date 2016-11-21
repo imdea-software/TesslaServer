@@ -1,8 +1,8 @@
 image: armv7/armhf-ubuntu
 before_script:
   - apt-get update
-  - apt-get upgrade
-  - apt-get install elixir
+  - apt-get upgrade -y
+  - apt-get install -y elixir
   - mix deps.get
 stages:
   - check_style
